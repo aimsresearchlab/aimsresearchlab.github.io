@@ -110,6 +110,12 @@ The homepage banner is a **5:2** image, **1600x640 webp**, quality 82. Crop
 the source to 5:2 first (keep the wall sign fully in frame), then resize.
 The `<img>` in `src/pages/index.astro` carries matching width/height.
 
+### Research areas (hero, `src/pages/index.astro`)
+
+The `areas` array at the top of the homepage renders as filled brand-blue
+pills under the lede, each linking to `#projects`. CamelCase tokens, no
+spaces, 6 to 8 of them. Keep them in sync with the tags used on project cards.
+
 ### News (`src/data/news.ts`)
 
 - One entry per event, newest first, ISO date. The homepage shows the first

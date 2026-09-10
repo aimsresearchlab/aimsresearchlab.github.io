@@ -12,6 +12,17 @@ const recent = recentPublications(3);
 const peopleGroups = groupedPeople();
 const newsItems = recentNews(5);
 
+// Research areas shown as a tag row under the intro. Edit here.
+const areas = [
+  'ComputerVision',
+  'VisionLanguageModels',
+  'RAG',
+  'ConversationalMemory',
+  'AIAgents',
+  'TrustworthyAI',
+  'HumanCenteredAI',
+];
+
 // Project link kinds -> icon + label. Simple Icons for brand marks, Phosphor otherwise.
 // Brand marks keep their official colors (arXiv red, GitHub black).
 const linkMeta = {
@@ -36,6 +47,9 @@ const linkMeta = {
           A research group at the University of Southern Mississippi building AI
           systems that learn from images, video, text, speech, and sensor data, and
           stay reliable under uncertainty.
+        </p>
+        <p class="areas ui" aria-label="Research areas">
+          {areas.map((a) => <a class="area-pill" href="#projects">#{a}</a>)}
         </p>
       </div>
       <!-- News (pulled from src/data/news.ts) -->
@@ -137,6 +151,20 @@ const linkMeta = {
     margin: 0 0 1.5rem;
   }
   .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 0; }
+  .areas { margin: 1.75rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .area-pill {
+    display: inline-block;
+    background: var(--brand);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    line-height: 1.2;
+  }
+  .area-pill:hover { background: var(--brand-deep); color: #fff; }
 
   /* News feed: a dated list in the right column */
   .news { border-left: 2px solid var(--brand); padding-left: 1.25rem; }
@@ -172,7 +200,7 @@ const linkMeta = {
   .claim { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
   .tags { margin: 0 0 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
   .tag { font-size: 0.8rem; color: var(--brand-deep); }
-  .tag + .tag { margin-left: 0.5rem; }
+  .tags .tag + .tag { margin-left: 0.5rem; }
   .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .link-pill {
     display: inline-flex;
