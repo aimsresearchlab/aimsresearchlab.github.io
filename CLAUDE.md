@@ -55,6 +55,8 @@ public/people/*.webp          headshots, 192x192, referenced from people.ts
 public/lab.webp               homepage banner, 1600x640 (5:2), lab photo
 public/CNAME                  custom domain for GitHub Pages; do not delete
 public/favicon.svg            copied from favicon/logo.svg
+public/og.jpg                 social preview image, 1200x630 jpg (not webp)
+public/robots.txt             allows all, points at the sitemap
 .github/workflows/deploy.yml  builds and publishes to GitHub Pages on push to main
 ```
 
@@ -133,6 +135,25 @@ npm run dev      local dev server with hot reload
 npm run build    static build to dist/
 npm run preview  serve the built dist/ locally
 ```
+
+## SEO
+
+All of it lives in `src/layouts/Base.astro`; pages only pass `title`,
+`description`, and optionally `image` and `type`.
+
+- Every page gets: canonical URL, description, Open Graph, Twitter card,
+  theme-color, and a `ResearchOrganization` JSON-LD block. The JSON-LD is a
+  data script (`type="application/ld+json"`), not executable JS, so it does
+  not violate the no-client-JS rule.
+- `@astrojs/sitemap` writes `sitemap-index.xml` at build time from every
+  route; `public/robots.txt` references it. Nothing to maintain by hand.
+- New pages: pass a specific `title` ("Thing · AIMS Lab") and a one-sentence
+  `description` under 160 characters. Do not reuse the homepage description.
+- Social image: `public/og.jpg`, 1200x630, jpg (WhatsApp, LinkedIn, and
+  iMessage do not reliably render webp previews). Regenerate from the banner
+  source if the banner changes.
+- After a domain change, update `site` in `astro.config.mjs`; every absolute
+  URL above derives from it.
 
 ## Deployment
 

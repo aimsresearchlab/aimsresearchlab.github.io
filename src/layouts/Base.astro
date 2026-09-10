@@ -8,8 +8,36 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;       // path under /public for the social preview; 1200x630 jpg
+  type?: 'website' | 'article';
 }
-const { title = 'AIMS', description = '' } = Astro.props;
+const {
+  title = 'AIMS',
+  description = 'AIMS (Artificial Intelligence & Multimodal Systems) is a research group at the University of Southern Mississippi working on computer vision, vision-language models, RAG and conversational memory, AI agents, and trustworthy AI.',
+  image = '/og.jpg',
+  type = 'website',
+} = Astro.props;
+
+// Absolute URLs for canonical + social tags. Astro.site comes from astro.config.mjs.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(image, Astro.site).href;
+
+// Organization schema for the lab (rich results, knowledge panel hints).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ResearchOrganization',
+  name: 'AIMS: Artificial Intelligence & Multimodal Systems Lab',
+  alternateName: 'AIMS Lab',
+  url: Astro.site?.href,
+  logo: new URL('/logo-mark.svg', Astro.site).href,
+  description,
+  parentOrganization: {
+    '@type': 'CollegeOrUniversity',
+    name: 'University of Southern Mississippi',
+    url: 'https://www.usm.edu/',
+  },
+  sameAs: ['https://github.com/aimsresearchlab'],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -17,8 +45,32 @@ const { title = 'AIMS', description = '' } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#1652EC" />
+    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={description} />
+
+    <!-- Open Graph (Facebook, LinkedIn, Slack, iMessage previews) -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="AIMS Lab" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The AIMS lab space at the University of Southern Mississippi" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <Header />
