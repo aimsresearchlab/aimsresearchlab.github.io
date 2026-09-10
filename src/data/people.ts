@@ -46,6 +46,11 @@ export const people: Person[] = [
     ],
   },
   {
+    name: 'Siyan Luo',
+    topic: 'PhD student',
+    category: 'phd',
+  },
+  {
     name: 'Sugam Panthi',
     topic: 'LLM evaluation validity',
     category: 'undergrad',
