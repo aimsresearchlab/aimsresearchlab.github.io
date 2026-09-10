@@ -91,6 +91,12 @@ export const people: Person[] = [
       { type: 'github', url: 'https://github.com/yarwen0' },
     ],
   },
+  {
+    name: 'Ashim Dahal',
+    topic: 'Research assistant',
+    category: 'undergrad',
+    image: '/people/aims-placeholder.webp', // AIMS mark until a headshot arrives
+  },
 ];
 
 // Display order + heading label for each category.
