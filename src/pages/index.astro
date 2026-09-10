@@ -13,10 +13,11 @@ const peopleGroups = groupedPeople();
 const newsItems = recentNews(5);
 
 // Project link kinds -> icon + label. Simple Icons for brand marks, Phosphor otherwise.
+// Brand marks keep their official colors (arXiv red, GitHub black).
 const linkMeta = {
-  arxiv:  { icon: 'simple-icons:arxiv',  label: 'arXiv' },
-  github: { icon: 'simple-icons:github', label: 'GitHub' },
-  paper:  { icon: 'ph:file-text',        label: 'Paper' },
+  arxiv:  { icon: 'simple-icons:arxiv',  label: 'arXiv',  color: '#B31B1B' },
+  github: { icon: 'simple-icons:github', label: 'GitHub', color: '#181717' },
+  paper:  { icon: 'ph:file-text',        label: 'Paper',  color: 'currentColor' },
 } as const;
 ---
 <Base title="AIMS" description="AIMS research group.">
@@ -68,7 +69,7 @@ const linkMeta = {
           <p class="project-links ui">
             {proj.links.map((l) => (
               <a href={l.url} class="link-pill">
-                <Icon name={linkMeta[l.kind].icon} />
+                <Icon name={linkMeta[l.kind].icon} style={`color: ${linkMeta[l.kind].color}`} />
                 {linkMeta[l.kind].label}
               </a>
             ))}
@@ -185,7 +186,7 @@ const linkMeta = {
     border-radius: 0.3rem;
     padding: 0.25rem 0.65rem;
   }
-  .link-pill:hover { background: var(--brand); color: #fff; }
+  .link-pill:hover { background: var(--paper); border-color: var(--brand-deep); color: var(--brand-deep); }
   .link-pill [data-icon] { font-size: 1rem; }
 
   .people-group + .people-group { margin-top: 2.5rem; }
