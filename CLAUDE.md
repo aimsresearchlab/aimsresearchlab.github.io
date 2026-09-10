@@ -28,9 +28,10 @@ successor should be able to edit templates without knowing a framework, and
 - Deep sections (footer) use `--navy`; the warm complement `--ochre` is for rare
   highlights only (~5% of the page).
 - Layout is a centered column: `--content-width: min(68%, 48rem)`, wider on phones.
-  Sections that need room (banner, hero + news, project grid) add the `.wide`
-  class to break out to `--content-wide: min(88vw, 64rem)`. Prose sections
-  (People, Recent) stay at the narrow width; the contrast is deliberate.
+  The homepage, header, and footer add the `.wide` class to every section so
+  they all share `--content-wide: min(88vw, 64rem)`; nothing on the homepage
+  should be narrower than its neighbours. Inner pages (e.g. /publications) keep
+  the narrow prose width for their body.
 - No decorative chrome (ribbons, blobs, animations). Visual interest comes
   from content: photos, cards, the news feed.
 

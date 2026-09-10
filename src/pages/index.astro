@@ -66,7 +66,7 @@ const newsItems = recentNews(5);
   </section>
 
   <!-- People (grouped by category, pulled from src/data/people.ts) -->
-  <section id="people">
+  <section id="people" class="wide">
     <h2>People</h2>
     {peopleGroups.map((group) => (
       <div class="people-group">
@@ -79,7 +79,7 @@ const newsItems = recentNews(5);
   </section>
 
   <!-- Recent publications (pulled from src/data/publications.ts) -->
-  <section id="recent">
+  <section id="recent" class="wide">
     <div class="section-head">
       <h2>Recent</h2>
       <a class="ui see-all" href="/publications">All publications →</a>
