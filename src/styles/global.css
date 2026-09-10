@@ -24,6 +24,7 @@
 
   /* --- Layout ----------------------------------------------------------- */
   --content-width: min(68%, 48rem); /* centered column, ~768px cap for prose  */
+  --content-wide:  min(88vw, 64rem); /* wider column for grids and the banner  */
   --space:         1.5rem;
 }
 
@@ -51,6 +52,12 @@ main { flex: 1 0 auto; padding-bottom: 4rem; } /* grows to push footer down */
 }
 @media (max-width: 40rem) {
   :root { --content-width: 88%; } /* give small screens more breathing room */
+}
+/* A section that breaks out of the prose column to the wide width.
+   Pure margins, so it works inside main.container without extra wrappers. */
+.wide {
+  width: var(--content-wide);
+  margin-inline: calc(50% - var(--content-wide) / 2);
 }
 
 /* --- Headings ----------------------------------------------------------- */

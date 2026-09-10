@@ -28,6 +28,11 @@ successor should be able to edit templates without knowing a framework, and
 - Deep sections (footer) use `--navy`; the warm complement `--ochre` is for rare
   highlights only (~5% of the page).
 - Layout is a centered column: `--content-width: min(68%, 48rem)`, wider on phones.
+  Sections that need room (banner, hero + news, project grid) add the `.wide`
+  class to break out to `--content-wide: min(88vw, 64rem)`. Prose sections
+  (People, Recent) stay at the narrow width; the contrast is deliberate.
+- No decorative chrome (ribbons, blobs, animations). Visual interest comes
+  from content: photos, cards, the news feed.
 
 ## Structure
 
@@ -41,6 +46,8 @@ src/components/Publication.astro
 src/pages/*.astro             one file per route
 src/data/people.ts            roster (single source of truth for the People section)
 src/data/publications.ts      papers (feeds homepage Recent and /publications)
+src/data/news.ts              dated news feed (homepage right column)
+src/data/projects.ts          project cards (homepage Projects grid)
 public/people/*.webp          headshots, 192x192, referenced from people.ts
 public/lab.webp               homepage banner, 1600x640 (5:2), lab photo
 public/CNAME                  custom domain for GitHub Pages; do not delete
@@ -97,11 +104,21 @@ The homepage banner is a **5:2** image, **1600x640 webp**, quality 82. Crop
 the source to 5:2 first (keep the wall sign fully in frame), then resize.
 The `<img>` in `src/pages/index.astro` carries matching width/height.
 
-### Research topics (`src/pages/index.astro`)
+### News (`src/data/news.ts`)
 
-Six topics in a two-column, three-row grid (one column under 40rem). Keep
-each description to one sentence. Adding a seventh breaks the grid; discuss
-first.
+- One entry per event, newest first, ISO date. The homepage shows the first
+  five. `text` is one line, no trailing period; quote paper titles.
+- Add an entry for every acceptance, preprint, new member, talk, or award.
+  A stale feed reads worse than none.
+
+### Projects (`src/data/projects.ts`)
+
+- One card per line of work, not per paper; a project with two papers gets one
+  card with two Paper links. `claim` is one sentence stating the finding.
+- `icon` is a Phosphor name; `tags` are one to three short area labels.
+- Links only to canonical records (arXiv, DOI, public GitHub repo). Do not
+  link private repos.
+- Cards auto-fill at 17rem minimum, so five or six cards make two rows.
 
 ## Commands
 

@@ -5,55 +5,63 @@ import Publication from '../components/Publication.astro';
 import Person from '../components/Person.astro';
 import { recentPublications } from '../data/publications';
 import { groupedPeople } from '../data/people';
+import { recentNews, formatDate } from '../data/news';
+import { projects } from '../data/projects';
 
 const recent = recentPublications(3);
 const peopleGroups = groupedPeople();
+const newsItems = recentNews(5);
 ---
 <Base title="AIMS" description="AIMS research group.">
-  <!-- Hero: landscape banner on top, lab intro below -->
-  <section id="top" class="hero">
+  <!-- Hero: wide banner, then intro on the left and the news feed on the right -->
+  <section id="top" class="hero wide">
     <img class="banner" src="/lab.webp" alt="The AIMS lab space at USM" width="1600" height="640" />
-    <h1>AIMS</h1>
-    <p class="expansion">
-      <span class="cap">A</span>rtificial <span class="cap">I</span>ntelligence &amp;
-      <span class="cap">M</span>ultimodal <span class="cap">S</span>ystems
-    </p>
-    <p class="affil ui">Lab @ USM · CSCE</p>
-    <p class="lede">
-      A research group at the University of Southern Mississippi building AI
-      systems that learn from images, video, text, speech, and sensor data, and
-      stay reliable under uncertainty.
-    </p>
+    <div class="hero-grid">
+      <div class="intro">
+        <h1>AIMS</h1>
+        <p class="expansion">
+          <span class="cap">A</span>rtificial <span class="cap">I</span>ntelligence &amp;
+          <span class="cap">M</span>ultimodal <span class="cap">S</span>ystems
+        </p>
+        <p class="affil ui">Lab @ USM · CSCE</p>
+        <p class="lede">
+          A research group at the University of Southern Mississippi building AI
+          systems that learn from images, video, text, speech, and sensor data, and
+          stay reliable under uncertainty.
+        </p>
+      </div>
+      <!-- News (pulled from src/data/news.ts) -->
+      <aside id="news" class="news" aria-labelledby="news-heading">
+        <h2 id="news-heading" class="news-heading ui">News</h2>
+        <ol class="news-list">
+          {newsItems.map((item) => (
+            <li>
+              <time class="ui" datetime={item.date}>{formatDate(item.date)}</time>
+              <span class="news-text">
+                {item.url ? <a href={item.url}>{item.text}</a> : item.text}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </aside>
+    </div>
   </section>
 
-  <!-- Research: sub-topics, not cards -->
-  <section id="research">
-    <h2>Research</h2>
-    <div class="topics">
-      <div class="topic">
-        <h3><Icon name="ph:eye" /> Computer vision &amp; segmentation</h3>
-        <p>Visual recognition, detection, and dense prediction.</p>
-      </div>
-      <div class="topic">
-        <h3><Icon name="ph:images" /> Vision-language models</h3>
-        <p>Joint image-text understanding and generation.</p>
-      </div>
-      <div class="topic">
-        <h3><Icon name="ph:database" /> RAG &amp; conversational memory</h3>
-        <p>Retrieval-grounded reasoning that persists across turns.</p>
-      </div>
-      <div class="topic">
-        <h3><Icon name="ph:robot" /> AI agents</h3>
-        <p>Systems that plan and act with external tools.</p>
-      </div>
-      <div class="topic">
-        <h3><Icon name="ph:shield-check" /> Robust &amp; trustworthy AI</h3>
-        <p>Calibration, uncertainty, and adversarial robustness.</p>
-      </div>
-      <div class="topic">
-        <h3><Icon name="ph:users" /> Human-centered AI</h3>
-        <p>Interaction that adapts to people and their needs.</p>
-      </div>
+  <!-- Projects (pulled from src/data/projects.ts) -->
+  <section id="projects" class="wide">
+    <h2>Projects</h2>
+    <div class="projects">
+      {projects.map((proj) => (
+        <article class="project">
+          <Icon class="project-icon" name={proj.icon} />
+          <h3>{proj.title}</h3>
+          <p class="claim">{proj.claim}</p>
+          <p class="tags ui">{proj.tags.join(' · ')}</p>
+          <p class="project-links ui">
+            {proj.links.map((l) => <a href={l.url}>{l.label}</a>)}
+          </p>
+        </article>
+      ))}
     </div>
   </section>
 
@@ -89,7 +97,16 @@ const peopleGroups = groupedPeople();
     aspect-ratio: 5 / 2;
     object-fit: cover;
     border: 1px solid var(--rule);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (max-width: 56rem) {
+    .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   }
   .hero h1 { margin-top: 0; margin-bottom: 0.25rem; }
   .expansion {
@@ -107,22 +124,41 @@ const peopleGroups = groupedPeople();
   }
   .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 0; }
 
-  .topics {
+  /* News feed: a dated list in the right column */
+  .news { border-left: 2px solid var(--brand); padding-left: 1.25rem; }
+  .news-heading {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 600;
+    margin: 0 0 1rem;
+  }
+  .news-list { list-style: none; margin: 0; padding: 0; }
+  .news-list li { display: flex; flex-direction: column; gap: 0.1rem; }
+  .news-list li + li { margin-top: 0.9rem; }
+  .news-list time { font-size: 0.8rem; color: var(--ink-soft); }
+  .news-text { font-size: 1rem; line-height: 1.45; }
+  .news-text a { color: var(--ink); text-decoration: none; }
+  .news-text a:hover { color: var(--brand); }
+
+  /* Projects: a card grid in the wide column */
+  .projects {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.75rem 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.5rem;
   }
-  @media (max-width: 40rem) {
-    .topics { grid-template-columns: 1fr; }
-  }
-  .topic h3 {
+  .project {
+    border: 1px solid var(--rule);
+    padding: 1.25rem 1.4rem 1.1rem;
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 0.35rem;
+    flex-direction: column;
   }
-  .topic h3 [data-icon] { color: var(--brand); font-size: 1.25rem; }
-  .topic p { margin: 0; color: var(--ink-soft); }
+  .project :global(.project-icon) { color: var(--brand); font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .project h3 { margin: 0 0 0.4rem; }
+  .claim { margin: 0 0 0.75rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
+  .tags { margin: 0 0 0.5rem; font-size: 0.8rem; color: var(--ink-soft); }
+  .project-links { margin: 0; font-size: 0.9rem; display: flex; gap: 1rem; }
 
   .people-group + .people-group { margin-top: 2.5rem; }
   .group-label {
