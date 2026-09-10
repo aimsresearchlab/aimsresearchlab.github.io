@@ -49,6 +49,7 @@ export const people: Person[] = [
     name: 'Siyan Luo',
     topic: 'PhD student',
     category: 'phd',
+    image: '/people/aims-placeholder.webp', // AIMS mark until a headshot arrives
   },
   {
     name: 'Sugam Panthi',

@@ -86,8 +86,9 @@ public/favicon.svg            copied from favicon/logo.svg
 
 - Sources so far: the USM faculty directory for faculty; personal sites or
   GitHub avatars for students. Ask before scraping a photo from anywhere else.
-- No photo yet: omit `image` and the card shows initials. Do not use a stock
-  placeholder image.
+- No photo yet: point `image` at `/people/aims-placeholder.webp` (the AIMS
+  mark in brand blue on the grey circle). Omitting `image` shows initials
+  instead; either is fine, but do not use a stock placeholder image.
 
 ### Publications (`src/data/publications.ts`)
 
