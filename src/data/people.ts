@@ -73,13 +73,13 @@ export const people: Person[] = [
     ],
   },
   {
-    name: 'Muhaiminul Yeamin',
+    name: 'Nhoojah Maharjan',
     topic: 'Research assistant',
     category: 'undergrad',
-    image: '/people/muhaiminul-yeamin.webp',
+    image: '/people/nhoojah-maharjan.webp',
     links: [
-      { type: 'website', url: 'https://muhaiminul.online/' },
-      { type: 'github', url: 'https://github.com/MY-Sabil' },
+      { type: 'website', url: 'https://www.nhoojah.com.np/' },
+      { type: 'github', url: 'https://github.com/yarwen0' },
     ],
   },
   {
@@ -93,13 +93,13 @@ export const people: Person[] = [
     ],
   },
   {
-    name: 'Nhoojah Maharjan',
+    name: 'Muhaiminul Yeamin',
     topic: 'Research assistant',
     category: 'undergrad',
-    image: '/people/nhoojah-maharjan.webp',
+    image: '/people/muhaiminul-yeamin.webp',
     links: [
-      { type: 'website', url: 'https://www.nhoojah.com.np/' },
-      { type: 'github', url: 'https://github.com/yarwen0' },
+      { type: 'website', url: 'https://muhaiminul.online/' },
+      { type: 'github', url: 'https://github.com/MY-Sabil' },
     ],
   },
 ];
