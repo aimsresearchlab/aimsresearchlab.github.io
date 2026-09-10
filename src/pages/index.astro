@@ -111,7 +111,14 @@ const peopleGroups = groupedPeople();
   }
   .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 0; }
 
-  .topics { display: flex; flex-direction: column; gap: 1.75rem; }
+  .topics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 2rem;
+  }
+  @media (max-width: 40rem) {
+    .topics { grid-template-columns: 1fr; }
+  }
   .topic h3 {
     display: flex;
     align-items: center;
