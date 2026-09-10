@@ -26,35 +26,56 @@ export interface Person {
 
 export const people: Person[] = [
   {
-    name: 'Name One',
+    name: 'Rabab Abdelfattah',
     topic: 'Principal Investigator',
     category: 'faculty',
+    image: '/people/rabab-abdelfattah.webp',
     links: [
-      { type: 'website', url: 'https://example.org' },
-      { type: 'scholar', url: 'https://scholar.google.com' },
+      { type: 'website', url: 'https://www.usm.edu/faculty-directory/profile.php?id=2458606' },
+      { type: 'scholar', url: 'https://scholar.google.com/citations?user=p4FzqnIAAAAJ' },
     ],
   },
   {
-    name: 'Name Two',
-    topic: 'Conversational memory',
+    name: 'Olanrewaju Muili',
+    topic: 'Trustworthy AI, multimodal agents',
     category: 'phd',
-    links: [{ type: 'github', url: 'https://github.com' }],
+    links: [{ type: 'github', url: 'https://github.com/omuili' }],
   },
   {
-    name: 'Name Three',
-    topic: 'Benchmark validity',
-    category: 'phd',
-    links: [{ type: 'x', url: 'https://x.com' }],
-  },
-  {
-    name: 'Name Four',
-    topic: 'Evaluation methods',
-    category: 'masters',
-  },
-  {
-    name: 'Name Five',
-    topic: 'Data pipelines',
+    name: 'Sugam Panthi',
+    topic: 'LLM evaluation validity',
     category: 'undergrad',
+    image: '/people/sugam-panthi.webp',
+    links: [
+      { type: 'website', url: 'https://spanthi.com' },
+      { type: 'github', url: 'https://github.com/Vein05' },
+    ],
+  },
+  {
+    name: 'Muhaiminul Yeamin',
+    topic: 'Research assistant',
+    category: 'undergrad',
+    image: '/people/muhaiminul-yeamin.webp',
+    links: [
+      { type: 'website', url: 'https://muhaiminul.online/' },
+      { type: 'github', url: 'https://github.com/MY-Sabil' },
+    ],
+  },
+  {
+    name: 'Sakshyam Sigdel',
+    topic: 'Research assistant',
+    category: 'undergrad',
+    image: '/people/sakshyam-sigdel.webp',
+    links: [
+      { type: 'website', url: 'https://sakshyamsigdel.com.np' },
+      { type: 'github', url: 'https://github.com/S-Sigdel' },
+    ],
+  },
+  {
+    name: 'Nhoojah Maharjan',
+    topic: 'Research assistant',
+    category: 'undergrad',
+    links: [{ type: 'github', url: 'https://github.com/yarwen0' }],
   },
 ];
 
