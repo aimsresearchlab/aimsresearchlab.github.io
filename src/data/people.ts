@@ -52,6 +52,17 @@ export const people: Person[] = [
     image: '/people/aims-placeholder.webp', // AIMS mark until a headshot arrives
   },
   {
+    name: 'Ashim Dahal',
+    topic: 'Computer vision',
+    category: 'undergrad',
+    image: '/people/ashim-dahal.webp',
+    links: [
+      { type: 'website', url: 'https://ashimdahal.com.np/' },
+      { type: 'scholar', url: 'https://scholar.google.com/citations?user=Nt9K4nsAAAAJ' },
+      { type: 'github', url: 'https://github.com/ashimdahal' },
+    ],
+  },
+  {
     name: 'Sugam Panthi',
     topic: 'LLM evaluation validity',
     category: 'undergrad',
@@ -91,12 +102,6 @@ export const people: Person[] = [
       { type: 'github', url: 'https://github.com/yarwen0' },
     ],
   },
-  {
-    name: 'Ashim Dahal',
-    topic: 'Research assistant',
-    category: 'undergrad',
-    image: '/people/aims-placeholder.webp', // AIMS mark until a headshot arrives
-  },
 ];
 
 // Display order + heading label for each category.
@@ -107,6 +112,7 @@ export const categoryOrder: { key: Category; label: string }[] = [
   { key: 'undergrad', label: 'Undergraduates' },
 ];
 
+// Within a category, list order is display order (longest-serving first).
 // Grouped in the fixed category order; empty groups are dropped.
 export function groupedPeople(): { label: string; members: Person[] }[] {
   return categoryOrder
