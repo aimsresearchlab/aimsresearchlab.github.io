@@ -7,12 +7,14 @@ import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
+  socialTitle?: string; // short title for link previews; defaults to title
   description?: string;
   image?: string;       // path under /public for the social preview; 1200x630 jpg
   type?: 'website' | 'article';
 }
 const {
   title = 'AIMS',
+  socialTitle = title,
   description = 'AIMS (Artificial Intelligence & Multimodal Systems) is a research group at the University of Southern Mississippi working on computer vision, vision-language models, RAG and conversational memory, AI agents, and trustworthy AI.',
   image = '/og.jpg',
   type = 'website',
@@ -57,7 +59,7 @@ const jsonLd = {
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="AIMS Lab" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={imageUrl} />
@@ -67,7 +69,7 @@ const jsonLd = {
 
     <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
 

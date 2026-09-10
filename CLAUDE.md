@@ -150,8 +150,13 @@ All of it lives in `src/layouts/Base.astro`; pages only pass `title`,
 - New pages: pass a specific `title` ("Thing · AIMS Lab") and a one-sentence
   `description` under 160 characters. Do not reuse the homepage description.
 - Social image: `public/og.jpg`, 1200x630, jpg (WhatsApp, LinkedIn, and
-  iMessage do not reliably render webp previews). Regenerate from the banner
-  source if the banner changes.
+  iMessage do not reliably render webp previews). It is the lab photo under a
+  navy gradient with the white mark, "AIMS", the expansion, and a USM line,
+  composed with ImageMagick and Times New Roman. Regenerate if the banner or
+  wording changes. Pages may pass `socialTitle` for a shorter preview title.
+- After changing tags or the image, force Facebook/Messenger/LinkedIn to
+  re-scrape: https://developers.facebook.com/tools/debug/ and
+  https://www.linkedin.com/post-inspector/. They cache previews for weeks.
 - After a domain change, update `site` in `astro.config.mjs`; every absolute
   URL above derives from it.
 
