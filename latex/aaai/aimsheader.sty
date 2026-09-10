@@ -1,0 +1,154 @@
+% aimsheader.sty — AIMS Lab arXiv-style title header
+% Meta/Llama-style rounded abstract box with lab logo and brand colors.
+%
+% Usage (preamble):
+%   \usepackage{aimsheader}
+%
+% Usage (after \begin{document}):
+%   \aimsheader{
+%     title    = {Your Paper Title},
+%     authors  = {First Author$^{1}$, Second Author$^{2}$},
+%     affil    = {$^{1}$University of Southern Mississippi \quad $^{2}$Somewhere Else},
+%     abstract = {Abstract text goes here...},
+%     date     = {August 13, 2026},
+%     website  = {https://aimslab.example.edu},
+%   }
+% Any key may be omitted; its line is dropped.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{aimsheader}[2026/08/13 AIMS Lab paper header]
+
+% Option [nohyperref]: for venues that forbid hyperref (e.g. AAAI).
+\makeatletter
+\newif\ifaims@hyperref \aims@hyperreftrue
+\DeclareOption{nohyperref}{\aims@hyperreffalse}
+\ProcessOptions\relax
+\makeatother
+
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{keyval}
+\RequirePackage{url}
+% Inter as the header sans (body font of the venue is untouched)
+\IfFileExists{inter.sty}{\RequirePackage{inter}}{\RequirePackage[scaled]{helvet}}
+
+% ---- Brand colors (sampled from the AIMS Lab logo) ----
+\definecolor{aimsnavy}{HTML}{0A1B4C}   % wordmark navy
+\definecolor{aimsazure}{HTML}{0D5FF3}  % bright gradient blue (links)
+\definecolor{aimsindigo}{HTML}{2629C4} % deep gradient indigo
+\definecolor{aimsboxbg}{HTML}{F4F6FA}  % header box background
+
+\makeatletter
+\ifaims@hyperref
+  \RequirePackage{hyperref}
+  \hypersetup{colorlinks=true, urlcolor=aimsazure, linkcolor=aimsnavy, citecolor=aimsnavy}
+\fi
+\makeatother
+
+% Logo file (same directory by default; override with \renewcommand)
+\newcommand{\aimslogofile}{aims-logo.pdf}
+\newcommand{\aimslogoheight}{22pt}
+
+% ---- keys ----
+\makeatletter
+\def\aims@title{}\def\aims@authors{}\def\aims@affil{}%
+\def\aims@abstract{}\def\aims@date{}\def\aims@website{}%
+\define@key{aims}{title}{\def\aims@title{#1}}
+\define@key{aims}{authors}{\def\aims@authors{#1}}
+\define@key{aims}{affil}{\def\aims@affil{#1}}
+\define@key{aims}{abstract}{\def\aims@abstract{#1}}
+\define@key{aims}{date}{\def\aims@date{#1}}
+\define@key{aims}{website}{\def\aims@website{#1}}
+
+\newcommand{\aimsheader}[1]{%
+  \setkeys{aims}{#1}%
+  \begin{tcolorbox}[
+      enhanced, frame hidden, boxrule=0pt,
+      colback=aimsboxbg, arc=10pt,
+      left=14pt, right=14pt, top=14pt, bottom=14pt,
+    ]
+    \includegraphics[height=\aimslogoheight]{\aimslogofile}\par
+    \vspace{14pt}
+    {\raggedright\sffamily\bfseries\fontsize{24}{29}\selectfont\color{black}\aims@title\par}
+    \vspace{6pt}
+    \ifx\aims@authors\empty\else
+      {\sffamily\bfseries\small\aims@authors\par}
+    \fi
+    \ifx\aims@affil\empty\else
+      {\small\aims@affil\par}
+    \fi
+    \vspace{12pt}
+    \aims@abstract\par
+    \ifx\aims@date\empty\else
+      \vspace{12pt}
+      {\sffamily\bfseries\small Date:} {\small\aims@date\par}
+    \fi
+    \ifx\aims@website\empty\else
+      \vspace{2pt}
+      {\sffamily\bfseries\small Website:} {\small\expandafter\url\expandafter{\aims@website}\par}
+    \fi
+  \end{tcolorbox}%
+}
+\makeatother
+
+% ---- Simple variant: corner logo on page 1, no box ----
+% \aimscornerlogo         -> top-left  (aligned with text edge)
+% \aimscornerlogo[r]      -> top-right
+% Place anywhere in the preamble or right after \begin{document};
+% the venue's normal \maketitle/abstract stay untouched.
+\RequirePackage{eso-pic}
+\makeatletter
+\newsavebox{\aims@logobox}
+\newcommand{\aimscornerlogo}[1][l]{%
+  \sbox{\aims@logobox}{\includegraphics[height=\aimslogoheight]{\aimslogofile}}%
+  \AddToShipoutPictureBG*{%
+    \if r#1%
+      \AtPageUpperLeft{\raisebox{-\dimexpr\aimslogoheight+0.55in\relax}{%
+        \hspace*{\dimexpr\paperwidth-\oddsidemargin-1in-\wd\aims@logobox\relax}%
+        \usebox{\aims@logobox}}}%
+    \else
+      \AtPageUpperLeft{\raisebox{-\dimexpr\aimslogoheight+0.55in\relax}{%
+        \hspace*{\dimexpr\oddsidemargin+1in\relax}%
+        \usebox{\aims@logobox}}}%
+    \fi}%
+}
+\makeatother
+
+% ---- Line variant: logo + right-hand note over a thin rule, left-aligned title ----
+% \aimslinetitle{ title={...}, authors={...}, affil={...}, right={Technical Report} }
+% Replaces \maketitle. The right key is the small gray text at the top-right.
+\makeatletter
+\def\aims@right{}
+\define@key{aims}{right}{\def\aims@right{#1}}
+\newcommand{\aimslinetitle}[1]{%
+  \setkeys{aims}{#1}%
+  \begingroup
+  \noindent
+  \raisebox{-0.25\height}{\includegraphics[height=\aimslogoheight]{\aimslogofile}}%
+  \hfill
+  {\sffamily\small\textcolor{black!60}{\aims@right}}\par
+  \vspace{7pt}
+  \noindent{\color{black!65}\rule{\textwidth}{1.4pt}}\par
+  \vspace{20pt}
+  {\raggedright\sffamily\bfseries\fontsize{21}{26}\selectfont\aims@title\par}
+  \vspace{10pt}
+  \ifx\aims@authors\empty\else
+    {\raggedright\sffamily\bfseries\small\aims@authors\par}
+  \fi
+  \ifx\aims@affil\empty\else
+    \vspace{2pt}
+    {\raggedright\small\aims@affil\par}
+  \fi
+  \vspace{6pt}
+  \ifx\aims@date\empty\else
+    {\sffamily\bfseries\small Date:} {\small\aims@date\par}
+  \fi
+  \ifx\aims@website\empty\else
+    \vspace{1pt}
+    {\sffamily\bfseries\small Website:} {\small\expandafter\url\expandafter{\aims@website}\par}
+  \fi
+  \vspace{16pt}
+  \endgroup
+}
+\makeatother

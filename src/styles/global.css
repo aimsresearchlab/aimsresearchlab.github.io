@@ -1,0 +1,90 @@
+/* ==========================================================================
+   AIMS: design tokens
+   Change the site's whole look from here. Everything below references these.
+   ========================================================================== */
+
+:root {
+  /* --- Brand color (pulled from logo/full/logo.svg) ---------------------- */
+  --brand:        #1652EC; /* primary accent: links, headings, rules, the dot */
+  --brand-deep:   #0A2596; /* darker accent, use for small text on white     */
+  --navy:         #041A62; /* deep sections: footer / hero backgrounds        */
+
+  /* --- Neutrals --------------------------------------------------------- */
+  --paper:        #FAFAF8; /* page background, warm off-white, not pure white */
+  --ink:          #0A1B4C; /* body text, logo navy, ~15:1 on paper           */
+  --ink-soft:     #3A4266; /* secondary text, captions                        */
+  --rule:         #E4E4DE; /* hairlines, borders                              */
+
+  /* --- Accent (use sparingly, ~5%, the blue's complement) -------------- */
+  --ochre:        #C8892A; /* one-off highlights: "new" badge, an award       */
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-serif:   'Tinos', 'Times New Roman', Times, serif;
+  --font-ui:      system-ui, -apple-system, Segoe UI, sans-serif;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --content-width: min(68%, 48rem); /* centered column, ~768px cap for prose  */
+  --space:         1.5rem;
+}
+
+/* --- Reset-ish ---------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* footer sticks to the bottom on short pages */
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.65;
+  font-optical-sizing: auto;
+}
+main { flex: 1 0 auto; padding-bottom: 4rem; } /* grows to push footer down */
+
+/* --- Centered content column ------------------------------------------- */
+.container {
+  width: var(--content-width);
+  margin-inline: auto;
+}
+@media (max-width: 40rem) {
+  :root { --content-width: 88%; } /* give small screens more breathing room */
+}
+
+/* --- Headings ----------------------------------------------------------- */
+h1, h2, h3 { line-height: 1.2; font-weight: 700; color: var(--ink); }
+h1 { font-size: 2.4rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; margin-top: 2.5em; }
+h3 { font-size: 1.2rem; }
+
+/* --- Links -------------------------------------------------------------- */
+a { color: var(--brand); text-underline-offset: 0.15em; }
+a:hover { color: var(--brand-deep); }
+
+/* --- Small UI labels (nav, meta) use the neutral sans ------------------- */
+.ui { font-family: var(--font-ui); }
+
+/* --- Icons render inline with the text -------------------------------- */
+[data-icon], svg.icon { vertical-align: -0.125em; }
+
+/* --- Sections stack down the single-page scroll ----------------------- */
+section { scroll-margin-top: 1.5rem; } /* anchor jumps clear the top edge */
+section + section { margin-top: 4rem; }
+section > h2:first-child,
+section > .section-head:first-child h2 { margin-top: 0; }
+html { scroll-behavior: smooth; }
+
+/* --- "new" / award badge (ochre, the blue's complement) --------------- */
+.badge {
+  display: inline-block;
+  background: var(--ochre);
+  color: #fff;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.1rem 0.45rem;
+  vertical-align: 0.15em;
+  margin-left: 0.4rem;
+}

@@ -1,0 +1,39 @@
+% Line variant: logo top-left, small note top-right, thin rule, left-aligned
+% title block. No box, no \maketitle. Directly usable for arXiv preprints.
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{aimsheader}
+
+\begin{document}
+
+\aimslinetitle{
+  title   = {Outcome Monitors: Recovering Silent Tool Failures in LLM Agents},
+  authors = {Sugam Author \quad Rabab Abdelfattah},
+  affil   = {AIMS Lab, University of Southern Mississippi},
+  right   = {Technical Report \, \textbullet \, August 2026},
+}
+
+\begin{abstract}
+Modern artificial intelligence (AI) systems are powered by foundation models
+that increasingly act through external tools. When a tool call fails
+silently, the agent's downstream reasoning proceeds on stale or fabricated
+state. This paper presents Outcome Monitors, a lightweight observability
+layer that detects unacknowledged tool failures from the conversation trace
+alone. This abstract is placeholder text demonstrating the line-header
+variant on the plain article class.
+\end{abstract}
+
+\section{Introduction}
+
+Foundation models are general models of language, vision, speech, and/or
+other modalities. This body text exists only to show the layout continuing
+below the line header. Lorem ipsum dolor sit amet, consectetur adipiscing
+elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\end{document}

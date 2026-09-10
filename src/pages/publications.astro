@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Publication from '../components/Publication.astro';
+import { publicationsByYear } from '../data/publications';
+
+const byYear = publicationsByYear();
+---
+<Base title="Publications · AIMS" description="Publications from the AIMS group.">
+  <h1>Publications</h1>
+  {byYear.map(([year, pubs]) => (
+    <section>
+      <h2>{year}</h2>
+      {pubs.map((pub) => <Publication pub={pub} />)}
+    </section>
+  ))}
+</Base>

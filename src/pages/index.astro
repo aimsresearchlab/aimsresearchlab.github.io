@@ -1,0 +1,152 @@
+---
+import Base from '../layouts/Base.astro';
+import { Icon } from 'astro-icon/components';
+import Publication from '../components/Publication.astro';
+import Person from '../components/Person.astro';
+import { recentPublications } from '../data/publications';
+import { groupedPeople } from '../data/people';
+
+const recent = recentPublications(3);
+const peopleGroups = groupedPeople();
+---
+<Base title="AIMS" description="AIMS research group.">
+  <!-- Hero: landscape banner on top, lab intro below -->
+  <section id="top" class="hero">
+    <div class="banner" aria-hidden="true">
+      <Icon name="ph:image" />
+    </div>
+    <h1>AIMS</h1>
+    <p class="expansion">
+      <span class="cap">A</span>rtificial <span class="cap">I</span>ntelligence &amp;
+      <span class="cap">M</span>ultimodal <span class="cap">S</span>ystems
+    </p>
+    <p class="affil ui">Lab @ USM · CSCE</p>
+    <p class="lede">
+      A research group at the University of Southern Mississippi building AI
+      systems that learn from images, video, text, speech, and sensor data, and
+      stay reliable under uncertainty.
+    </p>
+  </section>
+
+  <!-- Research: sub-topics, not cards -->
+  <section id="research">
+    <h2>Research</h2>
+    <div class="topics">
+      <div class="topic">
+        <h3><Icon name="ph:eye" /> Computer vision &amp; segmentation</h3>
+        <p>Visual recognition, detection, and dense prediction.</p>
+      </div>
+      <div class="topic">
+        <h3><Icon name="ph:images" /> Vision-language models</h3>
+        <p>Joint image-text understanding and generation.</p>
+      </div>
+      <div class="topic">
+        <h3><Icon name="ph:database" /> RAG &amp; conversational memory</h3>
+        <p>Retrieval-grounded reasoning that persists across turns.</p>
+      </div>
+      <div class="topic">
+        <h3><Icon name="ph:robot" /> AI agents</h3>
+        <p>Systems that plan and act with external tools.</p>
+      </div>
+      <div class="topic">
+        <h3><Icon name="ph:shield-check" /> Robust &amp; trustworthy AI</h3>
+        <p>Calibration, uncertainty, and adversarial robustness.</p>
+      </div>
+      <div class="topic">
+        <h3><Icon name="ph:users" /> Human-centered AI</h3>
+        <p>Interaction that adapts to people and their needs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- People (grouped by category, pulled from src/data/people.ts) -->
+  <section id="people">
+    <h2>People</h2>
+    {peopleGroups.map((group) => (
+      <div class="people-group">
+        <h3 class="group-label ui">{group.label}</h3>
+        <ul class="people">
+          {group.members.map((person) => <Person person={person} />)}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  <!-- Recent publications (pulled from src/data/publications.ts) -->
+  <section id="recent">
+    <div class="section-head">
+      <h2>Recent</h2>
+      <a class="ui see-all" href="/publications">All publications →</a>
+    </div>
+    {recent.map((pub) => <Publication pub={pub} />)}
+  </section>
+</Base>
+
+<style>
+  .hero { padding-top: 1rem; }
+  .banner {
+    aspect-ratio: 5 / 2;
+    border: 1px solid var(--rule);
+    background: #f1f1ec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+  }
+  .banner [data-icon] { font-size: 2.5rem; opacity: 0.5; }
+  .hero h1 { margin-top: 0; margin-bottom: 0.25rem; }
+  .expansion {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+  }
+  .expansion .cap { color: var(--brand); font-weight: 700; }
+  .affil {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+  }
+  .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 0; }
+
+  .topics { display: flex; flex-direction: column; gap: 1.75rem; }
+  .topic h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.35rem;
+  }
+  .topic h3 [data-icon] { color: var(--brand); font-size: 1.25rem; }
+  .topic p { margin: 0; color: var(--ink-soft); }
+
+  .people-group + .people-group { margin-top: 2.5rem; }
+  .group-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 600;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .people {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem 2rem;
+  }
+  .people :global(.person) { flex: 0 0 8.5rem; } /* fixed width, left-aligned */
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .see-all { font-size: 0.9rem; white-space: nowrap; }
+</style>

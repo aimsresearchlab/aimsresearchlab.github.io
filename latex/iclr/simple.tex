@@ -1,0 +1,58 @@
+% Simple variant: standard ICLR template, untouched \maketitle, with just the
+% AIMS Lab logo in the top-left corner of page 1. Use [r] for top-right.
+%
+% Drop \iclrfinalcopy and the \lhead line to get back the anonymous
+% double-blind submission layout (the corner logo would break anonymity, so
+% use this variant for preprints and camera-ready only).
+\documentclass{article}
+\usepackage{iclr2027_conference,times}
+\iclrfinalcopy
+\usepackage[T1]{fontenc}
+\usepackage{aimsheader}
+
+\title{Outcome Monitors: Recovering Silent Tool Failures in LLM Agents}
+% ICLR's \And starts a new author column, so each author carries its own
+% affiliation block. \AND breaks to a new line instead.
+\author{Sugam Author \\
+AIMS Lab, University of Southern Mississippi \\
+\texttt{sugam@usm.edu}
+\And
+Rabab Abdelfattah \\
+AIMS Lab, University of Southern Mississippi \\
+\texttt{rabab@usm.edu}}
+
+\begin{document}
+\aimscornerlogo
+\maketitle
+\lhead{Preprint. Under review.}
+
+\begin{abstract}
+Modern artificial intelligence (AI) systems are powered by foundation models
+that increasingly act through external tools. When a tool call fails
+silently, the agent's downstream reasoning proceeds on stale or fabricated
+state. This paper presents Outcome Monitors, a lightweight observability
+layer that detects unacknowledged tool failures from the conversation trace
+alone. This abstract is placeholder text demonstrating the simple corner-logo
+variant on the standard ICLR template.
+\end{abstract}
+
+\section{Introduction}
+
+Foundation models are general models of language, vision, speech, and/or
+other modalities. This body text exists only to show the standard ICLR layout
+with nothing changed except the corner logo. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\section{Related Work}
+
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+
+\end{document}

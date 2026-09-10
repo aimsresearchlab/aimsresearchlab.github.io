@@ -1,0 +1,31 @@
+---
+import { Icon } from 'astro-icon/components';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container footer-inner ui">
+    <span>© {year} AIMS</span>
+    <span class="links">
+      <a href="https://github.com/" aria-label="GitHub"><Icon name="ph:github-logo" /></a>
+      <a href="https://x.com/" aria-label="X"><Icon name="ph:x-logo" /></a>
+      <a href="mailto:hello@example.org" aria-label="Email"><Icon name="ph:envelope-simple" /></a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: 2rem;
+    background: var(--navy);
+    color: #cdd6f4;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  }
+  .links { display: inline-flex; gap: 1rem; font-size: 1.25rem; }
+  .site-footer a { color: #cdd6f4; }
+  .site-footer a:hover { color: #ffffff; }
+</style>

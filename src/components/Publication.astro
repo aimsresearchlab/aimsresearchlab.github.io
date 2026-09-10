@@ -1,0 +1,32 @@
+---
+// One publication entry. Used on the homepage "Recent" section and /publications.
+import type { Publication } from '../data/publications';
+interface Props { pub: Publication; }
+const { pub } = Astro.props;
+const Wrapper = pub.url ? 'a' : 'div';
+---
+<Wrapper class="pub" href={pub.url}>
+  <span class="pub-title">
+    {pub.title}
+    {pub.award && <span class="badge ui">{pub.award}</span>}
+  </span>
+  <span class="pub-meta ui">{pub.authors} · {pub.venue} · {pub.year}</span>
+</Wrapper>
+
+<style>
+  .pub {
+    display: block;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+    color: inherit;
+    text-decoration: none;
+  }
+  a.pub:hover .pub-title { color: var(--brand); }
+  .pub-title { display: block; font-weight: 700; line-height: 1.35; }
+  .pub-meta {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+</style>

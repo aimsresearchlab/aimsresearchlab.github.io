@@ -1,0 +1,73 @@
+---
+// Site header: logo + primary nav. Edit nav items here.
+// Section links point at homepage anchors so they work from any page.
+const nav = [
+  { label: 'Research', href: '/#research' },
+  { label: 'People',   href: '/#people' },
+  { label: 'Recent',   href: '/#recent' },
+  { label: 'Publications', href: '/publications' },
+];
+const path = Astro.url.pathname;
+---
+<header class="container site-header">
+  <div class="brand-lockup">
+    <a class="brand" href="/">
+      <img src="/logo-mark.svg" alt="" width="30" height="30" />
+      <span>AIMS</span>
+    </a>
+    <span class="divider" aria-hidden="true"></span>
+    <a class="usm" href="https://www.usm.edu/" aria-label="University of Southern Mississippi">
+      <img src="/usm-logo.svg" alt="USM" height="34" />
+    </a>
+  </div>
+  <nav class="ui" aria-label="Primary">
+    {nav.map((item) => (
+      <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+  }
+  .brand-lockup { display: inline-flex; align-items: center; gap: 1rem; }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .divider {
+    width: 1px;
+    height: 34px;
+    background: var(--rule);
+  }
+  .brand img { display: block; }
+  .usm { display: inline-flex; align-items: center; }
+  .usm img { height: 34px; width: auto; display: block; }
+  nav {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.95rem;
+  }
+  nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--brand);
+  }
+</style>

@@ -1,0 +1,83 @@
+---
+// One person: circular avatar, name, topic, and link icons.
+import { Icon } from 'astro-icon/components';
+import type { Person, LinkType } from '../data/people';
+
+interface Props { person: Person; }
+const { person } = Astro.props;
+
+// Map each link type to a Phosphor icon and an accessible label.
+const linkIcon: Record<LinkType, { icon: string; label: string }> = {
+  website:  { icon: 'ph:globe',           label: 'Website' },
+  scholar:  { icon: 'ph:graduation-cap',  label: 'Google Scholar' },
+  github:   { icon: 'ph:github-logo',     label: 'GitHub' },
+  x:        { icon: 'ph:x-logo',          label: 'X' },
+  linkedin: { icon: 'ph:linkedin-logo',   label: 'LinkedIn' },
+  email:    { icon: 'ph:envelope-simple', label: 'Email' },
+};
+
+const href = (type: LinkType, url: string) =>
+  type === 'email' ? `mailto:${url}` : url;
+
+// Initials fallback when there is no photo yet.
+const initials = person.name
+  .split(' ')
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join('');
+---
+<li class="person">
+  {person.image ? (
+    <img class="avatar" src={person.image} alt={person.name} width="96" height="96" />
+  ) : (
+    <span class="avatar placeholder" aria-hidden="true">{initials}</span>
+  )}
+  <span class="person-name">{person.name}</span>
+  <span class="person-topic ui">{person.topic}</span>
+  {person.links && person.links.length > 0 && (
+    <span class="person-links">
+      {person.links.map((l) => (
+        <a href={href(l.type, l.url)} aria-label={linkIcon[l.type].label}>
+          <Icon name={linkIcon[l.type].icon} />
+        </a>
+      ))}
+    </span>
+  )}
+</li>
+
+<style>
+  .person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.35rem;
+  }
+  .avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.4rem;
+  }
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--rule);
+    color: var(--ink-soft);
+    font-family: var(--font-ui);
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  .person-name { font-weight: 700; }
+  .person-topic { font-size: 0.9rem; color: var(--ink-soft); }
+  .person-links {
+    display: inline-flex;
+    gap: 0.6rem;
+    margin-top: 0.2rem;
+    font-size: 1.15rem;
+  }
+  .person-links a { color: var(--ink-soft); line-height: 1; }
+  .person-links a:hover { color: var(--brand); }
+</style>
