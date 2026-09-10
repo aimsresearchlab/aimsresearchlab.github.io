@@ -1,6 +1,6 @@
 // Single source of truth for publications.
 // The homepage "Recent" section and the /publications page both read from here.
-// To add a paper: copy an entry, keep the list roughly newest-first.
+// To add a paper: copy an entry. Order: published work first (newest first), then preprints.
 
 export interface Publication {
   title: string;
@@ -12,6 +12,13 @@ export interface Publication {
 }
 
 export const publications: Publication[] = [
+  {
+    title: 'From Classical Pipelines to Promptable Foundation Models: A Cross-Domain Survey of Thin-Object Segmentation for Power Lines, Cracks, and Retinal Vessels',
+    authors: 'A. Hossain, N. Maharjan, M. Hasan, R. Abdelfattah, M. Ezz-Eldin, X. Wang, M. M. Fouda, K. Abdelfattah',
+    venue: 'IEEE Internet of Things Journal',
+    year: 2026,
+    url: 'https://aquila.usm.edu/fac_pubs/22086/',
+  },
   {
     title: 'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks',
     authors: 'S. Panthi, R. Abdelfattah',
