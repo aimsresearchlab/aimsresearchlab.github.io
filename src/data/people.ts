@@ -39,7 +39,11 @@ export const people: Person[] = [
     name: 'Olanrewaju Muili',
     topic: 'Trustworthy AI, multimodal agents',
     category: 'phd',
-    links: [{ type: 'github', url: 'https://github.com/omuili' }],
+    image: '/people/olanrewaju-muili.webp',
+    links: [
+      { type: 'website', url: 'https://www.olanrewajumuili.com/' },
+      { type: 'github', url: 'https://github.com/omuili' },
+    ],
   },
   {
     name: 'Sugam Panthi',
@@ -75,7 +79,11 @@ export const people: Person[] = [
     name: 'Nhoojah Maharjan',
     topic: 'Research assistant',
     category: 'undergrad',
-    links: [{ type: 'github', url: 'https://github.com/yarwen0' }],
+    image: '/people/nhoojah-maharjan.webp',
+    links: [
+      { type: 'website', url: 'https://www.nhoojah.com.np/' },
+      { type: 'github', url: 'https://github.com/yarwen0' },
+    ],
   },
 ];
 

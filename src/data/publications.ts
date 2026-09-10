@@ -13,26 +13,25 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
-    title: 'When Target Choice Changes Benchmark Conclusions in Transformed Conversational Memory',
-    authors: 'AIMS',
+    title: 'Outcome Monitors: Recovery Affordances for Silent Tool Failures',
+    authors: 'S. Panthi, R. Abdelfattah',
     venue: 'arXiv preprint',
     year: 2026,
-    url: '#',
+    url: 'https://arxiv.org/abs/2608.19303',
   },
   {
-    title: 'Placeholder paper two',
-    authors: 'A. Author, B. Author',
-    venue: 'ACL 2026',
+    title: 'Fixed RAG Compression Collapses Measured Reader Scaling',
+    authors: 'S. Panthi, R. Abdelfattah',
+    venue: 'arXiv preprint',
     year: 2026,
-    url: '#',
-    award: 'Best Paper',
+    url: 'https://arxiv.org/abs/2606.21807',
   },
   {
-    title: 'Placeholder paper three',
-    authors: 'A. Author, C. Author',
-    venue: 'NeurIPS 2025',
-    year: 2025,
-    url: '#',
+    title: 'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks',
+    authors: 'S. Panthi, R. Abdelfattah',
+    venue: 'Findings of EMNLP 2026',
+    year: 2026,
+    url: 'https://arxiv.org/abs/2605.24060',
   },
 ];
 
