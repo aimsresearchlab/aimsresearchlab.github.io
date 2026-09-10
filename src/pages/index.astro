@@ -12,9 +12,7 @@ const peopleGroups = groupedPeople();
 <Base title="AIMS" description="AIMS research group.">
   <!-- Hero: landscape banner on top, lab intro below -->
   <section id="top" class="hero">
-    <div class="banner" aria-hidden="true">
-      <Icon name="ph:image" />
-    </div>
+    <img class="banner" src="/lab.webp" alt="The AIMS lab space at USM" width="1600" height="640" />
     <h1>AIMS</h1>
     <p class="expansion">
       <span class="cap">A</span>rtificial <span class="cap">I</span>ntelligence &amp;
@@ -85,16 +83,14 @@ const peopleGroups = groupedPeople();
 <style>
   .hero { padding-top: 1rem; }
   .banner {
+    display: block;
+    width: 100%;
+    height: auto;
     aspect-ratio: 5 / 2;
+    object-fit: cover;
     border: 1px solid var(--rule);
-    background: #f1f1ec;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--ink-soft);
     margin-bottom: 2rem;
   }
-  .banner [data-icon] { font-size: 2.5rem; opacity: 0.5; }
   .hero h1 { margin-top: 0; margin-bottom: 0.25rem; }
   .expansion {
     font-size: 1.5rem;

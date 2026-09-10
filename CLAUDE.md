@@ -42,6 +42,7 @@ src/pages/*.astro             one file per route
 src/data/people.ts            roster (single source of truth for the People section)
 src/data/publications.ts      papers (feeds homepage Recent and /publications)
 public/people/*.webp          headshots, 192x192, referenced from people.ts
+public/lab.webp               homepage banner, 1600x640 (5:2), lab photo
 public/CNAME                  custom domain for GitHub Pages; do not delete
 public/favicon.svg            copied from favicon/logo.svg
 .github/workflows/deploy.yml  builds and publishes to GitHub Pages on push to main
@@ -89,6 +90,12 @@ public/favicon.svg            copied from favicon/logo.svg
 - `url` points at the canonical record (arXiv abs page, DOI, or the USM Aquila
   record). Never `#`.
 - `award` only for a real award; it renders as an ochre badge.
+
+### Banner (`public/lab.webp`)
+
+The homepage banner is a **5:2** image, **1600x640 webp**, quality 82. Crop
+the source to 5:2 first (keep the wall sign fully in frame), then resize.
+The `<img>` in `src/pages/index.astro` carries matching width/height.
 
 ### Research topics (`src/pages/index.astro`)
 
