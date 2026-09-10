@@ -1,6 +1,7 @@
 // Single source of truth for publications.
 // The homepage "Recent" section and the /publications page both read from here.
-// To add a paper: copy an entry. Order: published work first (newest first), then preprints.
+// To add a paper: copy an entry. Order: published work first (newest first),
+// then papers under review/revision, then arXiv-only preprints.
 
 export interface Publication {
   title: string;
@@ -25,6 +26,12 @@ export const publications: Publication[] = [
     venue: 'Findings of EMNLP 2026',
     year: 2026,
     url: 'https://arxiv.org/abs/2605.24060',
+  },
+  {
+    title: 'Gaussian Splatting for Real-Time Scene Reconstruction: Methods, Systems, and Trade-offs',
+    authors: 'A. Dahal, R. Abdelfattah',
+    venue: 'Pattern Recognition (under major revision)',
+    year: 2026,
   },
   {
     title: 'Outcome Monitors: Recovery Affordances for Silent Tool Failures',
