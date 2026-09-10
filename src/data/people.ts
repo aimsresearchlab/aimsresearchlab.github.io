@@ -37,7 +37,7 @@ export const people: Person[] = [
   },
   {
     name: 'Olanrewaju Muili',
-    topic: 'Trustworthy AI, multimodal agents',
+    topic: 'Trustworthy AI',
     category: 'phd',
     image: '/people/olanrewaju-muili.webp',
     links: [
