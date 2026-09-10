@@ -11,6 +11,13 @@ import { projects } from '../data/projects';
 const recent = recentPublications(3);
 const peopleGroups = groupedPeople();
 const newsItems = recentNews(5);
+
+// Project link kinds -> icon + label. Simple Icons for brand marks, Phosphor otherwise.
+const linkMeta = {
+  arxiv:  { icon: 'simple-icons:arxiv',  label: 'arXiv' },
+  github: { icon: 'simple-icons:github', label: 'GitHub' },
+  paper:  { icon: 'ph:file-text',        label: 'Paper' },
+} as const;
 ---
 <Base title="AIMS" description="AIMS research group.">
   <!-- Hero: wide banner, then intro on the left and the news feed on the right -->
@@ -53,12 +60,18 @@ const newsItems = recentNews(5);
     <div class="projects">
       {projects.map((proj) => (
         <article class="project">
-          <Icon class="project-icon" name={proj.icon} />
           <h3>{proj.title}</h3>
           <p class="claim">{proj.claim}</p>
-          <p class="tags ui">{proj.tags.join(' · ')}</p>
+          <p class="tags ui">
+            {proj.tags.map((t) => <span class="tag">#{t}</span>)}
+          </p>
           <p class="project-links ui">
-            {proj.links.map((l) => <a href={l.url}>{l.label}</a>)}
+            {proj.links.map((l) => (
+              <a href={l.url} class="link-pill">
+                <Icon name={linkMeta[l.kind].icon} />
+                {linkMeta[l.kind].label}
+              </a>
+            ))}
           </p>
         </article>
       ))}
@@ -154,11 +167,26 @@ const newsItems = recentNews(5);
     display: flex;
     flex-direction: column;
   }
-  .project :global(.project-icon) { color: var(--brand); font-size: 1.6rem; margin-bottom: 0.6rem; }
   .project h3 { margin: 0 0 0.4rem; }
-  .claim { margin: 0 0 0.75rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
-  .tags { margin: 0 0 0.5rem; font-size: 0.8rem; color: var(--ink-soft); }
-  .project-links { margin: 0; font-size: 0.9rem; display: flex; gap: 1rem; }
+  .claim { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
+  .tags { margin: 0 0 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .tag { font-size: 0.8rem; color: var(--brand-deep); }
+  .tag + .tag { margin-left: 0.5rem; }
+  .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .link-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: none;
+    border: 1px solid var(--brand);
+    border-radius: 0.3rem;
+    padding: 0.25rem 0.65rem;
+  }
+  .link-pill:hover { background: var(--brand); color: #fff; }
+  .link-pill [data-icon] { font-size: 1rem; }
 
   .people-group + .people-group { margin-top: 2.5rem; }
   .group-label {

@@ -15,8 +15,10 @@ successor should be able to edit templates without knowing a framework, and
 - **All visual choices go through the design tokens** at the top of
   `src/styles/global.css`. Do not hardcode colors, fonts, or the content width
   in components; reference the CSS variables.
-- **Icons: Phosphor only**, via `astro-icon` (`<Icon name="ph:..." />`). They
-  inline as SVG at build time. Do not add an icon font or raster icons.
+- **Icons: Phosphor** via `astro-icon` (`<Icon name="ph:..." />`), plus
+  **Simple Icons only for brand marks** (`simple-icons:arxiv`,
+  `simple-icons:github`). Both inline as SVG at build time. Do not add an icon
+  font or raster icons.
 - **Fonts are self-hosted** via Fontsource (imported in `src/layouts/Base.astro`).
   Do not switch to a CDN font link; a dead CDN link is exactly the kind of rot
   this site is built to avoid.
@@ -116,9 +118,11 @@ The `<img>` in `src/pages/index.astro` carries matching width/height.
 
 - One card per line of work, not per paper; a project with two papers gets one
   card with two Paper links. `claim` is one sentence stating the finding.
-- `icon` is a Phosphor name; `tags` are one to three short area labels.
-- Links only to canonical records (arXiv, DOI, public GitHub repo). Do not
-  link private repos.
+- `tags` are one to three CamelCase tokens with no spaces (`TrustworthyAI`);
+  they render as hashtags. No per-project icons.
+- Links use `kind`: `arxiv`, `github`, or `paper`. Each renders as an outlined
+  pill with the matching icon. Only canonical records (arXiv, DOI, public
+  GitHub repo). Do not link private repos.
 - Cards auto-fill at 17rem minimum, so five or six cards make two rows.
 
 ## Commands
