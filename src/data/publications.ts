@@ -47,6 +47,13 @@ export const publications: Publication[] = [
     year: 2026,
     url: 'https://arxiv.org/abs/2606.21807',
   },
+  {
+    title: 'Does It Matter Which Gaussians You Pick in 4D Gaussian Streaming?',
+    authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
+    venue: 'arXiv preprint',
+    year: 2026,
+    url: 'https://arxiv.org/abs/2603.17227',
+  },
 ];
 
 // Newest first, capped. Used by the homepage "Recent" section.

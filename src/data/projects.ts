@@ -43,6 +43,14 @@ export const projects: Project[] = [
     ],
   },
   {
+    title: '4D Gaussian Streaming',
+    claim: 'Which Gaussians you pick as anchors barely matters: cheap samplers match the default strategy at deployment budgets, so the standard 8,192-anchor choice over-spends compute.',
+    tags: ['ComputerVision', 'GaussianSplatting'],
+    links: [
+      { kind: 'arxiv', url: 'https://arxiv.org/abs/2603.17227' },
+    ],
+  },
+  {
     title: 'Thin-Object Segmentation',
     claim: 'A cross-domain survey of power-line, crack, and retinal-vessel segmentation, from classical pipelines to promptable foundation models.',
     tags: ['ComputerVision', 'FoundationModels'],

@@ -32,6 +32,11 @@ export const news: NewsItem[] = [
     text: 'Thin-object segmentation survey accepted to IEEE Internet of Things Journal',
     url: 'https://aquila.usm.edu/fac_pubs/22086/',
   },
+  {
+    date: '2026-03-18',
+    text: 'New preprint: "Does It Matter Which Gaussians You Pick in 4D Gaussian Streaming?"',
+    url: 'https://arxiv.org/abs/2603.17227',
+  },
 ];
 
 export function recentNews(limit = 5): NewsItem[] {
