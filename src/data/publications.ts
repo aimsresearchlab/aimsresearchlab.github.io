@@ -13,6 +13,13 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
+    title: 'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks',
+    authors: 'S. Panthi, R. Abdelfattah',
+    venue: 'Findings of EMNLP 2026',
+    year: 2026,
+    url: 'https://arxiv.org/abs/2605.24060',
+  },
+  {
     title: 'Outcome Monitors: Recovery Affordances for Silent Tool Failures',
     authors: 'S. Panthi, R. Abdelfattah',
     venue: 'arXiv preprint',
@@ -25,13 +32,6 @@ export const publications: Publication[] = [
     venue: 'arXiv preprint',
     year: 2026,
     url: 'https://arxiv.org/abs/2606.21807',
-  },
-  {
-    title: 'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks',
-    authors: 'S. Panthi, R. Abdelfattah',
-    venue: 'Findings of EMNLP 2026',
-    year: 2026,
-    url: 'https://arxiv.org/abs/2605.24060',
   },
 ];
 
