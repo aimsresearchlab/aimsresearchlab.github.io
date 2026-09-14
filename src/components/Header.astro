@@ -1,13 +1,15 @@
 ---
 // Site header: logo + primary nav. Edit nav items here.
-// Section links point at homepage anchors so they work from any page.
+// Each item is its own page; the homepage sections still carry the same anchors.
 const nav = [
-  { label: 'Projects', href: '/#projects' },
-  { label: 'People',   href: '/#people' },
-  { label: 'News',     href: '/#news' },
-  { label: 'Publications', href: '/publications' },
+  { label: 'Projects', href: '/projects/' },
+  { label: 'People',   href: '/people/' },
+  { label: 'News',     href: '/news/' },
+  { label: 'Publications', href: '/publications/' },
 ];
+// Mark the current page, including a project detail page under /projects/.
 const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href);
 ---
 <header class="container wide site-header">
   <div class="brand-lockup">
@@ -28,7 +30,7 @@ const path = Astro.url.pathname;
   </button>
   <nav id="primary-navigation" class="ui" aria-label="Primary">
     {nav.map((item) => (
-      <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+      <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
         {item.label}
       </a>
     ))}

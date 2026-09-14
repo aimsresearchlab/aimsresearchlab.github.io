@@ -1,0 +1,71 @@
+---
+// One project card. Used on the homepage (no cover) and on /projects (cover).
+import { Icon } from 'astro-icon/components';
+import Cover from './Cover.astro';
+import { linkMeta, type ProjectEntry } from '../data/projects';
+
+interface Props { project: ProjectEntry; cover?: boolean; }
+const { project, cover = false } = Astro.props;
+const { title, claim, tags, links } = project.data;
+const href = `/projects/${project.id}/`;
+---
+<article class="project">
+  {cover && (
+    <a class="cover-link" href={href} tabindex="-1" aria-hidden="true">
+      <Cover src={project.data.cover} />
+    </a>
+  )}
+  <div class="body">
+    <h3><a href={href}>{title}</a></h3>
+    <p class="claim">{claim}</p>
+    <p class="tags ui">
+      {tags.map((t) => <span class="tag">#{t}</span>)}
+    </p>
+    <p class="project-links ui">
+      {links.map((l) => (
+        <a href={l.url} class="link-pill">
+          <Icon name={linkMeta[l.kind].icon} style={`color: ${linkMeta[l.kind].color}`} />
+          {linkMeta[l.kind].label}
+        </a>
+      ))}
+    </p>
+  </div>
+</article>
+
+<style>
+  .project {
+    border: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+  }
+  .cover-link { display: block; }
+  .cover-link :global(.cover) { border: 0; border-bottom: 1px solid var(--rule); }
+  .body {
+    padding: 1.25rem 1.4rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .project h3 { margin: 0 0 0.4rem; }
+  .project h3 a { color: var(--ink); text-decoration: none; }
+  .project h3 a:hover { color: var(--brand); }
+  .claim { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
+  .tags { margin: 0 0 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .tag { font-size: 0.8rem; color: var(--brand-deep); }
+  .tags .tag + .tag { margin-left: 0.5rem; }
+  .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .link-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: none;
+    border: 1px solid var(--brand);
+    border-radius: 0.3rem;
+    padding: 0.25rem 0.65rem;
+  }
+  .link-pill:hover { background: var(--paper); border-color: var(--brand-deep); color: var(--brand-deep); }
+  .link-pill [data-icon] { font-size: 1rem; }
+</style>

@@ -1,16 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Icon } from 'astro-icon/components';
 import Publication from '../components/Publication.astro';
 import Person from '../components/Person.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import { recentPublications } from '../data/publications';
 import { groupedPeople } from '../data/people';
 import { recentNews, formatDate } from '../data/news';
-import { projects } from '../data/projects';
+import { featuredProjects } from '../data/projects';
 
 const recent = recentPublications(3);
 const peopleGroups = groupedPeople();
 const newsItems = recentNews(5);
+const projects = await featuredProjects(3); // one row; raise to 6 for two rows
 
 // Research areas shown as a tag row under the intro. Edit here.
 const areas = [
@@ -23,14 +24,6 @@ const areas = [
   'HumanCenteredAI',
 ];
 
-// Project link kinds -> icon + label. Simple Icons for brand marks, Phosphor otherwise.
-// Brand marks keep their official colors (arXiv red, GitHub black).
-const linkMeta = {
-  arxiv:  { icon: 'simple-icons:arxiv',  label: 'arXiv',  color: '#B31B1B' },
-  github: { icon: 'simple-icons:github', label: 'GitHub', color: '#181717' },
-  paper:  { icon: 'ph:file-text',        label: 'Paper',  color: 'currentColor' },
-  demo:   { icon: 'ph:play-circle',      label: 'Demo',   color: 'currentColor' },
-} as const;
 ---
 <Base title="AIMS Lab · Artificial Intelligence & Multimodal Systems · USM" socialTitle="AIMS Lab: Artificial Intelligence & Multimodal Systems at USM">
   <!-- Hero: wide banner, then intro on the left and the news feed on the right -->
@@ -55,7 +48,9 @@ const linkMeta = {
       </div>
       <!-- News (pulled from src/data/news.ts) -->
       <aside id="news" class="news" aria-labelledby="news-heading">
-        <h2 id="news-heading" class="news-heading ui">News</h2>
+        <h2 id="news-heading" class="news-heading ui">
+          News <a class="news-all" href="/news/">All →</a>
+        </h2>
         <ol class="news-list">
           {newsItems.map((item) => (
             <li>
@@ -70,33 +65,23 @@ const linkMeta = {
     </div>
   </section>
 
-  <!-- Projects (pulled from src/data/projects.ts) -->
+  <!-- Projects (first three, by `featured` in src/content/projects/*.md) -->
   <section id="projects" class="wide">
-    <h2>Projects</h2>
+    <div class="section-head">
+      <h2>Projects</h2>
+      <a class="ui see-all" href="/projects/">All projects →</a>
+    </div>
     <div class="projects">
-      {projects.map((proj) => (
-        <article class="project">
-          <h3>{proj.title}</h3>
-          <p class="claim">{proj.claim}</p>
-          <p class="tags ui">
-            {proj.tags.map((t) => <span class="tag">#{t}</span>)}
-          </p>
-          <p class="project-links ui">
-            {proj.links.map((l) => (
-              <a href={l.url} class="link-pill">
-                <Icon name={linkMeta[l.kind].icon} style={`color: ${linkMeta[l.kind].color}`} />
-                {linkMeta[l.kind].label}
-              </a>
-            ))}
-          </p>
-        </article>
-      ))}
+      {projects.map((project) => <ProjectCard project={project} cover />)}
     </div>
   </section>
 
   <!-- People (grouped by category, pulled from src/data/people.ts) -->
   <section id="people" class="wide">
-    <h2>People</h2>
+    <div class="section-head">
+      <h2>People</h2>
+      <a class="ui see-all" href="/people/">Everyone →</a>
+    </div>
     {peopleGroups.map((group) => (
       <div class="people-group">
         <h3 class="group-label ui">{group.label}</h3>
@@ -177,6 +162,8 @@ const linkMeta = {
     font-weight: 600;
     margin: 0 0 1rem;
   }
+  .news-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .news-heading .news-all { font-weight: 400; text-decoration: none; }
   .news-list { list-style: none; margin: 0; padding: 0; }
   .news-list li { display: flex; flex-direction: column; gap: 0.1rem; }
   .news-list li + li { margin-top: 0.9rem; }
@@ -185,38 +172,12 @@ const linkMeta = {
   .news-text a { color: var(--ink); text-decoration: none; }
   .news-text a:hover { color: var(--brand); }
 
-  /* Projects: a card grid in the wide column */
+  /* Projects: a card grid in the wide column. Card styles live in ProjectCard.astro. */
   .projects {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 2rem;
   }
-  .project {
-    border: 1px solid var(--rule);
-    padding: 1.25rem 1.4rem 1.1rem;
-    display: flex;
-    flex-direction: column;
-  }
-  .project h3 { margin: 0 0 0.4rem; }
-  .claim { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
-  .tags { margin: 0 0 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
-  .tag { font-size: 0.8rem; color: var(--brand-deep); }
-  .tags .tag + .tag { margin-left: 0.5rem; }
-  .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .link-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--brand);
-    text-decoration: none;
-    border: 1px solid var(--brand);
-    border-radius: 0.3rem;
-    padding: 0.25rem 0.65rem;
-  }
-  .link-pill:hover { background: var(--paper); border-color: var(--brand-deep); color: var(--brand-deep); }
-  .link-pill [data-icon] { font-size: 1rem; }
 
   .people-group + .people-group { margin-top: 2.5rem; }
   .group-label {

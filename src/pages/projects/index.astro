@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { allProjects } from '../../data/projects';
+
+const projects = await allProjects();
+---
+<Base
+  title="Projects · AIMS Lab"
+  description="Ongoing lines of work at the AIMS lab: LLM evaluation validity, conversational memory, RAG, AI agents, and computer vision."
+>
+  <section class="wide">
+    <h1>Projects</h1>
+    <p class="lede">
+      One card per line of work, not per paper. Each page collects the claim,
+      the code, and the papers that came out of it.
+    </p>
+    <div class="projects">
+      {projects.map((project) => <ProjectCard project={project} cover />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lede { font-size: 1.15rem; color: var(--ink-soft); margin: 0 0 2.5rem; max-width: 42rem; }
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 2rem;
+  }
+</style>

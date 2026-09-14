@@ -10,7 +10,10 @@ const Wrapper = pub.url ? 'a' : 'div';
     {pub.title}
     {pub.award && <span class="badge ui">{pub.award}</span>}
   </span>
-  <span class="pub-meta ui">{pub.authors} · {pub.venue} · {pub.year}</span>
+  <span class="pub-meta ui">
+    {pub.authors} · {pub.venue} · {pub.year}
+    {pub.url && <span class="link-cue">[LINK]</span>}
+  </span>
 </Wrapper>
 
 <style>
@@ -29,4 +32,14 @@ const Wrapper = pub.url ? 'a' : 'div';
     font-size: 0.9rem;
     color: var(--ink-soft);
   }
+  /* Signals that the whole entry is clickable; entries without a url omit it. */
+  .link-cue {
+    color: var(--brand);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin-left: 0.15rem;
+    white-space: nowrap;
+  }
+  a.pub:hover .link-cue { color: var(--brand-deep); }
 </style>

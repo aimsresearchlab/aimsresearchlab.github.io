@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import { news, formatDate } from '../data/news';
+
+// Newest first, then grouped by year for the headings.
+const sorted = [...news].sort((a, b) => b.date.localeCompare(a.date));
+const byYear = new Map<string, typeof news>();
+for (const item of sorted) {
+  const year = item.date.slice(0, 4);
+  byYear.set(year, [...(byYear.get(year) ?? []), item]);
+}
+const years = [...byYear.entries()];
+---
+<Base
+  title="News · AIMS Lab"
+  description="Acceptances, preprints, talks, awards, and new members of the AIMS lab at the University of Southern Mississippi."
+>
+  <h1>News</h1>
+  {years.map(([year, items]) => (
+    <section>
+      <h2>{year}</h2>
+      <ol class="news-list">
+        {items.map((item) => (
+          <li>
+            <time class="ui" datetime={item.date}>{formatDate(item.date)}</time>
+            <span class="news-text">
+              {item.url ? <a href={item.url}>{item.text}</a> : item.text}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .news-list { list-style: none; margin: 0; padding: 0; }
+  .news-list li {
+    display: grid;
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .news-list time { font-size: 0.9rem; color: var(--ink-soft); }
+  .news-text { line-height: 1.45; }
+  .news-text a { color: var(--ink); text-decoration: none; }
+  .news-text a:hover { color: var(--brand); }
+  @media (max-width: 40rem) {
+    .news-list li { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+</style>

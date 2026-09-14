@@ -1,0 +1,94 @@
+---
+import { render } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
+import Publication from '../../components/Publication.astro';
+import { allProjects, linkMeta } from '../../data/projects';
+import { publications } from '../../data/publications';
+
+export async function getStaticPaths() {
+  const projects = await allProjects();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, claim, tags, cover, links } = project.data;
+const { Content } = await render(project);
+
+// Papers listed in frontmatter, in the order publications.ts defines.
+const titles = new Set(project.data.publications);
+const papers = publications.filter((p) => titles.has(p.title));
+---
+<Base title={`${title} · AIMS Lab`} description={claim} type="article">
+  <article>
+    <div class="wide cover-slot">
+      <Cover src={cover} alt={`${title} project cover`} />
+    </div>
+
+    <header class="head">
+      <p class="crumb ui"><a href="/projects/">Projects</a></p>
+      <h1>{title}</h1>
+      <p class="claim">{claim}</p>
+      <p class="tags ui">
+        {tags.map((t) => <span class="tag">#{t}</span>)}
+      </p>
+      {links.length > 0 && (
+        <p class="project-links ui">
+          {links.map((l) => (
+            <a href={l.url} class="link-pill">
+              <Icon name={linkMeta[l.kind].icon} style={`color: ${linkMeta[l.kind].color}`} />
+              {linkMeta[l.kind].label}
+            </a>
+          ))}
+        </p>
+      )}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {papers.length > 0 && (
+      <section class="papers">
+        <h2>Papers</h2>
+        {papers.map((pub) => <Publication pub={pub} />)}
+      </section>
+    )}
+  </article>
+</Base>
+
+<style>
+  .cover-slot { margin-bottom: 2.5rem; }
+  .head { margin-bottom: 2rem; }
+  .crumb { font-size: 0.85rem; margin: 0 0 0.75rem; }
+  .crumb a { color: var(--ink-soft); text-decoration: none; }
+  .crumb a:hover { color: var(--brand); }
+  .head h1 { margin: 0 0 0.6rem; }
+  .claim { font-size: 1.2rem; color: var(--ink-soft); margin: 0 0 1.25rem; }
+  .tags { margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag { font-size: 0.85rem; color: var(--brand-deep); }
+  .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .link-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: none;
+    border: 1px solid var(--brand);
+    border-radius: 0.3rem;
+    padding: 0.3rem 0.7rem;
+  }
+  .link-pill:hover { background: var(--paper); border-color: var(--brand-deep); color: var(--brand-deep); }
+  .link-pill [data-icon] { font-size: 1rem; }
+
+  .prose :global(h2) { font-size: 1.25rem; margin-top: 2.25rem; }
+  .prose :global(p) { margin: 0 0 1.1rem; }
+  .papers { border-top: 1px solid var(--rule); padding-top: 0.5rem; }
+  .papers h2 { font-size: 1.25rem; }
+</style>

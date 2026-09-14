@@ -1,0 +1,32 @@
+---
+// A 16:9 project cover. With no image, renders the placeholder (the AIMS mark
+// on a hairline box) so the layout does not shift when a real cover lands.
+// Real covers: public/projects/<slug>.webp, 1600x900, quality 82.
+interface Props { src?: string; alt?: string; }
+const { src, alt = '' } = Astro.props;
+---
+{src ? (
+  <img class="cover" src={src} alt={alt} width="1600" height="900" />
+) : (
+  <div class="cover cover-empty" aria-hidden="true">
+    <img src="/logo-mark.svg" alt="" width="72" height="72" />
+  </div>
+)}
+
+<style>
+  .cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+    background: #F2F2EE;
+  }
+  .cover-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cover-empty img { width: 20%; max-width: 72px; height: auto; opacity: 0.12; }
+</style>
