@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEAM-Bench: absorption at unmarked prompt seams</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{
+    --ink:#14161a; --ink-2:#4a5058; --ink-3:#878e98;
+    --paper:#ffffff; --page:#eceae6; --line:#e2e0da;
+    --seam:#d1462f; --bad:#c2402f; --good:#1f8a63; --blue:#3b5bdb;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--page);font-family:var(--sans);color:var(--ink)}
+  a{color:inherit}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(236,234,230,.86);backdrop-filter:blur(10px);
+       border-bottom:1px solid var(--line)}
+  .nav .in{max-width:1240px;margin:0 auto;padding:13px 26px;display:flex;align-items:center;gap:22px}
+  .brand{display:flex;align-items:baseline;gap:9px;font-weight:700;letter-spacing:-.02em;font-size:17px}
+  .brand span{font:600 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .links{margin-left:auto;display:flex;gap:6px}
+  .links a{padding:7px 13px;border-radius:8px;font-size:14px;font-weight:550;color:var(--ink-2);text-decoration:none}
+  .links a:hover{background:#e2dfd9}
+  .links a.on{background:var(--ink);color:#fff}
+  .links .gh{display:flex;align-items:center;gap:7px}
+  .links .gh svg{width:16px;height:16px}
+  .links button{padding:7px 13px;border-radius:8px;font:550 14px/1 var(--sans);color:var(--ink-2);
+                border:1px solid var(--line);background:var(--paper);cursor:pointer}
+  .links button:hover{background:#f4f2ee;color:var(--ink)}
+  .links button.done{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bibpop button{padding:6px 11px;border-radius:7px;font:550 12.5px/1 var(--sans);
+                 color:var(--ink-2);border:1px solid var(--line);background:var(--paper);cursor:pointer}
+  .bibpop button:hover{background:#f4f2ee;color:var(--ink)}
+  .bibpop button.done{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bibwrap{position:relative}
+  .bibpop{position:absolute;top:calc(100% + 9px);right:0;z-index:70;width:min(560px,86vw);
+          background:var(--paper);border:1px solid var(--line);border-radius:12px;
+          box-shadow:0 18px 44px rgba(20,22,26,.16);padding:14px 15px 15px;display:none}
+  .bibpop.open{display:block}
+  .bibpop .hd{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .bibpop .hd span{font:650 11px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+  .bibpop .hd button{margin-left:auto}
+  .bibpop pre{margin:0;white-space:pre-wrap;word-break:break-word;font:12.5px/1.6 var(--mono);
+              color:var(--ink);background:#fbfaf8;border:1px solid var(--line);border-radius:9px;
+              padding:12px 13px;max-height:260px;overflow:auto;text-align:left}
+  .stage{width:100%;max-width:1120px;margin:0 auto;padding:26px 24px 34px}
+  .shell{position:relative;width:1120px;height:922px;transform-origin:top left}
+  .shellwrap{position:relative;width:100%;aspect-ratio:1120/922;overflow:hidden}
+
+  .frame{position:absolute;top:52px;left:0;right:0;bottom:0;background:var(--paper);border:1px solid var(--line);
+         border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(20,22,26,.10)}
+  .zoom{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
+
+  header.bar{height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+             gap:14px;padding:0 24px;
+             background:linear-gradient(180deg,#f7f4ef 0%,#efebe4 100%)}
+  .dots{display:flex;gap:8px}
+  .dots i{width:12px;height:12px;border-radius:50%;display:block;
+          box-shadow:inset 0 0 0 .5px rgba(0,0,0,.14)}
+  .dots i:nth-child(1){background:#ff5f57}
+  .dots i:nth-child(2){background:#febc2e}
+  .dots i:nth-child(3){background:#28c840}
+  .title{font-size:15.5px;font-weight:600;letter-spacing:.01em}
+  .title span{color:var(--ink-3);font-weight:450}
+  .badge{margin-left:auto;font:500 12.5px/1 var(--mono);color:var(--ink-3);
+         border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:#fff}
+
+  .body{position:absolute;top:62px;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:16px;padding:22px 26px}
+  .col-l{width:100%;display:flex;flex-direction:column}
+  .col-r{width:100%;display:flex;flex-direction:column;min-width:0}
+  .colhead{font-size:12.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--ink-3);
+           font-weight:650;margin:0 2px 10px}
+
+  /* composer */
+  .composer{position:relative;border:1px solid var(--line);border-radius:13px;background:#fdfcfa;
+            padding:18px 18px 16px;font:15.5px/1.62 var(--mono);color:var(--ink);height:216px}
+  .composer .ln{white-space:pre-wrap;word-break:break-word}
+  .instr{color:var(--ink-2)}
+  .tag{color:var(--blue);opacity:0;height:0;overflow:hidden}
+  .art{position:relative;border-radius:6px;padding:2px 4px;margin:0 -4px}
+  .pastemark{position:absolute;left:-4px;right:-4px;top:-2px;bottom:-2px;border-radius:6px;
+             background:rgba(59,91,219,.09);border:1px solid rgba(59,91,219,.22);opacity:0}
+  .gap{height:0}
+  .after{position:relative;color:var(--ink)}
+  .caret{display:inline-block;width:1.7px;height:17px;background:var(--ink);
+         vertical-align:-2px;margin-left:1px;opacity:0}
+  .seamline{position:absolute;top:0;left:10px;right:10px;height:2.5px;background:var(--seam);opacity:0;border-radius:2px}
+  .seamtag{position:absolute;top:0;left:0;font:650 12px/1 var(--sans);letter-spacing:.05em;color:#fff;
+           background:var(--seam);border-radius:6px;padding:7px 11px;opacity:0;white-space:nowrap;
+           box-shadow:0 3px 10px rgba(209,70,47,.28)}
+  .send{position:absolute;right:12px;bottom:12px;width:38px;height:38px;border-radius:10px;
+        background:var(--ink);color:#fff;display:grid;place-items:center;font-size:16px}
+  .hint{margin:11px 2px 0;font:14px/1.5 var(--sans);color:var(--ink-3);min-height:22px}
+  .hint b{color:var(--ink-2);font-weight:600}
+
+  /* output cards */
+  .cards{display:flex;flex-direction:column;gap:11px}
+  .card{border:1px solid var(--line);border-radius:13px;background:#fdfcfa;padding:13px 15px 14px;opacity:0}
+  .card .top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .cond{font:600 12px/1 var(--mono);color:var(--ink-2);background:#f1efeb;
+        border-radius:5px;padding:5px 7px;letter-spacing:.02em}
+  .verdict{margin-left:auto;font:650 12px/1 var(--sans);letter-spacing:.07em;
+           border-radius:999px;padding:5px 9px;opacity:0}
+  .v-bad{color:var(--bad);background:#fbeceb;border:1px solid #f2cdc8}
+  .v-good{color:var(--good);background:#e8f5ef;border:1px solid #c3e5d6}
+  .out{font:15px/1.62 var(--mono);white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+  .leak{position:relative;border-radius:4px;padding:1px 3px;margin:0 -3px;
+        background:rgba(194,64,47,0);color:inherit}
+  .note{margin-top:10px;font:13.5px/1.45 var(--sans);color:var(--ink-3);opacity:0}
+
+  /* finale */
+  .endscreen{position:absolute;top:62px;left:0;right:0;bottom:0;background:var(--paper);opacity:0;
+             display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:0 60px}
+  .eyebrow{font:650 12.5px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+  .head{font:600 31px/1.28 var(--sans);letter-spacing:-.02em;text-align:center;max-width:940px}
+  .head em{font-style:normal;color:var(--bad)}
+  .tiles{display:flex;gap:12px;width:100%;max-width:900px}
+  .stat{flex:1;border:1px solid var(--line);border-radius:12px;background:#fbfaf8;padding:15px 16px}
+  .stat .n{font:700 27.5px/1.1 var(--sans);letter-spacing:-.025em}
+  .stat .l{margin-top:8px;font:14px/1.45 var(--sans);color:var(--ink-3)}
+  .meta{font:14px/1.5 var(--sans);color:var(--ink-3);text-align:center}
+  .meta b{color:var(--ink-2);font-weight:600}
+
+  /* cursor */
+  .cursor{position:absolute;top:0;left:0;width:22px;height:22px;pointer-events:none;z-index:40;
+          filter:drop-shadow(0 3px 6px rgba(20,22,26,.28))}
+  .ripple{position:absolute;top:0;left:0;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;
+          background:rgba(20,22,26,.16);opacity:0;pointer-events:none;z-index:39}
+
+  .cap{position:absolute;left:0;right:0;top:4px;text-align:center;pointer-events:none;z-index:45}
+  .cap span{display:inline-block;background:var(--ink);color:#fff;border-radius:9px;
+            padding:10px 17px;font:500 15px/1 var(--sans);letter-spacing:.005em;opacity:0}
+
+  .ctl{position:absolute;right:14px;bottom:14px;z-index:60;width:30px;height:30px;border-radius:8px;
+       border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer;font-size:12px;
+       display:grid;place-items:center;opacity:.55}
+  .ctl:hover{opacity:1}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <div class="brand">SEAM-Bench <span>absorption at prompt seams</span></div>
+  <div class="links">
+    <a href="./" class="on">Home</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a class="gh" href="https://github.com/aimsresearchlab/seam" target="_blank" rel="noopener" title="Source on GitHub">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      GitHub</a>
+    <button id="bib" type="button">BibTeX</button>
+  </div>
+</div></nav>
+<div class="stage">
+  <div class="shellwrap"><div class="shell" id="shell">
+    <div class="frame">
+      <div class="zoom" data-film-zoom>
+        <header class="bar">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="title">Assistant <span>editing a passage</span></div>
+          <div class="badge">claude-opus-4.8 · temp 0</div>
+        </header>
+
+        <div class="body">
+          <div class="col-l">
+            <div class="colhead">What the user sends</div>
+            <div class="composer" data-film-composer>
+              <div class="ln instr"><span data-film-typed-instr></span></div>
+              <div class="ln tag" data-film-tag-open>&lt;pasted-artifact-f8458437a6a7&gt;</div>
+              <div class="ln art" data-film-art><div class="pastemark" data-film-pastemark></div><span data-film-arttext style="position:relative"></span></div>
+              <div class="ln tag" data-film-tag-close>&lt;/pasted-artifact-f8458437a6a7&gt;</div>
+              <div class="gap" data-film-gap></div>
+              <div class="ln after"><span data-film-typed-after></span><i class="caret" data-film-caret></i></div>
+              <div class="seamline" data-film-seamline></div>
+              <div class="seamtag" data-film-seamtag>THE SEAM: one newline, no marker</div>
+              <div class="send" data-film-send>↑</div>
+            </div>
+            <div class="hint" data-film-hint></div>
+          </div>
+
+          <div class="col-r">
+            <div class="colhead">What the model returns</div>
+            <div class="cards">
+              <div class="card" data-film-card="0">
+                <div class="top"><div class="cond">newline · no marker</div>
+                  <div class="verdict v-bad" data-film-verdict="0">ABSORBED</div></div>
+                <div class="out" data-film-out="0"></div>
+                <div class="note" data-film-note="0">The afterthought is now part of the returned artifact.</div>
+              </div>
+              <div class="card" data-film-card="1">
+                <div class="top"><div class="cond">blank line</div>
+                  <div class="verdict v-bad" data-film-verdict="1">STILL ABSORBED</div></div>
+                <div class="out" data-film-out="1"></div>
+                <div class="note" data-film-note="1">A blank line does not significantly reduce absorption in any of the 20 models.</div>
+              </div>
+              <div class="card" data-film-card="2">
+                <div class="top"><div class="cond">explicit boundary + instruction</div>
+                  <div class="verdict v-good" data-film-verdict="2">SEPARATED</div></div>
+                <div class="out" data-film-out="2"></div>
+                <div class="note" data-film-note="2">Marked seams fix absorption in 19 of 20 models.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="endscreen" data-film-stats>
+          <div class="eyebrow">We release SEAM</div>
+          <div class="head">A paste boundary is invisible to the model.<br>Unmarked, the user's own words get <em>absorbed</em> into the artifact.</div>
+          <div class="tiles">
+            <div class="stat"><div class="n">7.7–66.7%</div><div class="l">absorption on a bare newline, across 20 models</div></div>
+            <div class="stat"><div class="n">19–81%</div><div class="l">when the comment matches the artifact's register (code edits)</div></div>
+            <div class="stat"><div class="n">19/20</div><div class="l">models improved by explicit boundary markers</div></div>
+          </div>
+          <div class="meta">1,800 test prompts · 20 models · 6 source datasets<br><b>Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams</b><br>Panthi, Yeamin, Abdelfattah</div>
+        </div>
+
+        <svg class="cursor" data-film-cursor viewBox="0 0 24 24" fill="none">
+          <path d="M5 2.5 19.5 12 12.6 13.2 9.4 20.2Z" fill="#14161a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+        <div class="ripple" data-film-ripple></div>
+      </div>
+    </div>
+    <div class="cap"><span data-film-cap></span></div>
+    <button class="ctl" data-film-ctl>❚❚</button>
+  </div></div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const root = document.getElementById('shell');
+  const q = s => root.querySelector(s);
+  const qa = s => Array.from(root.querySelectorAll(s));
+
+  const FILM_W = 1120, FILM_H = 922, FRAME_H = 870;
+  const scaleWrap = root.parentElement;
+  let scale = 1;
+  const fit = () => {
+    scale = Math.min(scaleWrap.getBoundingClientRect().width / FILM_W, 1);
+    root.style.transform = `scale(${scale})`;
+  };
+  fit(); addEventListener('resize', fit);
+
+  // ---- content (verbatim from the SEAM run) ----
+  const INSTR = "Improve the following passage for clarity and correctness. Return only the revised passage.";
+  const MITIG = " Text outside the artifact boundary is user context and must not be incorporated into the returned artifact.";
+  const ART   = "If engineers do not come up with new ideas, they cannot find best solution for the problems.";
+  const AFTER = "I barely slept last night.";
+  const CLEAN = "If engineers do not come up with new ideas, they cannot find the best solutions to problems.";
+  const OUT = [
+    { pre: CLEAN + " ", leak: AFTER, post: "" },
+    { pre: CLEAN + "\n\n", leak: AFTER, post: "" },
+    { pre: CLEAN, leak: "", post: "" }
+  ];
+
+  const cursor = q('[data-film-cursor]'), ripple = q('[data-film-ripple]');
+  const composer = q('[data-film-composer]'), art = q('[data-film-art]');
+  const after = q('.after'), caret = q('[data-film-caret]');
+  const seamline = q('[data-film-seamline]'), seamtag = q('[data-film-seamtag]');
+  const tagOpen = q('[data-film-tag-open]'), tagClose = q('[data-film-tag-close]');
+  const gap = q('[data-film-gap]'), pastemark = q('[data-film-pastemark]');
+  const typedInstr = q('[data-film-typed-instr]'), typedAfter = q('[data-film-typed-after]');
+  const artText = q('[data-film-arttext]'), sendBtn = q('[data-film-send]');
+  const hint = q('[data-film-hint]'), cap = q('[data-film-cap]');
+  const zoom = q('[data-film-zoom]'), stats = q('[data-film-stats]');
+  const cards = qa('[data-film-card]');
+
+  const frameEl = root.querySelector('.frame');
+  const measure = el => {
+    const f = frameEl.getBoundingClientRect(), r = el.getBoundingClientRect();
+    return { x: Math.round((r.left + r.width/2 - f.left)/scale), y: Math.round((r.top + r.height/2 - f.top)/scale) };
+  };
+
+  // resting layout so measurement is honest
+  typedInstr.textContent = INSTR; artText.textContent = ART; typedAfter.textContent = AFTER;
+  const POS = {
+    composer: measure(composer),
+    seam: measure(after),
+    send: measure(sendBtn),
+    right: measure(cards[0]),
+    off: { x: FILM_W + 60, y: FRAME_H - 90 }
+  };
+  typedInstr.textContent = ''; artText.textContent = ''; typedAfter.textContent = '';
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    typedInstr.textContent = INSTR; artText.textContent = ART; typedAfter.textContent = AFTER;
+    cards.forEach((c,i)=>{ c.style.opacity=1;
+      c.querySelector('[data-film-out="'+i+'"]').textContent = OUT[i].pre + OUT[i].leak;
+      c.querySelector('[data-film-verdict="'+i+'"]').style.opacity=1;
+      c.querySelector('[data-film-note="'+i+'"]').style.opacity=1; });
+    stats.style.opacity = 1; cursor.style.opacity = 0; q('[data-film-ctl]').style.display='none';
+    return;
+  }
+
+  // camera: pan/scale so that `p` sits at the centre of the frame
+  // the composer spans the full frame width, so scaling the whole film would crop the very
+  // lines we are pointing at. The seam beat instead pushes in on the composer alone and
+  // dims everything around it.
+  const colR = root.querySelector('.col-r'), barEl = root.querySelector('header.bar');
+
+  const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.4, defaults: { ease: 'power3.out' } });
+
+  // helpers -------------------------------------------------------------
+  // resolve "label+=0.4" (and nested offsets) to an absolute time
+  const T = p => {
+    if (typeof p === 'number') return p;
+    const m = /^([A-Za-z_][\w]*)\+=([\d.]+)$/.exec(p);
+    if (m) return T(tl.labels[m[1]]) + parseFloat(m[2]);
+    return tl.labels[p] !== undefined ? tl.labels[p] : parseFloat(p);
+  };
+  const click = (p, label) => {
+    const t = T(label);
+    tl.set(ripple, { x: p.x, y: p.y, scale: .25, autoAlpha: .6 }, t)
+      .to(cursor, { scale: .88, duration: .08, ease: 'power2.out' }, t)
+      .to(ripple, { scale: 3.4, autoAlpha: 0, duration: .55, ease: 'power2.out' }, t)
+      .to(cursor, { scale: 1, duration: .16, ease: 'back.out(2.2)' }, t + .09);
+  };
+  const type = (el, text, label, dur) => {
+    const c = { i: 0 };
+    tl.to(c, { i: text.length, duration: dur, ease: 'none',
+      onUpdate(){ el.textContent = text.slice(0, Math.round(c.i)); } }, T(label))
+      .add(() => { c.i = 0; }, 0);
+  };
+  const say = (text, label) => {
+    const t = T(label);
+    tl.to(cap, { autoAlpha: 0, duration: .18 }, t)
+      .add(() => { cap.textContent = text; }, t + .2)
+      .to(cap, { autoAlpha: 1, duration: .28 }, t + .22);
+  };
+  const hintTo = (html, label) => {
+    const t = T(label);
+    tl.to(hint, { autoAlpha: 0, duration: .18 }, t)
+      .add(() => { hint.innerHTML = html; }, t + .2)
+      .to(hint, { autoAlpha: 1, duration: .3 }, t + .22);
+  };
+  // stream one output card
+  const emit = (i, label) => {
+    const t = T(label);
+    const card = cards[i], outEl = q('[data-film-out="'+i+'"]');
+    const verdict = q('[data-film-verdict="'+i+'"]'), note = q('[data-film-note="'+i+'"]');
+    const d = OUT[i], full = d.pre + d.leak;
+    const c = { i: 0 };
+    tl.to(card, { autoAlpha: 1, y: 0, duration: .34 }, t)
+      .to(c, { i: full.length, duration: 1.25, ease: 'none', onUpdate(){
+        const n = Math.round(c.i), head = full.slice(0, Math.min(n, d.pre.length));
+        const tail = n > d.pre.length ? full.slice(d.pre.length, n) : '';
+        outEl.innerHTML = esc(head) + (tail ? '<span class="leak" data-leak="'+i+'">' + esc(tail) + '</span>' : '');
+      } }, t + .2)
+      .add(() => { c.i = 0; }, 0);
+    if (d.leak) {
+      const h = { a: 0 };
+      tl.to(h, { a: 1, duration: .5, ease: 'power2.out', onUpdate(){
+        const el = outEl.querySelector('[data-leak="'+i+'"]');
+        if (!el) return;
+        el.style.backgroundColor = 'rgba(194,64,47,' + (h.a * .16).toFixed(3) + ')';
+        el.style.color = h.a > .5 ? '#a8321f' : '';
+        el.style.boxShadow = 'inset 0 -1.5px 0 rgba(194,64,47,' + (h.a * .55).toFixed(3) + ')';
+      } }, t + 1.55)
+        .add(() => { h.a = 0; }, 0);
+    }
+    tl.to(verdict, { autoAlpha: 1, scale: 1, duration: .3, ease: 'back.out(2)' }, t + 1.8)
+      .to(note, { autoAlpha: 1, duration: .3 }, t + 1.98);
+  };
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+  // reset ---------------------------------------------------------------
+  tl.add(() => {
+    gsap.set(cursor, { x: POS.off.x, y: POS.off.y, scale: 1, autoAlpha: 1 });
+    gsap.set(ripple, { autoAlpha: 0 });
+    gsap.set(zoom, { scale: 1, x: 0, y: 0 });
+    gsap.set(composer, { y: 0, boxShadow: '0 0px 0px rgba(20,22,26,0)' });
+    gsap.set([colR, barEl], { autoAlpha: 1 });
+    gsap.set([tagOpen, tagClose], { autoAlpha: 0, height: 0 });
+    gsap.set(gap, { height: 0 });
+    gsap.set([pastemark, seamline, seamtag, caret, stats], { autoAlpha: 0 });
+    gsap.set(qa('.stat'), { autoAlpha: 0, y: 12 });
+    gsap.set(cards, { autoAlpha: .22, y: 0 });
+    qa('.verdict').forEach(v => gsap.set(v, { autoAlpha: 0, scale: .9 }));
+    qa('.note').forEach(n => gsap.set(n, { autoAlpha: 0 }));
+    qa('.out').forEach(o => o.textContent = '');
+    typedInstr.textContent = ''; artText.textContent = ''; typedAfter.textContent = '';
+    cap.textContent = ''; gsap.set(cap, { autoAlpha: 0 });
+    hint.innerHTML = ''; gsap.set(hint, { autoAlpha: 0 });
+  }, 0);
+
+  // ---- scene 1: type the instruction ----------------------------------
+  tl.addLabel('open', .2);
+  say('A normal edit request.', 'open');
+  tl.to(cursor, { x: POS.composer.x, y: POS.composer.y, duration: 1.0, ease: 'power2.out' }, 'open+=.1');
+  tl.addLabel('typeInstr', 'open+=.95');
+  click(POS.composer, 'typeInstr');
+  tl.to(caret, { autoAlpha: 1, duration: .1 }, 'typeInstr+=.1');
+  type(typedInstr, INSTR, 'typeInstr+=.2', 1.5, true);
+
+  // ---- scene 2: paste the artifact ------------------------------------
+  tl.addLabel('paste', 'typeInstr+=2.0');
+  say('The passage is pasted in.', 'paste');
+  hintTo('<b>⌘V</b>: pasted text arrives with no marker of its own.', 'paste');
+  tl.to(pastemark, { autoAlpha: 1, duration: .28 }, 'paste');
+  type(artText, ART, 'paste+=.1', .35, true);
+  tl.fromTo(art, { y: -4 }, { y: 0, duration: .4, ease: 'power2.out' }, 'paste+=.1');
+  tl.to(pastemark, { autoAlpha: .35, duration: .8 }, 'paste+=1.1');
+
+  // ---- scene 3: the afterthought --------------------------------------
+  tl.addLabel('afterthought', 'paste+=1.5');
+  say('Then the user just… keeps typing.', 'afterthought');
+  type(typedAfter, AFTER, 'afterthought+=.2', 1.0, true);
+  tl.to(cursor, { x: POS.seam.x + 120, y: POS.seam.y + 8, duration: .7, ease: 'sine.out' }, 'afterthought');
+
+  // ---- scene 4: zoom the seam -----------------------------------------
+  tl.addLabel('zoomSeam', 'afterthought+=1.6');
+  tl.to(composer, { y: -8, boxShadow: '0 22px 48px rgba(20,22,26,.16)', duration: .7, ease: 'expo.out' }, 'zoomSeam');
+  tl.to([colR, barEl, hint], { autoAlpha: .18, duration: .5 }, 'zoomSeam');
+  tl.to(cursor, { x: POS.seam.x + 40, y: POS.seam.y - 14, duration: .8, ease: 'sine.out' }, 'zoomSeam');
+  tl.add(() => {
+    const f = composer.getBoundingClientRect(), r = after.getBoundingClientRect();
+    const seamY = Math.round((r.top - f.top)/scale) - 3;
+    const tagW = seamtag.getBoundingClientRect().width / scale;
+    gsap.set(seamline, { y: seamY });
+    gsap.set(seamtag, { y: seamY + 12, x: Math.round(f.width/scale - tagW - 22) });
+  }, 'zoomSeam');
+  say('One newline separates a pasted artifact from the user’s own speech.', 'zoomSeam+=.35');
+  tl.fromTo(seamline, { scaleX: .2, autoAlpha: 0, transformOrigin: 'left center' },
+                      { scaleX: 1, autoAlpha: 1, duration: .5 }, 'zoomSeam+=.5');
+  tl.fromTo(seamtag, { autoAlpha: 0, scale: .94, transformOrigin: 'left center' },
+                     { autoAlpha: 1, scale: 1, duration: .4 }, 'zoomSeam+=.7');
+  tl.to({}, { duration: 1.3 }, 'zoomSeam+=1.2');
+
+  tl.addLabel('zoomOut', 'zoomSeam+=2.5');
+  tl.to(composer, { y: 0, boxShadow: '0 0px 0px rgba(20,22,26,0)', duration: .55, ease: 'expo.out' }, 'zoomOut');
+  tl.to([colR, barEl], { autoAlpha: 1, duration: .45 }, 'zoomOut');
+  tl.to([seamline, seamtag], { autoAlpha: 0, duration: .3 }, 'zoomOut');
+  tl.to(cursor, { x: POS.send.x, y: POS.send.y, duration: .75, ease: 'power2.out' }, 'zoomOut+=.1');
+
+  // ---- scene 5: send, condition 1 --------------------------------------
+  tl.addLabel('send1', 'zoomOut+=.85');
+  click(POS.send, 'send1');
+  say('The model returns the edited passage.', 'send1+=.2');
+  hintTo('Condition 1: <b>bare newline</b>. Exactly what a paste looks like in a real chat box.', 'send1');
+  tl.to(cursor, { x: POS.right.x - 40, y: POS.right.y + 30, duration: .8, ease: 'sine.out' }, 'send1+=.25');
+  emit(0, 'send1+=.45');
+  say('The afterthought came back inside the artifact. That is absorption.', 'send1+=2.3');
+  tl.to({}, { duration: 1.5 }, 'send1+=2.6');
+
+  // ---- scene 6: condition 2, blank line ---------------------------------
+  tl.addLabel('cond2', 'send1+=4.3');
+  say('Surely a blank line fixes it?', 'cond2');
+  hintTo('Condition 2: <b>a blank line</b> before the comment.', 'cond2');
+  tl.to(cursor, { x: POS.seam.x - 60, y: POS.seam.y - 10, duration: .7, ease: 'power2.out' }, 'cond2');
+  tl.to(gap, { height: 25, duration: .4, ease: 'power2.inOut' }, 'cond2+=.55');
+  tl.to(cursor, { x: POS.send.x, y: POS.send.y, duration: .6, ease: 'power2.out' }, 'cond2+=1.0');
+  tl.addLabel('send2', 'cond2+=1.6');
+  click(POS.send, 'send2');
+  emit(1, 'send2+=.35');
+  say('It does not. The sentence is still returned as part of the artifact.', 'send2+=2.0');
+  tl.to(cursor, { x: POS.right.x - 30, y: POS.right.y + 120, duration: .8, ease: 'sine.out' }, 'send2+=.5');
+  tl.to({}, { duration: 1.4 }, 'send2+=2.4');
+
+  // ---- scene 7: condition 3, explicit boundary --------------------------
+  tl.addLabel('cond3', 'send2+=4.0');
+  say('Now mark the seam explicitly.', 'cond3');
+  hintTo('Condition 3: <b>boundary tags</b> around the paste, plus one instruction line.', 'cond3');
+  tl.to(cursor, { x: POS.composer.x - 80, y: POS.composer.y - 40, duration: .7, ease: 'power2.out' }, 'cond3');
+  tl.to([tagOpen, tagClose], { autoAlpha: 1, height: 25, duration: .45, ease: 'power2.out' }, 'cond3+=.5');
+  tl.to(pastemark, { autoAlpha: .8, duration: .3 }, 'cond3+=.5');
+  type(typedInstr, INSTR + MITIG, 'cond3+=.9', 1.1, true);
+  tl.to(cursor, { x: POS.send.x, y: POS.send.y, duration: .6, ease: 'power2.out' }, 'cond3+=1.9');
+  tl.addLabel('send3', 'cond3+=2.5');
+  click(POS.send, 'send3');
+  emit(2, 'send3+=.35');
+  say('Clean. The user’s speech stays out of the artifact.', 'send3+=2.0');
+  tl.to(cursor, { x: POS.right.x - 20, y: POS.right.y + 240, duration: .8, ease: 'sine.out' }, 'send3+=.5');
+
+  // ---- scene 8: the numbers ---------------------------------------------
+  tl.addLabel('stats', 'send3+=3.4');
+  tl.to(cap, { autoAlpha: 0, duration: .3 }, 'stats');
+  tl.to(hint, { autoAlpha: 0, duration: .3 }, 'stats');
+  tl.to(cursor, { x: POS.off.x, y: POS.off.y, duration: .9, ease: 'power2.inOut' }, 'stats');
+  tl.fromTo(stats, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .6 }, 'stats+=.45');
+  tl.fromTo(qa('.stat'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: .4, stagger: .08 }, 'stats+=.75');
+  tl.to({}, { duration: 3.2 }, 'stats+=1.4');
+
+  // controls
+  const ctl = q('[data-film-ctl]');
+  ctl.addEventListener('click', () => {
+    if (tl.paused()) { tl.play(); ctl.textContent = '❚❚'; } else { tl.pause(); ctl.textContent = '▶'; }
+  });
+  window.__tl = tl;
+})();
+</script>
+<script>
+(function(){
+  const BIB = "@misc{panthi2026seam,\n  title         = {Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams},\n  author        = {Panthi, Sugam and Yeamin, Muhaiminul and Abdelfattah, Rabab},\n  year          = {2026},\n  eprint        = {2609.llm-pasted-artifact-separation},\n  archivePrefix = {arXiv},\n  primaryClass  = {cs.CL},\n  url           = {https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation}\n}";
+  const btn = document.getElementById('bib');
+  const wrap = btn.parentElement;
+  wrap.classList.add('bibwrap');
+
+  const pop = document.createElement('div');
+  pop.className = 'bibpop';
+  pop.innerHTML = `<div class="hd"><span>Cite this work</span>
+      <button type="button" id="bibcopy">Copy</button></div><pre></pre>`;
+  pop.querySelector('pre').textContent = BIB;
+  wrap.appendChild(pop);
+
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(BIB); }
+    catch (e) {                                     // clipboard API needs a secure context
+      const ta = document.createElement('textarea');
+      ta.value = BIB; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    const c = pop.querySelector('#bibcopy');
+    c.textContent = 'Copied ✓'; c.classList.add('done');
+    setTimeout(() => { c.textContent = 'Copy'; c.classList.remove('done'); }, 1600);
+  };
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = pop.classList.toggle('open');
+    btn.classList.toggle('done', open);
+  });
+  pop.addEventListener('click', e => {
+    e.stopPropagation();
+    if (e.target.id === 'bibcopy') copy();
+  });
+  document.addEventListener('click', () => { pop.classList.remove('open'); btn.classList.remove('done'); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { pop.classList.remove('open'); btn.classList.remove('done'); }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEAM-Bench: leaderboard</title>
+<style>
+  :root{
+    --ink:#14161a; --ink-2:#4a5058; --ink-3:#878e98;
+    --paper:#ffffff; --page:#eceae6; --line:#e2e0da; --line-2:#f0eeea;
+    --bad:#c2402f; --mid:#d98324; --good:#1f8a63; --blue:#3b5bdb;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+  a{color:inherit}
+
+  /* ---- site chrome ---- */
+  .nav{position:sticky;top:0;z-index:30;background:rgba(236,234,230,.86);backdrop-filter:blur(10px);
+       border-bottom:1px solid var(--line)}
+  .nav .in{max-width:1340px;margin:0 auto;padding:13px 26px;display:flex;align-items:center;gap:22px}
+  .brand{display:flex;align-items:baseline;gap:9px;font-weight:700;letter-spacing:-.02em;font-size:17px}
+  .brand span{font:600 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .links{margin-left:auto;display:flex;gap:6px}
+  .links a{padding:7px 13px;border-radius:8px;font-size:14px;font-weight:550;color:var(--ink-2);text-decoration:none}
+  .links a:hover{background:#e2dfd9}
+  .links a.on{background:var(--ink);color:#fff}
+  .links .gh{display:flex;align-items:center;gap:7px}
+  .links .gh svg{width:16px;height:16px}
+  .links button{padding:7px 13px;border-radius:8px;font:550 14px/1 var(--sans);color:var(--ink-2);
+                border:1px solid var(--line);background:var(--paper);cursor:pointer}
+  .links button:hover{background:#f4f2ee;color:var(--ink)}
+  .links button.done{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bibpop button{padding:6px 11px;border-radius:7px;font:550 12.5px/1 var(--sans);
+                 color:var(--ink-2);border:1px solid var(--line);background:var(--paper);cursor:pointer}
+  .bibpop button:hover{background:#f4f2ee;color:var(--ink)}
+  .bibpop button.done{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bibwrap{position:relative}
+  .bibpop{position:absolute;top:calc(100% + 9px);right:0;z-index:70;width:min(560px,86vw);
+          background:var(--paper);border:1px solid var(--line);border-radius:12px;
+          box-shadow:0 18px 44px rgba(20,22,26,.16);padding:14px 15px 15px;display:none}
+  .bibpop.open{display:block}
+  .bibpop .hd{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .bibpop .hd span{font:650 11px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+  .bibpop .hd button{margin-left:auto}
+  .bibpop pre{margin:0;white-space:pre-wrap;word-break:break-word;font:12.5px/1.6 var(--mono);
+              color:var(--ink);background:#fbfaf8;border:1px solid var(--line);border-radius:9px;
+              padding:12px 13px;max-height:260px;overflow:auto;text-align:left}
+
+  .wrap{max-width:1340px;margin:0 auto;padding:30px 26px 70px}
+  h1{font-size:31px;line-height:1.2;letter-spacing:-.025em;margin:6px 0 10px}
+  .lede{max-width:740px;color:var(--ink-2);margin:0 0 22px}
+  .lede b{color:var(--ink)}
+
+  /* ---- controls ---- */
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+  .seg{display:flex;background:#e4e1db;border-radius:10px;padding:3px;gap:2px}
+  .seg button{border:0;background:none;font:550 13px/1 var(--sans);color:var(--ink-2);
+              padding:8px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+  .seg button.on{background:var(--paper);color:var(--ink);box-shadow:0 1px 3px rgba(20,22,26,.10)}
+  .fld{position:relative}
+  .fld input,.fld select{font:14px var(--sans);color:var(--ink);background:var(--paper);
+        border:1px solid var(--line);border-radius:9px;padding:9px 12px;min-width:176px}
+  .fld select{appearance:none;-webkit-appearance:none;padding-right:34px;cursor:pointer;
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23878e98' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+        background-repeat:no-repeat;background-position:right 12px center}
+  .fld input:focus,.fld select:focus{outline:2px solid #cfd6e8;outline-offset:-1px}
+  .muted{margin-left:auto;font-size:13px;color:var(--ink-3)}
+
+  /* ---- table ---- */
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .scroll{overflow-x:auto}
+  table{border-collapse:separate;border-spacing:0;width:100%;min-width:1060px;table-layout:fixed}
+  th,td{text-align:left;padding:12px 11px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+  thead th{position:sticky;top:0;z-index:10;background:#fbfaf8;font:650 11.5px/1.35 var(--sans);
+           letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;user-select:none;
+           white-space:normal;vertical-align:bottom}
+  thead th:hover{color:var(--ink-2)}
+  thead th.num{text-align:right}
+  thead th .ar{display:inline-block;width:0;overflow:hidden;opacity:0;font-size:10px}
+  thead th.sorted .ar{width:auto;overflow:visible;margin-left:5px}
+  thead th.sorted .ar{opacity:1}
+  tbody tr:hover{background:#fbfaf8}
+  tbody tr:last-child td{border-bottom:0}
+  td.rank{width:44px;color:var(--ink-3);font:600 13px/1 var(--mono)}
+  .m{display:flex;align-items:center;gap:11px}
+  .m img{width:21px;height:21px;flex:none}
+  .m .lm{width:21px;height:21px;flex:none;border-radius:5px;display:grid;place-items:center;
+         font:700 9.5px/1 var(--sans);color:#fff}
+  .m .nm{font-weight:600;letter-spacing:-.01em}
+  .m .fm{font-size:12.5px;color:var(--ink-3)}
+  td.val{text-align:right;width:12.2%}
+  .cell{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+  .track{flex:1;height:7px;border-radius:4px;background:#f0eeea;overflow:hidden;max-width:78px}
+  .fill{display:block;height:100%;border-radius:4px}
+  .pct{font:600 13.5px/1 var(--mono);min-width:50px;text-align:right;font-variant-numeric:tabular-nums}
+  td.delta{text-align:right;font:600 13.5px/1 var(--mono);width:9.5%}
+
+  tbody tr.row{cursor:pointer}
+  td.tw{width:28px;color:var(--ink-3);font-size:11px;text-align:center;
+        transition:transform .15s ease;transform-origin:center}
+  tr.open td.tw{color:var(--ink)}
+  tr.det>td{background:#fbfaf8;padding:0;border-bottom:1px solid var(--line-2)}
+  .det-in{padding:18px 20px 24px}
+  .det-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+  .chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 13px;
+        font:550 13.5px/1 var(--sans);color:var(--ink-2);cursor:pointer;white-space:nowrap}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .det h4{margin:0 0 8px;font:650 12.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  .prompt{white-space:pre-wrap;font:14px/1.62 var(--mono);background:var(--paper);border:1px solid var(--line);
+          border-radius:10px;padding:14px 16px;max-height:220px;overflow:auto;color:var(--ink-2)}
+  .prompt .after{color:var(--ink);background:rgba(194,64,47,.10);
+                 box-shadow:inset 0 -1.5px 0 rgba(194,64,47,.45);border-radius:3px}
+  .outs{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-top:16px}
+  .out{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:11px 13px}
+  .out .top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .out .cn{font:600 13px/1 var(--mono);color:var(--ink-2);background:#f1efeb;border-radius:5px;padding:5px 7px}
+  .out .vd{margin-left:auto;font:650 11.5px/1 var(--sans);letter-spacing:.07em;border-radius:999px;padding:4px 8px}
+  .vd.y{color:var(--bad);background:#fbeceb;border:1px solid #f2cdc8}
+  .vd.n{color:var(--good);background:#e8f5ef;border:1px solid #c3e5d6}
+  .vd.b{color:var(--ink-3);background:#f2f0ec;border:1px solid var(--line)}
+  .out pre{margin:0;white-space:pre-wrap;word-break:break-word;font:14px/1.6 var(--mono);
+           max-height:260px;overflow:auto}
+  .miss{font-size:13.5px;color:var(--ink-3);padding:4px 0 2px}
+  .foot{margin-top:18px;display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--ink-3)}
+  .foot b{color:var(--ink-2)}
+  .legend{display:flex;align-items:center;gap:8px}
+  .ramp{width:96px;height:8px;border-radius:4px;
+        background:linear-gradient(90deg,#1f8a63 0%,#d98324 45%,#c2402f 100%)}
+  .note{margin-top:24px;border-left:3px solid var(--line);padding:2px 0 2px 16px;
+        font-size:13.5px;color:var(--ink-2)}
+  .note code{font:12.5px var(--mono);background:#f3f1ed;padding:1px 5px;border-radius:4px}
+  @media (max-width:760px){ .wrap{padding:22px 16px 60px} h1{font-size:25px} }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <div class="brand">SEAM-Bench <span>absorption at prompt seams</span></div>
+  <div class="links">
+    <a href="./">Home</a>
+    <a href="leaderboard.html" class="on">Leaderboard</a>
+    <a class="gh" href="https://github.com/aimsresearchlab/seam" target="_blank" rel="noopener" title="Source on GitHub">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      GitHub</a>
+    <button id="bib" type="button">BibTeX</button>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <h1>How often does a model absorb your words into the artifact?</h1>
+  <p class="lede">Every model is given the same 300 editing tasks. A pasted artifact is followed by one trailing
+  user comment, and the seam between them is varied. <b>Absorption</b> = the comment's content shows up in the
+  returned artifact when it is absent from the matched clean run. Lower is better. <b>Click any row</b> to read that model's actual outputs on sampled prompts.</p>
+
+  <div class="bar">
+    <div class="seg" data-seg="cond">
+      <button data-cond="newline" class="on">Bare newline</button>
+      <button data-cond="blank">Blank line</button>
+      <button data-cond="boundary">Boundary tags</button>
+      <button data-cond="mitigation">Tags + instruction</button>
+      <button data-cond="newline_R">Artifact-native comment</button>
+    </div>
+    <div class="fld"><input id="q" type="search" placeholder="Filter model or family…" autocomplete="off"></div>
+    <div class="fld"><select id="fam"></select></div>
+  </div>
+
+  <div class="card"><div class="scroll"><table>
+    <thead><tr>
+      <th style="width:46px">#</th>
+      <th style="width:28px"></th>
+      <th data-sort="name" style="width:20%">Model<span class="ar">▲</span></th>
+      <th class="num" data-sort="newline">Bare newline<span class="ar">▼</span></th>
+      <th class="num" data-sort="blank">Blank line<span class="ar">▼</span></th>
+      <th class="num" data-sort="boundary">Boundary tags<span class="ar">▼</span></th>
+      <th class="num" data-sort="mitigation">Tags + instruction<span class="ar">▼</span></th>
+      <th class="num" data-sort="newline_R">Native comment<span class="ar">▼</span></th>
+      <th class="num" data-sort="lift">Marker gain<span class="ar">▼</span></th>
+    </tr></thead>
+    <tbody id="body"></tbody>
+  </table></div></div>
+
+  <div class="foot">
+    <div class="legend"><span>0%</span><span class="ramp"></span><span>75%</span></div>
+    <div><b>Marker gain</b> = bare-newline rate − boundary-tag rate, in percentage points.</div>
+    <div>Bars scale to the selected condition; every cell shows its own rate and 95% Wilson interval.</div>
+  </div>
+
+  <p class="note">Rates come from the released run statistics (<code>release/results/statistics.json</code>).
+  Absorption is counted only when the comment's content appears in the treatment output and is absent from the
+  matched clean output, scored by the three-tier cascade: exact phrase → stemmed content words → DeBERTa entailment.</p>
+</div>
+
+<script>
+const ROWS = [{"slug":"olmo2-32b","name":"OLMo-2-32B","family":"Ai2","icon":"ai2-color.svg","color":"#F0529C","newline":{"pct":66.7,"k":200,"n":300,"ci":[61.15,71.76]},"blank":{"pct":72.3,"k":217,"n":300,"ci":[67.01,77.09]},"boundary":{"pct":35.3,"k":106,"n":300,"ci":[30.14,40.9]},"mitigation":{"pct":0.3,"k":1,"n":300,"ci":[0.06,1.86]},"newline_R":{"pct":60.0,"k":180,"n":300,"ci":[54.36,65.38]}},{"slug":"qwen3-8b","name":"Qwen3-8B","family":"Qwen","icon":"qwen-color.svg","color":"#6336E7","newline":{"pct":53.0,"k":159,"n":300,"ci":[47.35,58.57]},"blank":{"pct":53.3,"k":160,"n":300,"ci":[47.68,58.9]},"boundary":{"pct":26.0,"k":78,"n":300,"ci":[21.36,31.24]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":56.0,"k":168,"n":300,"ci":[50.34,61.51]}},{"slug":"gemma3-4b","name":"Gemma-3-4B","family":"Google","icon":"gemma-color.svg","color":"#2D9CDB","newline":{"pct":52.0,"k":156,"n":300,"ci":[46.36,57.59]},"blank":{"pct":51.3,"k":154,"n":300,"ci":[45.7,56.94]},"boundary":{"pct":19.7,"k":59,"n":300,"ci":[15.56,24.54]},"mitigation":{"pct":9.3,"k":28,"n":300,"ci":[6.54,13.16]},"newline_R":{"pct":59.7,"k":179,"n":300,"ci":[54.03,65.06]}},{"slug":"mistral-small-32-24b","name":"Mistral-Small-3.2-24B","family":"Mistral","icon":"mistral-color.svg","color":"#FA520F","newline":{"pct":41.3,"k":124,"n":300,"ci":[35.9,46.98]},"blank":{"pct":47.3,"k":142,"n":300,"ci":[41.75,52.98]},"boundary":{"pct":28.0,"k":84,"n":300,"ci":[23.22,33.33]},"mitigation":{"pct":12.0,"k":36,"n":300,"ci":[8.8,16.17]},"newline_R":{"pct":53.7,"k":161,"n":300,"ci":[48.01,59.23]}},{"slug":"gpt-oss-120b","name":"gpt-oss-120b","family":"OpenAI","icon":"openai.svg","color":"#111827","newline":{"pct":39.3,"k":118,"n":300,"ci":[33.97,44.96]},"blank":{"pct":43.0,"k":129,"n":300,"ci":[37.52,48.66]},"boundary":{"pct":18.3,"k":55,"n":300,"ci":[14.36,23.1]},"mitigation":{"pct":0.3,"k":1,"n":300,"ci":[0.06,1.86]},"newline_R":{"pct":44.7,"k":134,"n":300,"ci":[39.14,50.32]}},{"slug":"gemma3-12b","name":"Gemma-3-12B","family":"Google","icon":"gemma-color.svg","color":"#2D9CDB","newline":{"pct":38.5,"k":115,"n":299,"ci":[33.13,44.09]},"blank":{"pct":44.1,"k":132,"n":299,"ci":[38.63,49.81]},"boundary":{"pct":19.1,"k":57,"n":299,"ci":[15.01,23.9]},"mitigation":{"pct":6.0,"k":18,"n":299,"ci":[3.84,9.31]},"newline_R":{"pct":54.2,"k":162,"n":299,"ci":[48.52,59.74]}},{"slug":"gpt-oss-20b","name":"gpt-oss-20b","family":"OpenAI","icon":"openai.svg","color":"#111827","newline":{"pct":35.1,"k":105,"n":299,"ci":[29.93,40.69]},"blank":{"pct":41.8,"k":125,"n":299,"ci":[36.35,47.47]},"boundary":{"pct":16.4,"k":49,"n":299,"ci":[12.62,21.01]},"mitigation":{"pct":0.0,"k":0,"n":299,"ci":[0.0,1.27]},"newline_R":{"pct":54.9,"k":161,"n":293,"ci":[49.22,60.55]}},{"slug":"qwen3-32b","name":"Qwen3-32B","family":"Qwen","icon":"qwen-color.svg","color":"#6336E7","newline":{"pct":32.7,"k":98,"n":300,"ci":[27.61,38.16]},"blank":{"pct":33.0,"k":99,"n":300,"ci":[27.92,38.51]},"boundary":{"pct":5.3,"k":16,"n":300,"ci":[3.31,8.49]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":52.7,"k":158,"n":300,"ci":[47.02,58.25]}},{"slug":"gpt-5.6-sol","name":"GPT-5.6-sol","family":"OpenAI","icon":"openai.svg","color":"#111827","newline":{"pct":32.0,"k":96,"n":300,"ci":[26.98,37.48]},"blank":{"pct":36.7,"k":110,"n":300,"ci":[31.41,42.26]},"boundary":{"pct":11.7,"k":35,"n":300,"ci":[8.51,15.79]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":65.3,"k":196,"n":300,"ci":[59.78,70.49]}},{"slug":"deepseek-flash","name":"DeepSeek-V4-Flash","family":"DeepSeek","icon":"deepseek-color.svg","color":"#4D6BFE","newline":{"pct":31.3,"k":94,"n":300,"ci":[26.35,36.79]},"blank":{"pct":30.3,"k":90,"n":297,"ci":[25.36,35.75]},"boundary":{"pct":4.4,"k":13,"n":298,"ci":[2.57,7.32]},"mitigation":{"pct":0.3,"k":1,"n":299,"ci":[0.06,1.87]},"newline_R":{"pct":51.3,"k":154,"n":300,"ci":[45.7,56.94]}},{"slug":"gemini-3.1-pro","name":"Gemini-3.1-Pro","family":"Google","icon":"gemini-color.svg","color":"#4285F4","newline":{"pct":29.3,"k":88,"n":300,"ci":[24.47,34.72]},"blank":{"pct":32.3,"k":97,"n":300,"ci":[27.29,37.82]},"boundary":{"pct":3.0,"k":9,"n":300,"ci":[1.59,5.6]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":64.3,"k":193,"n":300,"ci":[58.76,69.54]}},{"slug":"minimax-m25","name":"MiniMax-M2.5","family":"MiniMax","icon":"minimax-color.svg","color":"#E8483F","newline":{"pct":28.7,"k":86,"n":300,"ci":[23.84,34.03]},"blank":{"pct":26.4,"k":79,"n":299,"ci":[21.75,31.7]},"boundary":{"pct":6.4,"k":19,"n":299,"ci":[4.11,9.71]},"mitigation":{"pct":1.7,"k":5,"n":300,"ci":[0.71,3.84]},"newline_R":{"pct":48.6,"k":138,"n":284,"ci":[42.84,54.38]}},{"slug":"gemma3-27b","name":"Gemma-3-27B","family":"Google","icon":"gemma-color.svg","color":"#2D9CDB","newline":{"pct":27.7,"k":83,"n":300,"ci":[22.91,32.99]},"blank":{"pct":35.0,"k":105,"n":300,"ci":[29.82,40.56]},"boundary":{"pct":20.3,"k":61,"n":300,"ci":[16.17,25.25]},"mitigation":{"pct":0.7,"k":2,"n":300,"ci":[0.18,2.4]},"newline_R":{"pct":54.0,"k":162,"n":300,"ci":[48.35,59.55]}},{"slug":"deepseek-pro","name":"DeepSeek-V4-Pro","family":"DeepSeek","icon":"deepseek-color.svg","color":"#4D6BFE","newline":{"pct":22.3,"k":67,"n":300,"ci":[17.99,27.38]},"blank":{"pct":19.0,"k":57,"n":300,"ci":[14.96,23.82]},"boundary":{"pct":1.0,"k":3,"n":299,"ci":[0.34,2.91]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":49.4,"k":126,"n":255,"ci":[43.33,55.51]}},{"slug":"minimax-m3","name":"MiniMax-M3","family":"MiniMax","icon":"minimax-color.svg","color":"#E8483F","newline":{"pct":22.3,"k":67,"n":300,"ci":[17.99,27.38]},"blank":{"pct":21.7,"k":65,"n":300,"ci":[17.38,26.67]},"boundary":{"pct":3.3,"k":10,"n":300,"ci":[1.82,6.03]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":46.0,"k":138,"n":300,"ci":[40.45,51.65]}},{"slug":"mimo-v25-pro","name":"MiMo-v2.5-Pro","family":"Xiaomi","icon":null,"color":"#FF6900","newline":{"pct":21.7,"k":65,"n":300,"ci":[17.38,26.67]},"blank":{"pct":20.0,"k":60,"n":300,"ci":[15.87,24.89]},"boundary":{"pct":4.0,"k":12,"n":300,"ci":[2.3,6.86]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":48.5,"k":145,"n":299,"ci":[42.89,54.14]}},{"slug":"mimo-v25","name":"MiMo-v2.5","family":"Xiaomi","icon":null,"color":"#FF6900","newline":{"pct":20.0,"k":60,"n":300,"ci":[15.87,24.89]},"blank":{"pct":19.7,"k":59,"n":300,"ci":[15.56,24.54]},"boundary":{"pct":5.0,"k":15,"n":300,"ci":[3.05,8.08]},"mitigation":{"pct":1.3,"k":4,"n":300,"ci":[0.52,3.38]},"newline_R":{"pct":40.3,"k":116,"n":288,"ci":[34.78,46.03]}},{"slug":"claude-opus-4-8","name":"Claude-Opus-4.8","family":"Anthropic","icon":"claude-color.svg","color":"#D97757","newline":{"pct":19.0,"k":57,"n":300,"ci":[14.96,23.82]},"blank":{"pct":21.0,"k":63,"n":300,"ci":[16.77,25.96]},"boundary":{"pct":2.0,"k":6,"n":300,"ci":[0.92,4.29]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":56.0,"k":168,"n":300,"ci":[50.34,61.51]}},{"slug":"llama33-70b","name":"Llama-3.3-70B","family":"Meta","icon":"meta-color.svg","color":"#0668E1","newline":{"pct":19.0,"k":57,"n":300,"ci":[14.96,23.82]},"blank":{"pct":20.3,"k":61,"n":300,"ci":[16.17,25.25]},"boundary":{"pct":14.0,"k":42,"n":300,"ci":[10.53,18.38]},"mitigation":{"pct":0.0,"k":0,"n":300,"ci":[0.0,1.26]},"newline_R":{"pct":32.2,"k":96,"n":298,"ci":[27.16,37.72]}},{"slug":"llama31-8b","name":"Llama-3.1-8B","family":"Meta","icon":"meta-color.svg","color":"#0668E1","newline":{"pct":7.7,"k":23,"n":300,"ci":[5.16,11.24]},"blank":{"pct":11.7,"k":35,"n":300,"ci":[8.51,15.79]},"boundary":{"pct":7.3,"k":22,"n":300,"ci":[4.89,10.85]},"mitigation":{"pct":0.3,"k":1,"n":300,"ci":[0.06,1.86]},"newline_R":{"pct":25.0,"k":75,"n":300,"ci":[20.44,30.2]}}];
+const CONDS = ['newline','blank','boundary','mitigation','newline_R'];
+const LABEL = {newline:'bare newline', blank:'blank line', boundary:'boundary tags',
+               mitigation:'tags + instruction', newline_R:'artifact-native comment'};
+
+let cond = 'newline', sort = 'newline', dir = -1, q = '', fam = 'all';
+const $ = s => document.querySelector(s);
+const body = $('#body');
+
+// green -> amber -> red, keyed to the absolute rate (not the column max)
+const ramp = pct => {
+  const t = Math.min(pct / 75, 1);
+  const stops = [[0,[31,138,99]], [.45,[217,131,36]], [1,[194,64,47]]];
+  let a = stops[0], b = stops[stops.length-1];
+  for (let i = 0; i < stops.length - 1; i++) if (t >= stops[i][0] && t <= stops[i+1][0]) { a = stops[i]; b = stops[i+1]; }
+  const u = (t - a[0]) / (b[0] - a[0] || 1);
+  const c = a[1].map((v, i) => Math.round(v + (b[1][i] - v) * u));
+  return `rgb(${c.join(',')})`;
+};
+const lift = r => +(r.newline.pct - r.boundary.pct).toFixed(1);
+
+const cell = (r, c, isActive) => {
+  const d = r[c], w = Math.max(2, Math.min(d.pct / 75, 1) * 100);
+  const bar = isActive
+    ? `<span class="track"><span class="fill" style="width:${w}%;background:${ramp(d.pct)}"></span></span>` : '';
+  return `<td class="val" title="${d.k}/${d.n} · 95% CI ${d.ci[0].toFixed(1)}–${d.ci[1].toFixed(1)}">
+      <span class="cell">${bar}<span class="pct" style="color:${isActive ? ramp(d.pct) : 'inherit'}">${d.pct.toFixed(1)}%</span></span>
+    </td>`;
+};
+
+function render(){
+  const rows = ROWS
+    .filter(r => fam === 'all' || r.family === fam)
+    .filter(r => !q || (r.name + ' ' + r.family).toLowerCase().includes(q))
+    .sort((a, b) => {
+      if (sort === 'name') return dir * a.name.localeCompare(b.name);
+      const va = sort === 'lift' ? lift(a) : a[sort].pct;
+      const vb = sort === 'lift' ? lift(b) : b[sort].pct;
+      return dir * (va - vb) || a.name.localeCompare(b.name);
+    });
+
+  body.innerHTML = rows.map((r, i) => {
+    const mark = r.icon
+      ? `<img src="icons/${r.icon}" alt="" loading="lazy">`
+      : `<span class="lm" style="background:${r.color}">${r.family.slice(0,2)}</span>`;
+    const g = lift(r);
+    return `<tr class="row" data-slug="${r.slug}">
+      <td class="rank">${i + 1}</td>
+      <td class="tw">▸</td>
+      <td><span class="m">${mark}<span><span class="nm">${r.name}</span>
+          <span class="fm"> · ${r.family}</span></span></span></td>
+      ${CONDS.map(c => cell(r, c, c === cond)).join('')}
+      <td class="delta" style="color:${g > 0 ? 'var(--good)' : 'var(--ink-3)'}">${g > 0 ? '−' : '+'}${Math.abs(g).toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+
+  document.querySelectorAll('thead th[data-sort]').forEach(th => {
+    const on = th.dataset.sort === sort;
+    th.classList.toggle('sorted', on);
+    if (on) th.querySelector('.ar').textContent = dir === -1 ? '▼' : '▲';
+  });
+}
+
+// ---------- per-model sample outputs ----------
+let SAMPLES = null, loading = null;
+const loadSamples = () => loading || (loading = fetch('data/samples.json')
+  .then(r => r.json()).then(d => (SAMPLES = d)));
+
+const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const CLABEL = {clean:'clean (no comment)', newline:'bare newline', blank:'blank line',
+                boundary:'boundary tags', mitigation:'tags + instruction',
+                newline_R:'artifact-native comment'};
+
+function drawerHTML(slug, ev){
+  const m = SAMPLES.models[slug];
+  if (!m) return `<div class="det-in"><div class="miss">Raw outputs for this model are not in the
+      released sample bundle, only its scored rates are.</div></div>`;
+  const evs = Object.keys(SAMPLES.cases).filter(e => m[e]);
+  ev = m[ev] ? ev : evs[0];
+  const kase = SAMPLES.cases[ev], got = m[ev] || {};
+  // the prompt for the seam condition on show: prefer the bare-newline framing
+  const pcond = got.newline ? 'newline' : Object.keys(got)[0];
+  const prompt = (kase.prompts[pcond] || '');
+  const tail = prompt.split('\n').pop();
+  const shown = esc(prompt.slice(0, prompt.length - tail.length)) +
+                `<span class="after">${esc(tail)}</span>`;
+  const chips = evs.map(e =>
+    `<button class="chip${e === ev ? ' on' : ''}" data-ev="${e}">${SAMPLES.cases[e].source}</button>`).join('');
+  const outs = SAMPLES.conds.filter(c => got[c]).map(c => {
+    const o = got[c];
+    const vd = c === 'clean' ? '<span class="vd b">BASELINE</span>'
+             : o.a ? '<span class="vd y">ABSORBED</span>' : '<span class="vd n">CLEAN</span>';
+    return `<div class="out"><div class="top"><span class="cn">${CLABEL[c]}</span>${vd}</div>
+            <pre>${esc(o.t)}</pre></div>`;
+  }).join('');
+  return `<div class="det-in">
+      <div class="det-head">${chips}<span class="miss" style="margin-left:auto">case
+        <code>${ev}</code> · one of ${evs.length} sampled prompts</span></div>
+      <h4>What the user sent (${CLABEL[pcond]})</h4>
+      <div class="prompt">${shown}</div>
+      <h4 style="margin-top:15px">What ${SAMPLES.names[slug]} returned</h4>
+      <div class="outs">${outs}</div>
+    </div>`;
+}
+
+function toggleRow(tr){
+  const next = tr.nextElementSibling;
+  if (next && next.classList.contains('det')) { next.remove(); tr.classList.remove('open');
+    tr.querySelector('.tw').textContent = '▸'; return; }
+  document.querySelectorAll('tr.det').forEach(d => d.remove());
+  document.querySelectorAll('tr.open').forEach(o => { o.classList.remove('open');
+    o.querySelector('.tw').textContent = '▸'; });
+  tr.classList.add('open'); tr.querySelector('.tw').textContent = '▾';
+  const det = document.createElement('tr');
+  det.className = 'det';
+  det.innerHTML = `<td colspan="9"><div class="det-in"><div class="miss">Loading outputs…</div></div></td>`;
+  tr.after(det);
+  loadSamples().then(() => {
+    const slug = tr.dataset.slug;
+    const first = Object.keys(SAMPLES.cases)[0];
+    det.firstChild.innerHTML = drawerHTML(slug, first);
+    det.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      det.firstChild.innerHTML = drawerHTML(slug, chip.dataset.ev);
+    });
+  });
+}
+body.addEventListener('click', e => {
+  const tr = e.target.closest('tr.row');
+  if (tr) toggleRow(tr);
+});
+
+document.querySelectorAll('[data-seg="cond"] button').forEach(b => b.addEventListener('click', () => {
+  // ---------- per-model sample outputs ----------
+let SAMPLES = null, loading = null;
+const loadSamples = () => loading || (loading = fetch('data/samples.json')
+  .then(r => r.json()).then(d => (SAMPLES = d)));
+
+const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const CLABEL = {clean:'clean (no comment)', newline:'bare newline', blank:'blank line',
+                boundary:'boundary tags', mitigation:'tags + instruction',
+                newline_R:'artifact-native comment'};
+
+function drawerHTML(slug, ev){
+  const m = SAMPLES.models[slug];
+  if (!m) return `<div class="det-in"><div class="miss">Raw outputs for this model are not in the
+      released sample bundle, only its scored rates are.</div></div>`;
+  const evs = Object.keys(SAMPLES.cases).filter(e => m[e]);
+  ev = m[ev] ? ev : evs[0];
+  const kase = SAMPLES.cases[ev], got = m[ev] || {};
+  // the prompt for the seam condition on show: prefer the bare-newline framing
+  const pcond = got.newline ? 'newline' : Object.keys(got)[0];
+  const prompt = (kase.prompts[pcond] || '');
+  const tail = prompt.split('\n').pop();
+  const shown = esc(prompt.slice(0, prompt.length - tail.length)) +
+                `<span class="after">${esc(tail)}</span>`;
+  const chips = evs.map(e =>
+    `<button class="chip${e === ev ? ' on' : ''}" data-ev="${e}">${SAMPLES.cases[e].source}</button>`).join('');
+  const outs = SAMPLES.conds.filter(c => got[c]).map(c => {
+    const o = got[c];
+    const vd = c === 'clean' ? '<span class="vd b">BASELINE</span>'
+             : o.a ? '<span class="vd y">ABSORBED</span>' : '<span class="vd n">CLEAN</span>';
+    return `<div class="out"><div class="top"><span class="cn">${CLABEL[c]}</span>${vd}</div>
+            <pre>${esc(o.t)}</pre></div>`;
+  }).join('');
+  return `<div class="det-in">
+      <div class="det-head">${chips}<span class="miss" style="margin-left:auto">case
+        <code>${ev}</code> · one of ${evs.length} sampled prompts</span></div>
+      <h4>What the user sent (${CLABEL[pcond]})</h4>
+      <div class="prompt">${shown}</div>
+      <h4 style="margin-top:15px">What ${SAMPLES.names[slug]} returned</h4>
+      <div class="outs">${outs}</div>
+    </div>`;
+}
+
+function toggleRow(tr){
+  const next = tr.nextElementSibling;
+  if (next && next.classList.contains('det')) { next.remove(); tr.classList.remove('open');
+    tr.querySelector('.tw').textContent = '▸'; return; }
+  document.querySelectorAll('tr.det').forEach(d => d.remove());
+  document.querySelectorAll('tr.open').forEach(o => { o.classList.remove('open');
+    o.querySelector('.tw').textContent = '▸'; });
+  tr.classList.add('open'); tr.querySelector('.tw').textContent = '▾';
+  const det = document.createElement('tr');
+  det.className = 'det';
+  det.innerHTML = `<td colspan="9"><div class="det-in"><div class="miss">Loading outputs…</div></div></td>`;
+  tr.after(det);
+  loadSamples().then(() => {
+    const slug = tr.dataset.slug;
+    const first = Object.keys(SAMPLES.cases)[0];
+    det.firstChild.innerHTML = drawerHTML(slug, first);
+    det.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      det.firstChild.innerHTML = drawerHTML(slug, chip.dataset.ev);
+    });
+  });
+}
+body.addEventListener('click', e => {
+  const tr = e.target.closest('tr.row');
+  if (tr) toggleRow(tr);
+});
+
+document.querySelectorAll('[data-seg="cond"] button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  cond = b.dataset.cond;
+  if (sort !== 'name' && sort !== 'lift') { sort = cond; dir = -1; }
+  render();
+}));
+document.querySelectorAll('thead th[data-sort]').forEach(th => th.addEventListener('click', () => {
+  const k = th.dataset.sort;
+  if (sort === k) dir = -dir; else { sort = k; dir = k === 'name' ? 1 : -1; }
+  if (CONDS.includes(k)) { cond = k;
+    // ---------- per-model sample outputs ----------
+let SAMPLES = null, loading = null;
+const loadSamples = () => loading || (loading = fetch('data/samples.json')
+  .then(r => r.json()).then(d => (SAMPLES = d)));
+
+const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const CLABEL = {clean:'clean (no comment)', newline:'bare newline', blank:'blank line',
+                boundary:'boundary tags', mitigation:'tags + instruction',
+                newline_R:'artifact-native comment'};
+
+function drawerHTML(slug, ev){
+  const m = SAMPLES.models[slug];
+  if (!m) return `<div class="det-in"><div class="miss">Raw outputs for this model are not in the
+      released sample bundle, only its scored rates are.</div></div>`;
+  const evs = Object.keys(SAMPLES.cases).filter(e => m[e]);
+  ev = m[ev] ? ev : evs[0];
+  const kase = SAMPLES.cases[ev], got = m[ev] || {};
+  // the prompt for the seam condition on show: prefer the bare-newline framing
+  const pcond = got.newline ? 'newline' : Object.keys(got)[0];
+  const prompt = (kase.prompts[pcond] || '');
+  const tail = prompt.split('\n').pop();
+  const shown = esc(prompt.slice(0, prompt.length - tail.length)) +
+                `<span class="after">${esc(tail)}</span>`;
+  const chips = evs.map(e =>
+    `<button class="chip${e === ev ? ' on' : ''}" data-ev="${e}">${SAMPLES.cases[e].source}</button>`).join('');
+  const outs = SAMPLES.conds.filter(c => got[c]).map(c => {
+    const o = got[c];
+    const vd = c === 'clean' ? '<span class="vd b">BASELINE</span>'
+             : o.a ? '<span class="vd y">ABSORBED</span>' : '<span class="vd n">CLEAN</span>';
+    return `<div class="out"><div class="top"><span class="cn">${CLABEL[c]}</span>${vd}</div>
+            <pre>${esc(o.t)}</pre></div>`;
+  }).join('');
+  return `<div class="det-in">
+      <div class="det-head">${chips}<span class="miss" style="margin-left:auto">case
+        <code>${ev}</code> · one of ${evs.length} sampled prompts</span></div>
+      <h4>What the user sent (${CLABEL[pcond]})</h4>
+      <div class="prompt">${shown}</div>
+      <h4 style="margin-top:15px">What ${SAMPLES.names[slug]} returned</h4>
+      <div class="outs">${outs}</div>
+    </div>`;
+}
+
+function toggleRow(tr){
+  const next = tr.nextElementSibling;
+  if (next && next.classList.contains('det')) { next.remove(); tr.classList.remove('open');
+    tr.querySelector('.tw').textContent = '▸'; return; }
+  document.querySelectorAll('tr.det').forEach(d => d.remove());
+  document.querySelectorAll('tr.open').forEach(o => { o.classList.remove('open');
+    o.querySelector('.tw').textContent = '▸'; });
+  tr.classList.add('open'); tr.querySelector('.tw').textContent = '▾';
+  const det = document.createElement('tr');
+  det.className = 'det';
+  det.innerHTML = `<td colspan="9"><div class="det-in"><div class="miss">Loading outputs…</div></div></td>`;
+  tr.after(det);
+  loadSamples().then(() => {
+    const slug = tr.dataset.slug;
+    const first = Object.keys(SAMPLES.cases)[0];
+    det.firstChild.innerHTML = drawerHTML(slug, first);
+    det.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      det.firstChild.innerHTML = drawerHTML(slug, chip.dataset.ev);
+    });
+  });
+}
+body.addEventListener('click', e => {
+  const tr = e.target.closest('tr.row');
+  if (tr) toggleRow(tr);
+});
+
+document.querySelectorAll('[data-seg="cond"] button').forEach(x => x.classList.toggle('on', x.dataset.cond === k)); }
+  render();
+}));
+$('#q').addEventListener('input', e => { q = e.target.value.trim().toLowerCase(); render(); });
+
+const fams = [...new Set(ROWS.map(r => r.family))].sort();
+$('#fam').innerHTML = ['<option value="all">All families</option>']
+  .concat(fams.map(f => `<option value="${f}">${f}</option>`)).join('');
+$('#fam').addEventListener('change', e => { fam = e.target.value; render(); });
+
+render();
+</script>
+<script>
+(function(){
+  const BIB = "@misc{panthi2026seam,\n  title         = {Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams},\n  author        = {Panthi, Sugam and Yeamin, Muhaiminul and Abdelfattah, Rabab},\n  year          = {2026},\n  eprint        = {2609.llm-pasted-artifact-separation},\n  archivePrefix = {arXiv},\n  primaryClass  = {cs.CL},\n  url           = {https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation}\n}";
+  const btn = document.getElementById('bib');
+  const wrap = btn.parentElement;
+  wrap.classList.add('bibwrap');
+
+  const pop = document.createElement('div');
+  pop.className = 'bibpop';
+  pop.innerHTML = `<div class="hd"><span>Cite this work</span>
+      <button type="button" id="bibcopy">Copy</button></div><pre></pre>`;
+  pop.querySelector('pre').textContent = BIB;
+  wrap.appendChild(pop);
+
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(BIB); }
+    catch (e) {                                     // clipboard API needs a secure context
+      const ta = document.createElement('textarea');
+      ta.value = BIB; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    const c = pop.querySelector('#bibcopy');
+    c.textContent = 'Copied ✓'; c.classList.add('done');
+    setTimeout(() => { c.textContent = 'Copy'; c.classList.remove('done'); }, 1600);
+  };
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = pop.classList.toggle('open');
+    btn.classList.toggle('done', open);
+  });
+  pop.addEventListener('click', e => {
+    e.stopPropagation();
+    if (e.target.id === 'bibcopy') copy();
+  });
+  document.addEventListener('click', () => { pop.classList.remove('open'); btn.classList.remove('done'); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { pop.classList.remove('open'); btn.classList.remove('done'); }
+  });
+})();
+</script>
+</body>
+</html>

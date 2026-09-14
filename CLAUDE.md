@@ -12,6 +12,12 @@ successor should be able to edit templates without knowing a framework, and
 - **No client-side JavaScript.** Do not add Astro client directives
   (`client:load`, etc.) or `<script>` tags. If something seems to need JS, ask
   first; it almost never does for this site.
+  The one exception: interactive paper demos under `public/`, which are
+  hand-written static HTML outside the Astro pipeline and may use JS (see
+  `public/seam/`, the SEAM-Bench demo and leaderboard). Astro-rendered pages
+  stay JS-free, so the site itself still builds and survives without a runtime.
+  Every other rule here, em dashes and design tokens included, applies to those
+  files too.
 - **All visual choices go through the design tokens** at the top of
   `src/styles/global.css`. Do not hardcode colors, fonts, or the content width
   in components; reference the CSS variables.
@@ -57,6 +63,7 @@ public/CNAME                  custom domain for GitHub Pages; do not delete
 public/favicon.svg            copied from favicon/logo.svg
 public/og.jpg                 social preview image, 1200x630 jpg (not webp)
 public/robots.txt             allows all, points at the sitemap
+public/seam/                  SEAM-Bench demo + leaderboard, static HTML, served at /seam/
 .github/workflows/deploy.yml  builds and publishes to GitHub Pages on push to main
 ```
 
