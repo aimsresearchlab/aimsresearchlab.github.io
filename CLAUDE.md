@@ -67,6 +67,29 @@ public/seam/                  SEAM-Bench demo + leaderboard, static HTML, served
 .github/workflows/deploy.yml  builds and publishes to GitHub Pages on push to main
 ```
 
+## SEAM-Bench pages (`public/seam/`)
+
+Two hand-written static pages that deploy with the site to `/seam/`:
+`index.html` is a GSAP walkthrough of one benchmark case, `leaderboard.html`
+ranks 20 models and expands each row into that model's real outputs.
+Supporting files: `icons/` (brand marks) and `data/samples.json` (the sampled
+outputs, built upstream).
+
+- They are the documented exception to the no-JavaScript rule. Every other rule
+  here still applies to them, em dashes and all.
+- The walkthrough measures cursor targets from the DOM and rebuilds its timeline
+  on resize, so it reflows on phones instead of scaling to nothing. Keep that
+  property: never reintroduce a fixed-size canvas scaled by transform.
+- `window.__tl` is the timeline. `tl.pause()`, `tl.seek(t, false)` (the `false`
+  lets callbacks fire) and `tl.play()` are how you inspect a beat or capture a
+  still. Step forward in small increments; captions and typed text come from
+  callbacks, so one long jump lands mid-write.
+- Numbers come from the benchmark's `results/statistics.json`. Regenerate and
+  re-embed, never retype.
+- Full pipeline, repo map, and the figure-capture recipe:
+  [`docs/DEMO.md`](https://github.com/aimsresearchlab/seam/blob/main/docs/DEMO.md)
+  in `aimsresearchlab/seam`.
+
 ## Content rules
 
 ### People (`src/data/people.ts`)
