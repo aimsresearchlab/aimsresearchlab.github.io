@@ -133,6 +133,52 @@
         font-size:13.5px;color:var(--ink-2)}
   .note code{font:12.5px var(--mono);background:#f3f1ed;padding:1px 5px;border-radius:4px}
   @media (max-width:760px){ .wrap{padding:22px 16px 60px} h1{font-size:25px} }
+
+  /* phones */
+  .swipe{display:none}
+  @media (max-width:760px){
+    .nav .in{padding:11px 14px;gap:10px;flex-wrap:wrap}
+    .brand{font-size:15.5px}
+    .brand span{display:none}
+    .links{gap:4px}
+    .links a,.links button{padding:6px 10px;font-size:13px}
+    .links .gh svg{width:14px;height:14px}
+    .bibpop{width:min(92vw,560px);right:auto;left:50%;transform:translateX(-50%)}
+    .bibpop pre{font-size:11px}
+    .wrap{padding:20px 14px 52px}
+    h1{font-size:23px;letter-spacing:-.02em}
+    .lede{font-size:14px;margin-bottom:18px}
+    .bar{gap:8px}
+    .seg{flex-wrap:wrap;width:100%}
+    .seg button{font-size:12.5px;padding:7px 10px}
+    .fld{flex:1 1 100%}
+    .fld input,.fld select{width:100%;min-width:0}
+    table{min-width:820px}
+    th,td{padding:10px 9px}
+    thead th{font-size:10.5px}
+    .m img,.m .lm{width:18px;height:18px}
+    .m .nm{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+    .m .fm{display:none}               /* the brand mark already says the family */
+    .m>span{min-width:0}
+    thead th[data-sort="name"]{width:32% !important}
+    .pct{font-size:12.5px;min-width:44px}
+    td.delta{font-size:12.5px}
+    .track{max-width:52px}
+    .swipe{display:block;margin-top:10px;font-size:12.5px;color:var(--ink-3)}
+    .foot{gap:10px;font-size:12.5px;margin-top:14px}
+    .note{font-size:12.5px;margin-top:20px}
+    /* the drawer lives inside the horizontally scrolled table, so pin it to the
+       viewport instead of letting it run off with the wide columns */
+    tr.det>td{position:sticky;left:0}
+    .det-in{padding:14px 12px 18px;width:calc(100vw - 30px);max-width:100%}
+    .det-head{gap:6px}
+    .chip{font-size:12.5px;padding:6px 10px}
+    .outs{grid-template-columns:1fr;gap:10px}
+    .prompt{font-size:12.5px;padding:12px}
+    .out pre{font-size:12.5px}
+    .out .cn{font-size:11.5px}
+    .out .vd{font-size:10.5px}
+  }
 </style>
 </head>
 <body>
@@ -180,6 +226,8 @@
     </tr></thead>
     <tbody id="body"></tbody>
   </table></div></div>
+
+  <p class="swipe">Swipe the table sideways to see every seam condition.</p>
 
   <div class="foot">
     <div class="legend"><span>0%</span><span class="ramp"></span><span>75%</span></div>
