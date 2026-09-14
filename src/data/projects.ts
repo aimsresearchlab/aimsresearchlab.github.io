@@ -2,9 +2,10 @@
 // To add one: copy an entry. Keep `claim` to one sentence.
 
 // `kind` picks the icon and label: arxiv -> arXiv logo, github -> GitHub logo,
-// paper -> generic document (DOI, publisher, or repository record).
+// paper -> generic document (DOI, publisher, or repository record),
+// demo -> an interactive page on this site (see public/seam/).
 export interface ProjectLink {
-  kind: 'arxiv' | 'github' | 'paper';
+  kind: 'arxiv' | 'github' | 'paper' | 'demo';
   url: string;
 }
 
@@ -63,6 +64,7 @@ export const projects: Project[] = [
     claim: 'Measuring how much typed user speech gets absorbed into edited artifacts at unmarked within-turn seams.',
     tags: ['HumanCenteredAI', 'LLMEditing'],
     links: [
+      { kind: 'demo', url: '/seam/' },
       { kind: 'github', url: 'https://github.com/aimsresearchlab/seam' },
     ],
   },
