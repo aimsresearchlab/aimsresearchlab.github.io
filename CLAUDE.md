@@ -52,11 +52,17 @@ src/components/Header.astro   logo + nav (edit nav array at top)
 src/components/Footer.astro   copyright + GitHub org link
 src/components/Person.astro   one person card (avatar, name, topic, link icons)
 src/components/Publication.astro
+src/components/ProjectCard.astro  one project card (homepage + /projects)
+src/components/Cover.astro        16:9 project cover, or the placeholder
 src/pages/*.astro             one file per route
-src/data/people.ts            roster (single source of truth for the People section)
+src/pages/projects/[slug].astro   one page per project, from the collection
+src/content.config.ts         schema for the projects collection
+src/content/projects/*.md     one markdown file per project (source of truth)
+src/data/people.ts            roster (feeds homepage People and /people)
 src/data/publications.ts      papers (feeds homepage Recent and /publications)
-src/data/news.ts              dated news feed (homepage right column)
-src/data/projects.ts          project cards (homepage Projects grid)
+src/data/news.ts              dated news feed (homepage right column and /news)
+src/data/projects.ts          helpers over the projects collection + link icons
+public/projects/*.webp        project covers, 1600x900 (16:9)
 public/people/*.webp          headshots, 192x192, referenced from people.ts
 public/lab.webp               homepage banner, 1600x640 (5:2), lab photo
 public/CNAME                  custom domain for GitHub Pages; do not delete
@@ -96,6 +102,10 @@ outputs, built upstream).
 
 - One entry per person. Categories: `faculty`, `phd`, `masters`, `undergrad`.
   Section order and headings come from `categoryOrder` in the same file.
+- Someone who has finished gets `graduated: 'Spring 2026'` (season plus year).
+  That drops them from the roster on the homepage and moves them into the
+  Alumni section at the foot of `/people`, grouped by category and term, most
+  recent term first. Keep the entry where it is in the array; do not delete it.
 - `topic` is one short line (two to four words). It must fit on one line in a
   10.5rem card; if it wraps, shorten it. Cards in a row must line up.
 - Names are forced onto one line (`white-space: nowrap`). If a name is too long
@@ -140,6 +150,23 @@ The homepage banner is a **5:2** image, **1600x640 webp**, quality 82. Crop
 the source to 5:2 first (keep the wall sign fully in frame), then resize.
 The `<img>` in `src/pages/index.astro` carries matching width/height.
 
+### Routes
+
+Every homepage section has a full page behind it, and the header nav points at
+the pages, not at homepage anchors:
+
+```
+/            hero, 3 projects, People, 3 recent publications, news sidebar
+/projects    all projects, cards with covers
+/projects/<slug>  one project: cover, claim, links, prose, its papers
+/people      full roster
+/news        full archive, grouped by year
+/publications  all papers, grouped by year
+```
+
+The homepage sections keep their `#projects`, `#people`, `#news` anchors, so
+old links still land in the right place.
+
 ### Research areas (hero, `src/pages/index.astro`)
 
 The `areas` array at the top of the homepage renders as filled brand-blue
@@ -153,16 +180,43 @@ spaces, 6 to 8 of them. Keep them in sync with the tags used on project cards.
 - Add an entry for every acceptance, preprint, new member, talk, or award.
   A stale feed reads worse than none.
 
-### Projects (`src/data/projects.ts`)
+### Projects (`src/content/projects/*.md`)
 
-- One card per line of work, not per paper; a project with two papers gets one
-  card with two Paper links. `claim` is one sentence stating the finding.
-- `tags` are one to three CamelCase tokens with no spaces (`TrustworthyAI`);
-  they render as hashtags. No per-project icons.
-- Links use `kind`: `arxiv`, `github`, or `paper`. Each renders as an outlined
-  pill with the matching icon. Only canonical records (arXiv, DOI, public
-  GitHub repo). Do not link private repos.
-- Cards auto-fill at 17rem minimum, so five or six cards make two rows.
+One markdown file per line of work, not per paper. The filename is the slug and
+the URL (`gaussian-streaming.md` -> `/projects/gaussian-streaming/`). Frontmatter
+is validated by `src/content.config.ts`, so a bad field fails the build.
+
+```yaml
+---
+title: '4D Gaussian Streaming'
+claim: 'One sentence stating the finding or the goal.'
+tags: [ComputerVision, GaussianSplatting]   # 1 to 3 CamelCase tokens, no spaces
+cover: /projects/gaussian-streaming.webp    # optional, 16:9
+featured: 4                                 # homepage order; omit to leave it off
+links:
+  - { kind: arxiv, url: 'https://arxiv.org/abs/2603.17227' }
+publications:
+  - 'Exact title from src/data/publications.ts'
+---
+```
+
+- Quote `title` and `claim`. A colon in an unquoted YAML scalar breaks the parse.
+- The body is the project page: two or three short `##` sections (overview, what
+  we found, what is next). Keep it to what the papers actually support.
+- `featured` orders the homepage grid, which shows the first three. Raise the
+  limit in `src/pages/index.astro` if you want two rows.
+- `links` use `kind`: `arxiv`, `github`, `paper`, or `demo`. Each renders as an
+  outlined pill with the matching icon. Only canonical records (arXiv, DOI,
+  public GitHub repo, a demo on this site). Do not link private repos.
+- `publications` must match titles in `src/data/publications.ts` character for
+  character; a typo silently drops the paper from the Papers section.
+
+### Project covers (`public/projects/`)
+
+- **16:9**, **1600x900 webp**, quality 82, named `<slug>.webp`. Crop to 16:9
+  first, then resize. With no `cover`, the page and the card render a
+  placeholder (the AIMS mark on a hairline box) at the same aspect ratio, so
+  adding a real image later does not move the layout.
 
 ## Commands
 
