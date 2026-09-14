@@ -218,6 +218,14 @@ publications:
   placeholder (the AIMS mark on a hairline box) at the same aspect ratio, so
   adding a real image later does not move the layout.
 
+## Changelog
+
+Every change set gets an entry in `changelog/`, one markdown file named
+`YYYY-MM-DD-slug.md`. A change set is a coherent piece of work, usually one
+push rather than one commit. Write it as part of the work: say what changed
+and why, and list anything a successor still has to do by hand. The
+conventions are in `changelog/README.md`.
+
 ## Commands
 
 ```
