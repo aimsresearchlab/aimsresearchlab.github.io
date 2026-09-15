@@ -52,7 +52,13 @@ export const people: Person[] = [
     name: 'Siyan Luo',
     topic: 'PhD student',
     category: 'phd',
-    image: '/people/aims-placeholder.webp', // AIMS mark until a headshot arrives
+    image: '/people/siyan-luo.webp',
+  },
+  {
+    name: 'Ticauris Stokes',
+    topic: 'Computer vision',
+    category: 'phd',
+    image: '/people/ticauris-stokes.webp',
   },
   {
     name: 'Ashim Dahal',
@@ -77,7 +83,7 @@ export const people: Person[] = [
   },
   {
     name: 'Nhoojah Maharjan',
-    topic: 'Research assistant',
+    topic: 'Trustworthy AI',
     category: 'undergrad',
     image: '/people/nhoojah-maharjan.webp',
     links: [
@@ -87,7 +93,7 @@ export const people: Person[] = [
   },
   {
     name: 'Sakshyam Sigdel',
-    topic: 'Research assistant',
+    topic: 'Applied computer vision',
     category: 'undergrad',
     image: '/people/sakshyam-sigdel.webp',
     links: [
@@ -97,7 +103,7 @@ export const people: Person[] = [
   },
   {
     name: 'Muhaiminul Yeamin',
-    topic: 'Research assistant',
+    topic: 'NLP',
     category: 'undergrad',
     image: '/people/muhaiminul-yeamin.webp',
     links: [
@@ -105,15 +111,49 @@ export const people: Person[] = [
       { type: 'github', url: 'https://github.com/MY-Sabil' },
     ],
   },
-  // Graduated Master's students, Spring 2026. Two of them, from Rabab's deck.
-  // Fill in the names (and headshots, 192x192 webp) and uncomment:
-  // {
-  //   name: '',
-  //   topic: "Master's student",
-  //   category: 'masters',
-  //   image: '/people/first-last.webp',
-  //   graduated: 'Spring 2026',
-  // },
+  {
+    name: 'Rashika Karmacharya',
+    topic: 'Computer vision',
+    category: 'undergrad',
+    image: '/people/rashika-karmacharya.webp',
+    links: [
+      { type: 'linkedin', url: 'https://www.linkedin.com/in/rashika-karmacharya' },
+    ],
+  },
+  {
+    name: 'Bishesta Bohara',
+    topic: 'Computer vision',
+    category: 'undergrad',
+    image: '/people/bishesta-bohara.webp',
+  },
+  {
+    name: 'Shrabya Bhattarai',
+    topic: 'Applied computer vision',
+    category: 'undergrad',
+    image: '/people/shrabya-bhattarai.webp',
+  },
+  {
+    name: 'Joshua Johnston',
+    topic: 'Computer vision',
+    category: 'undergrad',
+    image: '/people/joshua-johnston.webp',
+  },
+  // Alumni. Keep them in the array; `graduated` moves them to the Alumni
+  // section on /people.
+  {
+    name: 'Akram Hossain',
+    topic: 'RA at U. of Arkansas',
+    category: 'masters',
+    image: '/people/akram-hossain.webp',
+    graduated: 'Spring 2026',
+  },
+  {
+    name: 'Murad Hasan',
+    topic: 'TA at U. of Arkansas',
+    category: 'masters',
+    image: '/people/murad-hasan.webp',
+    graduated: 'Spring 2026',
+  },
 ];
 
 // Display order + heading label for each category.
