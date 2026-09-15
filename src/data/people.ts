@@ -29,8 +29,8 @@ export interface Person {
 
 export const people: Person[] = [
   {
-    name: 'Rabab Abdelfattah',
-    topic: 'Principal Investigator',
+    name: 'Dr. Rabab Abdelfattah',
+    topic: 'AIMS Lab Director',
     category: 'faculty',
     image: '/people/rabab-abdelfattah.webp',
     links: [

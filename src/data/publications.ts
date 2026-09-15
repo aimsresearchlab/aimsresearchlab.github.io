@@ -29,7 +29,7 @@ export const publications: Publication[] = [
   },
   {
     title: 'Gaussian Splatting for Real-Time Scene Reconstruction: Methods, Systems, and Trade-offs',
-    authors: 'A. Dahal, R. Abdelfattah',
+    authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
     venue: 'Pattern Recognition (under major revision)',
     year: 2026,
   },
