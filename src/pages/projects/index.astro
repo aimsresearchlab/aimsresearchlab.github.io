@@ -5,16 +5,17 @@ import { allProjects } from '../../data/projects';
 
 const projects = await allProjects();
 ---
-<Base
-  title="Projects · AIMS Lab"
-  description="Ongoing lines of work at the AIMS lab: LLM evaluation validity, conversational memory, RAG, AI agents, and computer vision."
->
+<Base title="Projects · AIMS Lab" description="...">
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Projects</h1>
+      <p class="lede">
+        One card per line of work, not per paper. Each page collects the claim,
+        the code, and the papers that came out of it.
+      </p>
+    </div>
+  </section>
   <section class="wide">
-    <h1>Projects</h1>
-    <p class="lede">
-      One card per line of work, not per paper. Each page collects the claim,
-      the code, and the papers that came out of it.
-    </p>
     <div class="projects">
       {projects.map((project) => <ProjectCard project={project} cover />)}
     </div>
@@ -22,7 +23,32 @@ const projects = await allProjects();
 </Base>
 
 <style>
-  .lede { font-size: 1.15rem; color: var(--ink-soft); margin: 0 0 2.5rem; max-width: 42rem; }
+  .hero {
+    background: #302f2c;
+    color: #fff;
+    border-bottom: 5px solid #ffcc33;
+    margin: -3rem calc(50% - 50vw) 3rem;
+  }
+  .hero-inner {
+    max-width: 1180px;
+    margin: auto;
+    padding: 3rem 1.5rem 2.5rem;
+  }
+  .hero h1 {
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    font-size: clamp(2.5rem, 4.5vw, 3.25rem);
+    margin: 0 0 1rem;
+    color: #fff;
+  }
+  .hero .lede {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.15rem;
+    max-width: 42rem;
+    color: #d6d5d0;
+    margin: 0;
+  }
   .projects {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
