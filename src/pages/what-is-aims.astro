@@ -12,22 +12,24 @@
   <style>
     :root{--navy:#07142d;--gold:#ffcc33;--cream:#efefec;--ink:#12203a;--muted:#68738a;--line:#d8d9d6;--white:#fff;--blue:#1652ec;--charcoal:#302f2c;--max:1180px}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:'Times New Roman',Times,serif;font-size:16px;line-height:1.75}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
-    .usm-bar{background:var(--charcoal)}.usm-bar a{display:flex;align-items:center;gap:.55rem;max-width:var(--max);margin:auto;padding:.4rem 1.5rem;color:#fff;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600}.usm-bar a:hover{color:var(--gold)}.usm-bar-logo{height:16px;width:auto;filter:brightness(0) invert(1)}
+    .usm-bar{background:var(--charcoal)}.usm-bar a{display:block;max-width:var(--max);margin:auto;padding:.4rem 1.5rem;color:var(--gold);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
     .topbar{background:#fff;color:var(--navy);border-bottom:1px solid var(--line)}.nav{max-width:var(--max);margin:auto;padding:.75rem 1.5rem;display:flex;align-items:center;gap:2rem}.brand-lockup{display:flex;align-items:center;gap:1rem;margin-right:auto}.usm-brand,.aims-brand{display:flex;align-items:center;justify-content:center;height:70px}.usm-logo{width:150px;height:auto}.brand-divider{height:52px;width:1px;background:#b9bec8}.brand-full{width:auto;height:70px}.navlinks{display:flex;gap:.3rem;font-size:1.05rem;font-weight:700}.navlinks a{display:inline-block;padding:.5rem 1rem;border-radius:.4rem;color:var(--muted)}.navlinks a[aria-current=page]{background:#111;color:#fff}.navlinks a:hover{color:var(--navy)}
     .hero{background:var(--charcoal);color:#fff;border-bottom:5px solid var(--gold)}.hero-inner{max-width:var(--max);margin:auto;padding:2.2rem 1.5rem 2rem}.hero h1{color:#fff!important;font-family:'Times New Roman',Times,serif;letter-spacing:-.045em;line-height:1.05;font-size:clamp(2.25rem,4vw,3.25rem);margin:.5rem 0}.hero p{font-size:1.15rem;max-width:760px;color:#d6d5d0;margin:0}
     main{max-width:var(--max);margin:auto;padding:3.5rem 1.5rem 5.5rem}.content-flow{font-size:1.05rem;color:#3f4858}.content-flow:after{content:"";display:block;clear:both}.content-flow p{margin:0 0 1.55rem;text-align:justify;text-justify:inter-word;hyphens:auto}.content-flow p:first-of-type{font-size:1.12rem;color:var(--ink)}.visual{float:right;width:62%;margin:0 0 1.8rem 2.7rem;background:#25282d;border:1px solid #45494f;border-radius:22px;padding:1rem;box-shadow:0 20px 50px rgba(7,20,45,.16)}.visual img{width:100%;height:auto;border-radius:12px}
-    footer{background:#040d1f;color:#aeb8ca}.footer{max-width:var(--max);margin:auto;padding:2.2rem 1.5rem;display:flex;justify-content:space-between;gap:2rem;font-size:.78rem}.footer a{color:#fff}
+    footer{background:#040d1f;color:#aeb8ca}.footer-cta{background:var(--charcoal);border-top:5px solid var(--gold)}.footer-cta-inner{max-width:var(--max);margin:auto;padding:2.4rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}.footer-cta h2{margin:0;color:#fff;font-family:'Times New Roman',Times,serif;font-size:clamp(1.35rem,3vw,1.85rem);letter-spacing:-.02em}.footer-cta-btn{display:inline-block;background:var(--gold);color:#1b1a17;font-weight:800;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;padding:.75rem 1.5rem;border-radius:.3rem;white-space:nowrap}.footer-cta-btn:hover{background:#fff}.footer-main{max-width:var(--max);margin:auto;padding:2.5rem 1.5rem;display:flex;flex-wrap:wrap;gap:2rem;justify-content:space-between}.footer-logos{display:flex;align-items:center;gap:1.25rem}.footer-logos img{height:52px;width:auto}.footer-usm-logo{filter:brightness(0) invert(1)}.footer-logo-divider{width:1px;height:40px;background:#3a4353}.footer-contact{font-size:.82rem;line-height:1.65;min-width:220px}.footer-contact strong{color:#fff}.footer-contact a{color:#fff}.footer-contact a:hover{color:var(--gold)}.footer-links{font-size:.82rem;align-self:flex-start}.footer-links a{color:#fff}.footer-links a:hover{color:var(--gold)}.footer-bottom{max-width:var(--max);margin:auto;padding:0 1.5rem 2rem;font-size:.72rem;color:#68738a}
     @media(max-width:900px){.nav{align-items:flex-start;flex-wrap:wrap}.brand-lockup{margin-right:auto}.navlinks{order:3;width:100%;overflow-x:auto;padding-top:.2rem}.visual{width:56%;margin-left:2rem}}
-    @media(max-width:650px){.nav{gap:1rem}.brand-lockup{gap:.65rem}.usm-brand,.aims-brand{height:50px}.brand-full{width:auto;height:49px}.brand-divider{height:42px}.usm-logo{width:105px}.navlinks{gap:.2rem;font-size:.85rem}.navlinks a{padding:.35rem .65rem}.hero-inner{padding:1.75rem 1.25rem}main{padding:3.2rem 1rem 4rem}.content-flow p{text-align:left}.visual{float:none;width:100%;margin:0 0 2rem}.footer{flex-direction:column}}
+    @media(max-width:650px){.nav{gap:1rem}.brand-lockup{gap:.65rem}.usm-brand,.aims-brand{height:50px}.brand-full{width:auto;height:49px}.brand-divider{height:42px}.usm-logo{width:105px}.navlinks{gap:.2rem;font-size:.85rem}.navlinks a{padding:.35rem .65rem}.hero-inner{padding:1.75rem 1.25rem}main{padding:3.2rem 1rem 4rem}.content-flow p{text-align:left}.visual{float:none;width:100%;margin:0 0 2rem}.footer-cta-inner{flex-direction:column;align-items:flex-start}.footer-main{flex-direction:column;gap:1.5rem}}
   </style>
 </head>
 <body>
-  <div class="usm-bar"><a href="https://www.usm.edu/"><img class="usm-bar-logo" src="/assets/usm-horizontal-logo.png" alt="" /> The University of Southern Mississippi</a></div>
+  <div class="usm-bar"><a href="https://www.usm.edu/">The University of Southern Mississippi</a></div>
   <header class="topbar">
     <nav class="nav" aria-label="Primary navigation">
-<div class="brand-lockup">
-  <a class="aims-brand" href="https://aimsresearchlab.com/"><img class="brand-full" src="/assets/aims-lab-logo.png" alt="AIMS Lab — Artificial Intelligence and Multimodal Systems"></a>
-</div>
+      <div class="brand-lockup">
+        <a class="usm-brand" href="https://www.usm.edu/computing-sciences-computer-engineering/index.php" aria-label="USM School of Computing Sciences and Computer Engineering"><img class="usm-logo" src="/assets/usm-horizontal-logo.png" alt="The University of Southern Mississippi"></a>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <a class="aims-brand" href="https://aimsresearchlab.com/"><img class="brand-full" src="/assets/aims-lab-logo.png" alt="AIMS Lab — Artificial Intelligence and Multimodal Systems"></a>
+      </div>
       <div class="navlinks">
         <a href="/">Home</a>
         <a href="/what-is-aims/" aria-current="page">What is AIMS?</a>
@@ -57,6 +59,23 @@
     </section>
   </main>
 
-  <footer><div class="footer"><span>© 2026 AIMS Lab · University of Southern Mississippi</span><span><a href="https://github.com/aimsresearchlab">GitHub</a> · TEC 340, Hattiesburg, MS</span></div></footer>
+  <footer>
+    <div class="footer-cta">
+      <div class="footer-cta-inner">
+        <h2>Want to work in the AIMS Lab?</h2>
+        <a class="footer-cta-btn" href="mailto:rabab.abdelfattah@usm.edu?subject=Interest%20in%20joining%20AIMS%20Lab">Get in touch</a>
+      </div>
+    </div>
+    <div class="footer-main">
+      <div class="footer-logos">
+        <img src="/assets/aims-lab-logo.png" alt="AIMS Lab">
+        <span class="footer-logo-divider" aria-hidden="true"></span>
+        <img class="footer-usm-logo" src="/assets/usm-horizontal-logo.png" alt="The University of Southern Mississippi">
+      </div>
+      <div class="footer-contact"><strong>Dr. Rabab Abdelfattah</strong><br>Director, AIMS Lab<br><a href="mailto:rabab.abdelfattah@usm.edu">rabab.abdelfattah@usm.edu</a><br>TEC 340 · University of Southern Mississippi · Hattiesburg, MS</div>
+      <div class="footer-links"><a href="https://github.com/aimsresearchlab">GitHub</a></div>
+    </div>
+    <div class="footer-bottom">© {new Date().getFullYear()} AIMS Lab · University of Southern Mississippi</div>
+  </footer>
 </body>
 </html>
