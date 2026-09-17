@@ -50,15 +50,13 @@ const isCurrent = (href: string) =>
     gap: 2rem;
   }
   .brand-lockup { display: flex; align-items: center; gap: 1rem; margin-right: auto; }
-  .usm-brand,
   .aims-brand {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 70px;
   }
-  .usm-logo { width: 150px; height: auto; }
-  .brand-divider { height: 52px; width: 1px; background: var(--rule); }
+  
   .brand-full { width: auto; height: 70px; }
   .navlinks {
     display: flex;
@@ -83,10 +81,8 @@ const isCurrent = (href: string) =>
   @media (max-width: 650px) {
     .nav { gap: 1rem; }
     .brand-lockup { gap: 0.65rem; }
-    .usm-brand, .aims-brand { height: 50px; }
-    .brand-full { width: auto; height: 49px; }
-    .brand-divider { height: 42px; }
-    .usm-logo { width: 105px; }
+   .aims-brand { height: 50px; }
+    .brand-full { width: auto; height: 49px; }    
     .navlinks { gap: 0.2rem; font-size: 0.85rem; }
     .navlinks a { padding: 0.35rem 0.65rem; }
   }
