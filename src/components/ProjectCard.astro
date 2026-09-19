@@ -10,9 +10,9 @@ const { title, claim, tags, links } = project.data;
 const href = `/projects/${project.id}/`;
 ---
 <article class="project">
-  {cover && (
+ {cover && (
     <a class="cover-link" href={href} tabindex="-1" aria-hidden="true">
-      <Cover src={project.data.cover} caption={project.data.coverCaption} />
+      <Cover src={project.data.cover} video={project.data.coverVideo} caption={project.data.coverCaption} />
     </a>
   )}
   <div class="body">
