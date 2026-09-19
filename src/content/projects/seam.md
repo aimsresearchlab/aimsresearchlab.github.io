@@ -2,6 +2,7 @@
 title: 'SEAM'
 claim: 'Measuring how much typed user speech gets absorbed into edited artifacts at unmarked within-turn seams.'
 tags: [HumanCenteredAI, LLMEditing]
+cover: /projects/seam.webp
 links:
   - { kind: demo, url: '/seam/' }
   - { kind: github, url: 'https://github.com/aimsresearchlab/seam' }
