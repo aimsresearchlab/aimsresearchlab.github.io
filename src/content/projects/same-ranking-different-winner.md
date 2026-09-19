@@ -3,7 +3,6 @@ title: 'Same Ranking, Different Winner'
 claim: 'The scoring target a memory benchmark picks can flip which LLM wins, even when the overall ranking looks stable.'
 tags: [ConversationalMemory, Evaluation]
 cover: /projects/same-ranking-different-winner.webp
-coverCaption: 'Stage I constructs Raw, Source, and Canonical scoring targets from the same query, memory store, and source evidence. Stage II performs fixed output rescoring by applying the three targets to the same saved ranked traces and controlling for shared query coverage. Stage III analyzes target sensitivity and audits contested credits for semantic support.'
 featured: 1
 links:
   - { kind: arxiv, url: 'https://arxiv.org/abs/2605.24060' }
