@@ -15,6 +15,7 @@ const projects = defineCollection({
     tags: z.array(z.string()).min(1).max(3),
     // 16:9 image under public/projects/, 1600x900 webp. Omit for the placeholder.
     cover: z.string().optional(),
+    coverVideo: z.string().optional(),
     coverCaption: z.string().optional(),
     // Homepage order. 1 shows first; omit to keep a project off the homepage.
     featured: z.number().optional(),
