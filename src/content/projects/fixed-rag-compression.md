@@ -2,6 +2,7 @@
 title: 'Fixed RAG Compression'
 claim: 'A fixed compression layer in a RAG pipeline collapses the reader-scaling trend that the uncompressed setup shows.'
 tags: [RAG, Evaluation]
+cover: /projects/fixed-rag-compression.webp
 featured: 2
 links:
   - { kind: arxiv, url: 'https://arxiv.org/abs/2606.21807' }
