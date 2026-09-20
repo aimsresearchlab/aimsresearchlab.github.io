@@ -361,6 +361,14 @@ animates one real query rescored under three scoring targets.
   lets callbacks fire) and `tl.play()` are how you inspect a beat or capture a
   still. Step forward in small increments; captions and typed text come from
   callbacks, so one long jump lands mid-write.
+- Driving one of these pages from Playwright: every GSAP method returns the
+  timeline, so `page.evaluate(() => window.__tl.pause())` hands Playwright a
+  circular object to serialize and hangs with no error. Wrap the call so it
+  returns nothing: `page.evaluate(() => { window.__tl.pause(); })`. Load with
+  `waitUntil: 'load'`, not `networkidle`, which never settles while the page
+  animates. To record a cut, open the context with `recordVideo` at the target
+  size, seek to the first beat, note the wall clock, play for the length you
+  want, close the context, then trim that pre-roll off the front with ffmpeg.
 - Numbers are generated, never retyped. SEAM's come from the benchmark's
   `results/statistics.json`; TIAP's come from `scripts/sync-tiap-data.py`,
   which reads the saved run artifacts in the paper repo and writes
@@ -398,10 +406,22 @@ All of it lives in `src/layouts/Base.astro`; pages only pass `title`,
   not violate the no-client-JS rule.
 - `@astrojs/sitemap` writes `sitemap-index.xml` at build time from every
   route; `public/robots.txt` references it. Nothing to maintain by hand.
-- New pages: pass a specific `title` ("Thing AIMS Lab") and a one-sentence
+- New pages: pass a specific `title` ("Thing · AIMS Lab") and a one-sentence
   `description` under 160 characters. Do not reuse the homepage description,
   and do not ship a placeholder: `/projects` shipped `description="..."` for a
   week and that is what search engines and link previews showed.
+- **Titles end in "USM".** `Base.astro` appends it to the `<title>` and the
+  social titles unless the page already says USM or Southern Miss, so a page
+  passes its own name and nothing else. People looking for a university lab
+  search for the university along with the subject, and the title is where
+  both names can meet. The hand-written demos under `public/` are outside the
+  layout, so their `<title>` and `og:title` carry the suffix by hand.
+- The title is the cheap half of the university connection. The half that
+  actually moves rankings is a link from a `usm.edu` page (the CSCE department
+  listing, the faculty profile) to aimsresearchlab.com. That is worth asking
+  for; a keyword in a title inherits no authority on its own. The JSON-LD in
+  `Base.astro` already names USM as `parentOrganization`, which is the machine
+  readable half of the same claim.
 - Social image: `public/og.jpg`, 1200x630, jpg (WhatsApp, LinkedIn, and
   iMessage do not reliably render webp previews). It is the lab photo under a
   navy gradient with the white mark, "AIMS", the expansion, and a USM line,

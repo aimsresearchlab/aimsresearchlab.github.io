@@ -20,6 +20,15 @@ const {
   type = 'website',
 } = Astro.props;
 
+// Every title ends in "USM" unless it already says so. People looking for a
+// lab search for the university with it ("usm ai lab", "southern miss machine
+// learning"), and the title is the one place both names can meet. Pages pass
+// the page name only; the suffix is added here so a new page cannot forget it.
+const withUsm = (text: string) =>
+  /USM|Southern Miss/i.test(text) ? text : `${text} \u00B7 USM`;
+const pageTitle = withUsm(title);
+const pageSocialTitle = withUsm(socialTitle);
+
 // Absolute URLs for canonical + social tags. Astro.site comes from astro.config.mjs.
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image, Astro.site).href;
@@ -57,14 +66,14 @@ const jsonLd = {
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#1652EC" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
 
     <!-- Open Graph (Facebook, LinkedIn, Slack, iMessage previews) -->
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="AIMS Lab" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content={socialTitle} />
+    <meta property="og:title" content={pageSocialTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={imageUrl} />
@@ -74,7 +83,7 @@ const jsonLd = {
 
     <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:title" content={pageSocialTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
 
