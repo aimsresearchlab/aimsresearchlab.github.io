@@ -2,6 +2,7 @@
 title: '4D Gaussian Streaming'
 claim: 'Which Gaussians you pick as anchors barely matters: cheap samplers match the default strategy at deployment budgets, so the standard 8,192-anchor choice over-spends compute.'
 cover: /projects/gaussian-streaming.webp
+coverVideo: /projects/anchor_policies.mp4
 tags: [ComputerVision, GaussianSplatting]
 featured: 3
 links:
