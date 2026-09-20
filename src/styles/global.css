@@ -20,6 +20,7 @@
   --gold:         #F5CE55; /* USM gold, filled panels (the /people culture card) */
   --gold-ink:     #8A6A1F; /* gold that reads as text on paper: kickers, roles   */
   --charcoal:     #302F2C; /* full-bleed page headers, warm near-black            */
+  --usm-band:     #E8E5DF; /* the university band above the header                */
   --on-charcoal:  #D6D5D0; /* secondary text on --charcoal (headings stay white)  */
 
   /* --- Figure palette ---------------------------------------------------

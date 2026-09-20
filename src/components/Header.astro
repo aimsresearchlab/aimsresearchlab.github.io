@@ -24,16 +24,6 @@ const isCurrent = (href: string) =>
           alt="AIMS Lab: Artificial Intelligence and Multimodal Systems"
         />
       </a>
-      <span class="cobrand-cross" aria-hidden="true">&#215;</span>
-      <a class="usm-brand" href="https://www.usm.edu/">
-        <img
-          class="brand-usm"
-          src="/usm-logo.svg"
-          alt="The University of Southern Mississippi"
-          width="147"
-          height="57"
-        />
-      </a>
     </div>
     <div class="navlinks">
       {nav.map((item) => (
@@ -59,23 +49,14 @@ const isCurrent = (href: string) =>
     align-items: center;
     gap: 2rem;
   }
-  /* AIMS x USM, side by side: the lab mark, a thin cross, the university mark. */
-  .brand-lockup { display: flex; align-items: center; gap: 0.9rem; margin-right: auto; }
-  .aims-brand,
-  .usm-brand {
+  .brand-lockup { display: flex; align-items: center; gap: 1rem; margin-right: auto; }
+  .aims-brand {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 70px;
   }
-  .cobrand-cross {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--ink-soft);
-    opacity: 0.55;
-  }
   .brand-full { width: auto; height: 70px; }
-  .brand-usm { width: auto; height: 52px; }
   .navlinks {
     display: flex;
     gap: 0.3rem;
@@ -109,12 +90,9 @@ const isCurrent = (href: string) =>
   }
   @media (max-width: 650px) {
     .nav { gap: 1rem; }
-    .brand-lockup { gap: 0.5rem; }
-    .aims-brand,
-    .usm-brand { height: 50px; }
+    .brand-lockup { gap: 0.65rem; }
+    .aims-brand { height: 50px; }
     .brand-full { width: auto; height: 49px; }
-    .brand-usm { width: auto; height: 36px; }
-    .cobrand-cross { font-size: 0.85rem; }
     .navlinks { gap: 0.2rem; font-size: 0.85rem; }
     .navlinks a { padding: 0.35rem 0.65rem; }
   }
