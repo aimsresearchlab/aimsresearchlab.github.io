@@ -1,0 +1,49 @@
+---
+// Full-bleed page header: the charcoal band with the gold rule that /projects
+// introduced, now shared by every route below the homepage. The homepage keeps
+// its banner and lede instead.
+//
+// `width` picks the inner column: `wide` lines the title up with a card grid
+// (--content-wide), `prose` with body text (--content-width). Anything in the
+// slot sits under the title; a `<p class="lede">` is the usual case.
+interface Props {
+  title: string;
+  width?: 'wide' | 'prose';
+}
+const { title, width = 'wide' } = Astro.props;
+---
+<section class="page-head" data-width={width}>
+  <div class="page-head-inner">
+    <h1>{title}</h1>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-head {
+    background: var(--charcoal);
+    color: #fff;
+    border-bottom: 5px solid var(--gold);
+    /* breaks out of whatever column it sits in, to the full viewport width */
+    margin: 0 calc(50% - 50vw) 3rem;
+  }
+  .page-head-inner {
+    width: var(--content-wide);
+    margin-inline: auto;
+    padding: 3rem 0 2.5rem;
+  }
+  .page-head[data-width='prose'] .page-head-inner { width: var(--content-width); }
+  .page-head h1 {
+    font-size: clamp(2.5rem, 4.5vw, 3.25rem);
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: #fff;
+  }
+  .page-head-inner :global(.lede) {
+    font-size: 1.15rem;
+    max-width: 42rem;
+    color: var(--on-charcoal);
+    margin: 1rem 0 0;
+  }
+  .page-head-inner :global(p:last-child) { margin-bottom: 0; }
+</style>

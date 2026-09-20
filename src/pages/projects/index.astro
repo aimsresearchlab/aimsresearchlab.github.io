@@ -1,21 +1,19 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import PageHeader from '../../components/PageHeader.astro';
 import { allProjects } from '../../data/projects';
 
 const projects = await allProjects();
 ---
 <Base title="Projects · AIMS Lab" description="...">
-  <section class="hero">
-    <div class="hero-inner">
-      <h1>Projects</h1>
-      <p class="lede">
-        We work on how machines see, remember, retrieve, and explain
-        themselves, and on whether the results hold up when you look closely.
-        Please click each project to learn more.
-      </p>
-    </div>
-  </section>
+  <PageHeader title="Projects">
+    <p class="lede">
+      We work on how machines see, remember, retrieve, and explain
+      themselves, and on whether the results hold up when you look closely.
+      Please click each project to learn more.
+    </p>
+  </PageHeader>
   <section class="wide">
     <div class="projects">
       {projects.map((project) => <ProjectCard project={project} cover />)}
@@ -24,30 +22,6 @@ const projects = await allProjects();
 </Base>
 
 <style>
-  /* Full-bleed header band; the inner column lines up with the card grid. */
-  .hero {
-    background: var(--charcoal);
-    color: #fff;
-    border-bottom: 5px solid var(--gold);
-    margin: 0 calc(50% - 50vw) 3rem;
-  }
-  .hero-inner {
-    width: var(--content-wide);
-    margin-inline: auto;
-    padding: 3rem 0 2.5rem;
-  }
-  .hero h1 {
-    font-size: clamp(2.5rem, 4.5vw, 3.25rem);
-    letter-spacing: -0.01em;
-    margin: 0 0 1rem;
-    color: #fff;
-  }
-  .hero .lede {
-    font-size: 1.15rem;
-    max-width: 42rem;
-    color: var(--on-charcoal);
-    margin: 0;
-  }
   .projects {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));

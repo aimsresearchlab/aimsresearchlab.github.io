@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Person from '../components/Person.astro';
+import PageHeader from '../components/PageHeader.astro';
 import { people, groupedPeople, alumni } from '../data/people';
 import type { LinkType } from '../data/people';
 
@@ -27,12 +28,13 @@ const linkLabel: Record<LinkType, string> = {
   title="People · AIMS Lab"
   description="Faculty, graduate students, and undergraduate researchers in the AIMS lab at the University of Southern Mississippi."
 >
-  <section class="wide">
-    <h1>People</h1>
+  <PageHeader title="People">
     <p class="lede">
       The lab is in TEC 340 at the University of Southern Mississippi. We take
       on undergraduate researchers every semester.
     </p>
+  </PageHeader>
+  <section class="wide">
     <div class="section-head">
       <h2>Leadership</h2>
       <span class="ui">Faculty</span>
