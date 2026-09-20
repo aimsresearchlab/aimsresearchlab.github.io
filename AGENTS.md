@@ -369,6 +369,11 @@ animates one real query rescored under three scoring targets.
   animates. To record a cut, open the context with `recordVideo` at the target
   size, seek to the first beat, note the wall clock, play for the length you
   want, close the context, then trim that pre-roll off the front with ffmpeg.
+  Record at a viewport with room (1440x1100) and crop to the demo window
+  afterwards, measured from the DOM. These pages are fixed layouts that fill
+  the viewport, so recording straight at 1280x720 squeezes them and clips the
+  window. Widen the crop to 16:9 around the window instead of padding it: the
+  extra pixels are then the page's own background.
 - Numbers are generated, never retyped. SEAM's come from the benchmark's
   `results/statistics.json`; TIAP's come from `scripts/sync-tiap-data.py`,
   which reads the saved run artifacts in the paper repo and writes

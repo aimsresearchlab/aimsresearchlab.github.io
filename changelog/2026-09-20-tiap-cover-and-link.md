@@ -23,6 +23,14 @@ reachable only by typing the URL.
   came out smaller than the one it replaces: 971KB webm and 535KB mp4 for the
   full size (was 1022KB and 816KB), 214KB and 135KB for the 640x360 thumbs.
 
+Corrected in a second pass: the first recording was made at a 1280x720
+viewport, and `/tiap/` is a fixed layout that fills whatever viewport it gets,
+so the demo window was squeezed and its lower half fell outside the frame. It
+is now recorded at 1440x1100 and cropped to the window plus its caption line.
+The crop is widened to exactly 16:9 around the window rather than padded, so
+the bars at the sides are the page's own background. The poster still is cut
+from the same box at 2x, so the two match.
+
 The recipe, including the Playwright trap that eats an afternoon (GSAP methods
 return the timeline, so `page.evaluate(() => tl.pause())` hangs while Playwright
 tries to serialize a circular object), is in `AGENTS.md` under the demo pages.
