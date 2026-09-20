@@ -81,16 +81,6 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
 <body>
-  <div class="usm-bar">
-    <a href="https://www.usm.edu/" aria-label="The University of Southern Mississippi">
-      <img
-        class="usm-bar-logo"
-        src="/assets/usm1.png"
-        alt="The University of Southern Mississippi"
-      />
-    </a>
-  </div>
-
   <Header />
     <main class="container">
       <slot />
@@ -98,6 +88,3 @@ const jsonLd = {
     <Footer />
   </body>
 </html>
-<style is:global>
-  .usm-bar{background:#e8e5df;border-bottom:0!important}.usm-bar a{display:flex;align-items:center;justify-content:center;max-width:1180px;min-height:42px;margin:auto;padding:.2rem 1rem}.usm-bar-logo{display:block;width:min(500px,90vw);height:42px;object-fit:contain}
-</style>

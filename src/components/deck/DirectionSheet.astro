@@ -1,0 +1,21 @@
+---
+// Sheet: who directs the work.
+import Sheet from './Sheet.astro';
+import { leadership } from '../../data/deck';
+const leaders = leadership();
+---
+
+<Sheet>
+  <p class="kicker ui">People</p>
+  <h2 class="slide-title">Direction</h2>
+  <div class="lead-grid">
+    {leaders.map((l) => (
+      <div class="lead">
+        <img src={l.image} alt="" width="192" height="192" />
+        <p class="lead-name">{l.name}</p>
+        <p class="lead-role ui">{l.role}</p>
+        <p class="lead-where ui">{l.where}</p>
+      </div>
+    ))}
+  </div>
+</Sheet>

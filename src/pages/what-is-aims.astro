@@ -1,73 +1,76 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>What is AIMS? · AIMS Lab</title>
-  <meta name="description" content="Learn how the Artificial Intelligence & Multimodal Systems Lab develops intelligent systems that perceive, understand, reason, interact, and act reliably.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308142b'/%3E%3Cpath d='M14 44 28 17h8l14 27h-9l-3-7H25l-3 7Zm14-14h7l-3.5-8Z' fill='%23ffcc33'/%3E%3C/svg%3E">
-  <style>
-    :root{--navy:#07142d;--gold:#ffcc33;--cream:#efefec;--ink:#12203a;--muted:#68738a;--line:#d8d9d6;--white:#fff;--blue:#1652ec;--charcoal:#302f2c;--max:1180px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:'Times New Roman',Times,serif;font-size:16px;line-height:1.75}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
-    .usm-bar {background: #e8e5df}.usm-bar a{display:flex;align-items:center;justify-content:center;max-width:var(--max);min-height:42px;margin:auto;padding:.2rem 1rem;color:var(--ink);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700}.usm-bar a:hover{color:var(--gold)}
-    .topbar{background:#fff;color:var(--navy);border-bottom:1px solid var(--line)}.nav{max-width:var(--max);margin:auto;padding:.75rem 1.5rem;display:flex;align-items:center;gap:2rem}.brand-lockup{display:flex;align-items:center;gap:1rem;margin-right:auto}.usm-brand,.aims-brand{display:flex;align-items:center;justify-content:center;height:70px}.usm-logo{width:150px;height:auto}.brand-divider{height:52px;width:1px;background:#b9bec8}.brand-full{width:auto;height:70px}.navlinks{display:flex;gap:.3rem;font-size:1.05rem;font-weight:700}.navlinks a{display:inline-block;padding:.5rem 1rem;border-radius:.4rem;color:var(--muted)}.navlinks a[aria-current=page]{background:#111;color:#fff}.navlinks a:hover{color:var(--navy)}
-    .hero{background:var(--charcoal);color:#fff;border-bottom:5px solid var(--gold)}.hero-inner{max-width:var(--max);margin:auto;padding:2.2rem 1.5rem 2rem}.hero h1{color:#fff!important;font-family:'Times New Roman',Times,serif;letter-spacing:-.045em;line-height:1.05;font-size:clamp(2.25rem,4vw,3.25rem);margin:.5rem 0}.hero p{font-size:1.15rem;max-width:760px;color:#d6d5d0;margin:0}.usm-bar{background:#e8e5df;border-bottom:0}
-.usm-bar-logo{width:200px;height:42px;object-fit:fill}
-    main{max-width:var(--max);margin:auto;padding:3.5rem 1.5rem 5.5rem}.content-flow{font-size:1.05rem;color:#3f4858}.content-flow:after{content:"";display:block;clear:both}.content-flow p{margin:0 0 1.55rem;text-align:justify;text-justify:inter-word;hyphens:auto}.content-flow p:first-of-type{font-size:1.12rem;color:var(--ink)}.visual{float:right;width:62%;margin:0 0 1.8rem 2.7rem;background:#25282d;border:1px solid #45494f;border-radius:22px;padding:1rem;box-shadow:0 20px 50px rgba(7,20,45,.16)}.visual img{width:100%;height:auto;border-radius:12px}
-    footer{background:#040d1f;color:#aeb8ca}.footer{max-width:var(--max);margin:auto;padding:2.2rem 1.5rem;display:flex;justify-content:space-between;gap:2rem;font-size:.78rem}.footer a{color:#fff}
-    @media(max-width:900px){.nav{align-items:flex-start;flex-wrap:wrap}.brand-lockup{margin-right:auto}.navlinks{order:3;width:100%;overflow-x:auto;padding-top:.2rem}.visual{width:56%;margin-left:2rem}}
-    @media(max-width:650px){.nav{gap:1rem}.brand-lockup{gap:.65rem}.usm-brand,.aims-brand{height:50px}.brand-full{width:auto;height:49px}.brand-divider{height:42px}.usm-logo{width:105px}.navlinks{gap:.2rem;font-size:.85rem}.navlinks a{padding:.35rem .65rem}.hero-inner{padding:1.75rem 1.25rem}main{padding:3.2rem 1rem 4rem}.content-flow p{text-align:left}.visual{float:none;width:100%;margin:0 0 2rem}.footer{flex-direction:column}}
-  </style>
-</head>
-<body>
-<div class="usm-bar">
-  <a href="https://www.usm.edu/" aria-label="The University of Southern Mississippi">
-    <img class="usm-bar-logo" src="/assets/usm1.png" alt="The University of Southern Mississippi">
-  </a>
-</div>
-<header class="topbar">
-  <nav class="nav" aria-label="Primary navigation">
-    <div class="brand-lockup">
-      <a class="aims-brand" href="https://aimsresearchlab.com/">
-        <img
-          class="brand-full"
-          src="/assets/aims-lab-logo.png"
-          alt="AIMS Lab — Artificial Intelligence and Multimodal Systems"
-        >
-      </a>
-    </div>
-      <div class="navlinks">
-        <a href="/">Home</a>
-        <a href="/what-is-aims/" aria-current="page">What is AIMS?</a>
-        <a href="/projects/">Projects</a>
-        <a href="/people/">Meet the Team</a>
-        <a href="/news/">News</a>
-        <a href="/publications/">Publications</a>
-      </div>
-    </nav>
-  </header>
+---
+import Base from '../layouts/Base.astro';
+import ResearchLoop from '../components/ResearchLoop.astro';
+---
+<Base
+  title="What is AIMS? · AIMS Lab"
+  description="How the Artificial Intelligence and Multimodal Systems Lab develops intelligent systems that perceive, understand, reason, interact, and act reliably."
+>
+  <section>
+    <h1>What is AIMS?</h1>
+    <p class="lede">
+      Artificial Intelligence and Multimodal Systems at the University of
+      Southern Mississippi.
+    </p>
 
-  <section class="hero">
-    <div class="hero-inner">
-      <h1>What is AIMS?</h1>
-      <p>Artificial Intelligence &amp; Multimodal Systems at the University of Southern Mississippi.</p>
-    </div>
+    <p>
+      The Artificial Intelligence and Multimodal Systems (AIMS) Lab develops
+      intelligent systems that can perceive, understand, reason, interact, and
+      operate reliably. Our research brings together computer vision, multimodal
+      AI, language models, trustworthy AI, and human-centered intelligent
+      systems to investigate how AI can learn from diverse forms of information
+      and use that information effectively.
+    </p>
+    <p>
+      Modern AI systems increasingly process information from multiple sources,
+      including images, video, text, speech, and sensor data. AIMS researchers
+      investigate how these systems can better understand visual and multimodal
+      information, reason with retrieved and remembered knowledge, interact
+      effectively with users, and remain reliable under uncertainty and
+      challenging real-world conditions. Our research spans visual recognition
+      and segmentation, vision-language models, retrieval-augmented generation
+      (RAG), conversational memory, AI agents, robust and trustworthy AI, and
+      human-centered AI applications.
+    </p>
+    <p>
+      As a student in the AIMS Lab, you will have opportunities to contribute to
+      projects across these research areas, from developing and evaluating new
+      AI methods to applying them to real-world problems. Students gain
+      hands-on experience in research design, experimentation, evaluation,
+      scientific writing, and collaboration while contributing to ongoing
+      research projects and scholarly publications.
+    </p>
+
+    <figure class="wide diagram">
+      <ResearchLoop />
+      <figcaption>
+        The six areas of the lab and the loop they form: perceive, reason, act,
+        interact, trust, and understand.
+      </figcaption>
+    </figure>
   </section>
+</Base>
 
-  <main>
-    <section class="content-flow" aria-label="About AIMS Research Lab">
-      <figure class="visual">
-        <img src="/assets/what-is-aims.jpg" alt="AIMS research areas: computer vision, multimodal and generative AI, language models and agentic AI, edge AI, human-centered AI, and trustworthy AI">
-      </figure>
-      <p>The Artificial Intelligence and Multimodal Systems (AIMS) Lab develops intelligent systems that can perceive, understand, reason, interact, and operate reliably. Our research brings together computer vision, multimodal AI, language models, trustworthy AI, and human-centered intelligent systems to investigate how AI can learn from diverse forms of information and use that information effectively.</p>
-      <p>Modern AI systems increasingly process information from multiple sources, including images, video, text, speech, and sensor data. AIMS researchers investigate how these systems can better understand visual and multimodal information, reason with retrieved and remembered knowledge, interact effectively with users, and remain reliable under uncertainty and challenging real-world conditions. Our research spans visual recognition and segmentation, vision-language models, retrieval-augmented generation (RAG), conversational memory, AI agents, robust and trustworthy AI, and human-centered AI applications.</p>
-      <p>As a student in the AIMS Lab, you will have opportunities to contribute to projects across these research areas—from developing and evaluating new AI methods to applying them to real-world problems. Students gain hands-on experience in research design, experimentation, evaluation, scientific writing, and collaboration while contributing to ongoing research projects and scholarly publications.</p>
-    </section>
-  </main>
-
-  <footer><div class="footer"><span>© 2026 AIMS Lab · University of Southern Mississippi</span><span><a href="https://github.com/aimsresearchlab">GitHub</a> · TEC 340, Hattiesburg, MS</span></div></footer>
-</body>
-</html>
+<style>
+  .lede { font-size: 1.15rem; color: var(--ink-soft); margin: 0 0 2.5rem; max-width: 42rem; }
+  .diagram {
+    /* margin-block only: the inline margins belong to .wide, which is what
+       centres the figure on the page instead of on the text column. */
+    margin-block: 3.5rem 0;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+  .diagram a { display: block; }
+  .diagram img { display: block; width: 100%; height: auto; }
+  .diagram figcaption {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+</style>

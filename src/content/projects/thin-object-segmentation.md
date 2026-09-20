@@ -1,6 +1,7 @@
 ---
 title: 'Thin-Object Segmentation'
 claim: 'A cross-domain survey of power-line, crack, and retinal-vessel segmentation, from classical pipelines to promptable foundation models.'
+cover: /projects/thin-object-segmentation.webp
 tags: [ComputerVision, FoundationModels]
 links:
   - { kind: paper, url: 'https://aquila.usm.edu/fac_pubs/22086/' }

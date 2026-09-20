@@ -1,0 +1,44 @@
+---
+// Sheet: everyone else, by category, alumni last. Straight from people.ts, so
+// the deck cannot drift from /people.
+import Sheet from './Sheet.astro';
+import { groupedPeople, alumni, type Person } from '../../data/people';
+// The faculty row is the Direction sheet's job.
+const groups = groupedPeople().filter((g) => g.label !== 'Faculty');
+const graduates = alumni().flatMap((g) => g.members);
+const face = (p: Person) => p.image ?? '/people/aims-placeholder.webp';
+---
+
+<Sheet>
+  <p class="kicker ui">People</p>
+  <h2 class="slide-title">The lab</h2>
+  <div class="people-rows">
+    {groups.map((g) => (
+      <div class="people-row">
+        <p class="people-label ui">{g.label}</p>
+        <div class="faces">
+          {g.members.map((m) => (
+            <div class="face">
+              <img src={face(m)} alt="" width="192" height="192" />
+              <p class="face-name">{m.name.replace(/^Dr\. /, '')}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+    {graduates.length > 0 && (
+      <div class="people-row alumni-row">
+        <p class="people-label ui">Alumni</p>
+        <div class="faces">
+          {graduates.map((m) => (
+            <div class="face">
+              <img src={face(m)} alt="" width="192" height="192" />
+              <p class="face-name">{m.name}</p>
+              <p class="face-term ui">{m.graduated}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</Sheet>

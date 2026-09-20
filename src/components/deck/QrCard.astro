@@ -1,0 +1,16 @@
+---
+// A QR on a white card with the AIMS mark in the middle. White in both themes
+// because a code has to stay scannable; the codes are H level, so the mark in
+// the centre sits on redundancy the code already carries.
+interface Props {
+  src: string;
+  alt: string;
+  size?: 'large' | 'small' | 'tiny';
+}
+const { src, alt, size = 'large' } = Astro.props;
+---
+
+<div class:list={['qr-card', size !== 'large' && size]}>
+  <img class="qr" src={src} alt={alt} width="512" height="512" />
+  <img class="qr-mark" src="/logo-mark.svg" alt="" width="96" height="96" />
+</div>

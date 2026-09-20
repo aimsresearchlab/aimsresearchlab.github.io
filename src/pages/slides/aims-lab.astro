@@ -1,0 +1,110 @@
+---
+// The AIMS overview deck: 16:9 sheets built from the same data files as the
+// rest of the site, so the roster, the paper list and the news feed cannot
+// drift from it.
+//
+// This page is the source of truth. `npm run deck:pptx` renders it headlessly
+// and writes the editable PowerPoint copies under public/slides/, the way the
+// posters on spanthi.com are generated from their own pages.
+//
+// Where things live:
+//   src/components/deck/*.astro  one file per sheet, plus the shared pieces
+//   src/data/deck.ts             deck-only content (areas, leadership, links)
+//   src/styles/deck.css          every sheet style, namespaced under .deck
+//   src/scripts/deck-present.ts  present mode: fullscreen, keys, the timer
+//   src/scripts/deck-motion.ts   live-page motion, off under reduced motion
+//
+// This page only assembles them and decides the order of the sheets.
+import Base from '../../layouts/Base.astro';
+import { Icon } from 'astro-icon/components';
+import '../../styles/deck.css';
+
+import Backdrop from '../../components/deck/Backdrop.astro';
+import StageBar from '../../components/deck/StageBar.astro';
+import TitleSheet from '../../components/deck/TitleSheet.astro';
+import WorkSheet from '../../components/deck/WorkSheet.astro';
+import SpotlightSheet from '../../components/deck/SpotlightSheet.astro';
+import CardsSheet from '../../components/deck/CardsSheet.astro';
+import DirectionSheet from '../../components/deck/DirectionSheet.astro';
+import RosterSheet from '../../components/deck/RosterSheet.astro';
+import PapersSheet from '../../components/deck/PapersSheet.astro';
+import NewsSheet from '../../components/deck/NewsSheet.astro';
+
+import { allProjects } from '../../data/projects';
+import { spotlightSlugs } from '../../data/deck';
+
+const projects = await allProjects();
+const bySlug = new Map(projects.map((p) => [p.id, p]));
+// A slug with no project (renamed, deleted) is dropped rather than failing the
+// build; that project simply stays a card.
+const spotlights = spotlightSlugs
+  .map((slug) => bySlug.get(slug))
+  .filter((p): p is NonNullable<typeof p> => p !== undefined);
+const cards = projects.filter((p) => !spotlights.includes(p));
+
+// Title, what we do, the spotlights, the cards, direction, roster, papers, news.
+const sheetCount = 7 + spotlights.length;
+---
+
+<Base
+  title="AIMS Lab overview deck · AIMS Lab"
+  socialTitle="The AIMS Lab overview deck"
+  description="An overview of the AIMS Lab at USM: research areas, people, projects, papers and news. Presentable fullscreen, and available as an editable PowerPoint file."
+>
+  <section class="deck wide">
+    <input class="deck-dark" id="deck-dark" type="checkbox" />
+
+    <div class="deck-head">
+      <div>
+        <h1>Lab overview deck</h1>
+        <p class="deck-note ui">
+          {sheetCount} slides, built from the same data as the rest of this site.
+          The PowerPoint copy is generated from this page, so the two never disagree.
+        </p>
+      </div>
+      <p class="deck-actions ui">
+        <button class="deck-button present" type="button" data-present>
+          <Icon name="ph:projector-screen" /> Present
+        </button>
+        <label class="deck-button" for="deck-dark">
+          <span class="on-light"><Icon name="ph:moon" /> Dark</span>
+          <span class="on-dark"><Icon name="ph:sun" /> Light</span>
+        </label>
+        <a class="deck-button" href="/slides/aims-lab.pptx" download>
+          <Icon name="ph:download-simple" /> Light .pptx
+        </a>
+        <a class="deck-button" href="/slides/aims-lab-dark.pptx" download>
+          <Icon name="ph:download-simple" /> Dark .pptx
+        </a>
+      </p>
+    </div>
+
+    <Backdrop />
+
+    <!-- tabindex: present mode focuses the stage, so keys reach the document
+         instead of re-triggering the button that started the deck. -->
+    <div class="deck-sheets" tabindex="-1">
+      <TitleSheet />
+      <WorkSheet projectCount={projects.length} />
+      {spotlights.map((project) => <SpotlightSheet project={project} />)}
+      <CardsSheet projects={cards} />
+      <DirectionSheet />
+      <RosterSheet />
+      <PapersSheet projects={projects} />
+      <NewsSheet />
+    </div>
+
+    <StageBar count={sheetCount} />
+  </section>
+</Base>
+
+<script>
+  // The only JavaScript on an Astro-rendered page, and all of it optional: the
+  // deck reads and scrolls without it. Bundled at build time, so there is no
+  // CDN to rot.
+  import { initPresent } from '../../scripts/deck-present';
+  import { initMotion } from '../../scripts/deck-motion';
+
+  const deck = document.querySelector<HTMLElement>('.deck');
+  if (deck) initMotion(deck, initPresent(deck));
+</script>

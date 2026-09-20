@@ -1,0 +1,28 @@
+---
+// One sheet of the deck: a frame that the present controller shows or hides,
+// and the 1280 x 720 canvas the PowerPoint exporter walks. Every sheet goes
+// through here, so those two contracts live in one file.
+// It also carries the mark and the AIMS wordmark in the top corner, so a sheet
+// cannot forget them. The title and closing sheets brand themselves and pass
+// `mark={false}`.
+interface Props {
+  /** Extra class on the canvas, for a sheet that styles itself. */
+  variant?: string;
+  /** The mark in the top corner. Off for a sheet that brands itself. */
+  mark?: boolean;
+}
+const { variant, mark = true } = Astro.props;
+---
+
+<div class="slide-frame">
+  <div class:list={['slide-canvas', variant]}>
+    {mark && (
+      <div class="sheet-brand">
+        <img class="sheet-mark mark on-light" src="/logo-mark.svg" alt="" width="96" height="96" />
+        <img class="sheet-mark mark on-dark" src="/logo-mark-light.svg" alt="" width="96" height="96" />
+        <span class="sheet-brand-word">AIMS</span>
+      </div>
+    )}
+    <slot />
+  </div>
+</div>

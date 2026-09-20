@@ -17,6 +17,21 @@
 
   /* --- Accent (use sparingly, ~5%, the blue's complement) -------------- */
   --ochre:        #C8892A; /* one-off highlights: "new" badge, an award       */
+  --gold:         #F5CE55; /* USM gold, filled panels (the /people culture card) */
+  --gold-ink:     #8A6A1F; /* gold that reads as text on paper: kickers, roles   */
+  --charcoal:     #302F2C; /* full-bleed page headers, warm near-black            */
+  --on-charcoal:  #D6D5D0; /* secondary text on --charcoal (headings stay white)  */
+
+  /* --- Figure palette ---------------------------------------------------
+     Six categorical hues, for figures that have to tell six things apart
+     (the research loop on /what-is-aims). Not for page chrome: a page still
+     uses --brand, --ink, and --ochre. */
+  --area-perceive:   #2A5599;
+  --area-understand: #B85F1E;
+  --area-reason:     #2F7F7A;
+  --area-act:        #4F7A21;
+  --area-interact:   #6B4B8A;
+  --area-trust:      #8C2434;
 
   /* --- Type ------------------------------------------------------------- */
   --font-serif:   'Tinos', 'Times New Roman', Times, serif;
@@ -25,6 +40,7 @@
   /* --- Layout ----------------------------------------------------------- */
   --content-width: min(68%, 48rem); /* centered column, ~768px cap for prose  */
   --content-wide:  min(88vw, 64rem); /* wider column for grids and the banner  */
+  --header-width:  min(94vw, 78rem); /* header runs wider than the page columns */
   --space:         1.5rem;
 }
 

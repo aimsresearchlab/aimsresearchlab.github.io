@@ -1,0 +1,39 @@
+---
+// Closing sheet: what happened lately, and where to find the lab.
+import { Icon } from 'astro-icon/components';
+import Sheet from './Sheet.astro';
+import Lockup from './Lockup.astro';
+import QrCard from './QrCard.astro';
+import { recentNews, formatDate } from '../../data/news';
+interface Props {
+  limit?: number;
+}
+const { limit = 5 } = Astro.props;
+const items = recentNews(limit);
+---
+
+<Sheet variant="s-close" mark={false}>
+  <div class="close-grid">
+    <div>
+      <p class="kicker ui">News</p>
+      <h2 class="slide-title">Recently</h2>
+      <ol class="news">
+        {items.map((n) => (
+          <li>
+            <span class="news-date ui">{formatDate(n.date)}</span>
+            <span class="news-text">{n.text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="join">
+      <ul class="join-contact ui">
+        <li><Icon name="ph:globe-simple" /><span class="foot-strong">aimsresearchlab.com</span></li>
+        <li><Icon name="simple-icons:github" />github.com/aimsresearchlab</li>
+        <li><Icon name="ph:map-pin" />TEC 340 · Hattiesburg, MS</li>
+      </ul>
+      <Lockup small />
+      <QrCard src="/slides/qr-aimsresearchlab.svg" alt="QR code for aimsresearchlab.com" size="small" />
+    </div>
+  </div>
+</Sheet>

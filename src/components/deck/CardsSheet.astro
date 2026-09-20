@@ -1,0 +1,43 @@
+---
+// Every project that is not a spotlight, as cards. These have no figure worth
+// a whole sheet, so the card carries the cover as a band, then the claim, the
+// paper behind it, where the code and the preprint live, and a code for the
+// project page. The cards fill the frame rather than floating in the middle.
+// A project with no cover simply has no band; the rest of the card is the same.
+// No heading: the kicker labels the sheet and the height goes to the cards.
+import Sheet from './Sheet.astro';
+import QrCard from './QrCard.astro';
+import { linkLabels } from '../../data/deck';
+import type { ProjectEntry } from '../../data/projects';
+interface Props {
+  projects: ProjectEntry[];
+}
+const { projects } = Astro.props;
+---
+
+<Sheet>
+  <p class="kicker ui">Projects</p>
+  <div class="card-grid">
+    {projects.map((p) => (
+      <div class="card">
+        {p.data.cover && (
+          <span class="card-shot"><img src={p.data.cover} alt="" width="1600" height="900" /></span>
+        )}
+        <p class="card-tags ui">{p.data.tags.map((t) => <span class="tag">#{t}</span>)}</p>
+        <p class="card-title">{p.data.title}</p>
+        <p class="card-claim">{p.data.claim}</p>
+        {p.data.publications[0] && <p class="card-paper ui">{p.data.publications[0]}</p>}
+        <div class="card-foot">
+          <QrCard
+            src={`/slides/qr-${p.id}.svg`}
+            alt={`QR code for the ${p.data.title} project page`}
+            size="tiny"
+          />
+          <p class="card-links ui">
+            {p.data.links.map((l) => <span class="link-pill">{linkLabels[l.kind] ?? l.kind}</span>)}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</Sheet>

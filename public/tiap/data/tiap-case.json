@@ -1,0 +1,522 @@
+{
+  "_generated_by": "scripts/sync-tiap-data.py",
+  "_source_repo": "/Users/vein/Documents/research/LLM_Conversational_Memory__Sugam_",
+  "_note": "Every number shown on /tiap comes from this file. Regenerate with python3 scripts/sync-tiap-data.py after the paper's results change.",
+  "paper": {
+    "title": "Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks",
+    "venue": "Findings of EMNLP 2026",
+    "arxiv": "2605.24060",
+    "code": "https://github.com/rabdelfattahlab/LLM_Memory_Benchmark"
+  },
+  "case": {
+    "dataset": "LongMemEval-S",
+    "query_index": 380,
+    "tenant_id": "longmemeval_8fb83627",
+    "query": "How many issues of National Geographic have I finished reading?",
+    "reference_answer": "Five",
+    "category_label": "Unknown Category (knowledge-update)",
+    "top_k": 60,
+    "target_sizes": [
+      {
+        "run_id": "20260313T172942Z_longmemeval_s_lexical_full",
+        "n_fixture_indexes": 3,
+        "n_expected_memory_ids": 5,
+        "expected_group_count": 3,
+        "expected_group_sizes": "[2, 1, 2]"
+      },
+      {
+        "run_id": "20260313T185031Z_longmemeval_s_ollama_full_guarded_w8_np16",
+        "n_fixture_indexes": 3,
+        "n_expected_memory_ids": 5,
+        "expected_group_count": 3,
+        "expected_group_sizes": "[2, 1, 2]"
+      },
+      {
+        "run_id": "20260314T013728Z_longmemeval_s_ollama_bge_m3_full",
+        "n_fixture_indexes": 3,
+        "n_expected_memory_ids": 4,
+        "expected_group_count": 3,
+        "expected_group_sizes": "[2, 1, 1]"
+      }
+    ]
+  },
+  "figure": {
+    "_source": "paper/figures/A_framework_overview.pdf",
+    "_note": "The short ranked trace printed inside the paper's framework figure. It is that figure's own illustration of a ranked output, not a row of any saved run, and the method scene reproduces it as such.",
+    "illustrative_trace": [
+      [
+        "1",
+        "m7",
+        "0.73"
+      ],
+      [
+        "2",
+        "m3",
+        "0.62"
+      ],
+      [
+        "3",
+        "m9",
+        "0.21"
+      ]
+    ]
+  },
+  "bundle": {
+    "families": {
+      "beam": [
+        "100k_lexical",
+        "100k_mxbai",
+        "1m_lexical"
+      ],
+      "locomo": [
+        "allminilm",
+        "bge_m3",
+        "lexical",
+        "mxbai"
+      ],
+      "locomo_density": [
+        "allminilm_f1",
+        "allminilm_f8",
+        "lexical_f1",
+        "lexical_f8"
+      ],
+      "longmemeval": [
+        "allminilm",
+        "bge_m3",
+        "lexical"
+      ],
+      "transfer": [
+        "locomo_mem0",
+        "locomo_memoryos"
+      ]
+    },
+    "total_runs": 16,
+    "_note": "Counted from the artifact tree, not from the upstream README, whose prose describes 8 native runs and an f1/f5/f8 density sweep while the bundle ships 7 native runs and f1/f8 only."
+  },
+  "systems": {
+    "longmemeval_allminilm": {
+      "label": "all-MiniLM",
+      "run_dir": "allminilm",
+      "has_trace": true,
+      "hit_ranks": [
+        13,
+        41
+      ],
+      "expected_memory_ids": [
+        "mem_052270f3073ebd92",
+        "mem_0b07582b59f68398",
+        "mem_76f6061173ee7af9",
+        "mem_9c02b7399967b083",
+        "mem_bd92e3db116ce4f7"
+      ],
+      "ranking_depth": 60,
+      "ranked_preview": [
+        {
+          "rank": 1,
+          "memory_id": "mem_597c0d6eee47f08d",
+          "is_expected": false,
+          "content": "I've actually been reading a lot about the Amazon rainforest lately, especially in National Geographic - I've finished five issues so far and they've all had great articles on the region"
+        },
+        {
+          "rank": 2,
+          "memory_id": "mem_638aca2735fc635a",
+          "is_expected": false,
+          "content": "Let's fill in the National Geographic section of the spreadsheet"
+        },
+        {
+          "rank": 3,
+          "memory_id": "mem_0f1894ff711fd079",
+          "is_expected": false,
+          "content": "National Geographic is an excellent resource for learning about the Amazon rainforest. Now, let's dive into some fantastic documentaries and films that will complement your reading and provide a visual perspective on the region. Here are some recommendations: **Documentaries:** 1. **Our Planet: Amazon** (Netflix, 2019) - A breathtakingly beautiful and informative episode from the Netflix series, showcasing the Amazon's natural wonders and the impact of human activity. 2. **Chasing Coral** (Netflix, 2017) - While not exclusively focused on the Amazon, this documentary explores the decline of coral reefs and features a segment on the Amazon River's connection to the ocean. 3. **The Last Lions** (2011) - A powerful documentary that highlights the decline of lion populations in Africa, with a segment on the Amazon rainforest and its importance in the global ecosystem. 4. **The Hunt: Amazon** (BBC, 2015) - A thrilling documentary series that explores the strategies predators use to catch their prey in the Amazon rainforest. 5. **River Monsters** (Animal Planet, 2009-2017) - A popular documentary series that explores the fascinating and often fearsome creatures of the Amazon River and its tributaries. 6. **The Amazon: What the Future Holds** (BBC, 2019) - A thought-provoking documentary examining the impact of deforestation, climate change, and human activity on the Amazon's ecosystem. **Films:** 1. **The Emerald Forest** (1985) - A classic adventure drama film set in the Amazon rainforest, exploring the clash between indigenous cultures and modern civilization. 2. **Fitzcarraldo** (1982) - A critically acclaimed film by Werner Herzog, telling the story of a rubber baron's quest to build an opera house in the Amazon jungle. 3. **The Motorcycle Diaries** (2004) - A biographical drama film based on Che Guevara's travels across South America, including his journey through the Amazon rainforest. 4. **Medicine for Melancholy** (2008) - A drama film that explores the relationship between two people from different cultural backgrounds in the Amazon rainforest. **Series:** 1. **Amazon with David Attenborough** (BBC, 2019) - A six-part series exploring the natural history of the Amazon rainforest, hosted by the renowned Sir David Attenborough. 2. **Expedition Amazon** (Discovery Channel, 2019) - A documentary series following a team of explorers as they venture into the Amazon rainforest to uncover its secrets. These documentaries, films, and series will provide a visually stunning and thought-provoking complement to your reading. Enjoy your journey into the Amazon rainforest!"
+        },
+        {
+          "rank": 4,
+          "memory_id": "mem_b7459f1b1818bcc4",
+          "is_expected": false,
+          "content": "National Geographic is an excellent resource for learning about the Amazon rainforest and its indigenous communities. Now, let's dive into some fantastic documentaries and films that will give you a deeper look into the daily lives of indigenous communities in the Amazon: **Documentaries:** 1. **The Last Shaman** (2016): A documentary that follows the journey of a young shaman from the Amazon rainforest as he seeks to preserve his people's traditions and way of life. 2. **The Uncontacted** (2017): A documentary that explores the lives of isolated indigenous communities in the Amazon and the efforts to protect them. 3. **When Two Worlds Collide** (2016): A documentary that examines the conflict between indigenous communities and the Peruvian government over land rights and resource extraction in the Amazon. 4. **The Forest** (2016): A documentary that follows a group of indigenous people from the Amazon rainforest as they fight to protect their lands from logging and mining. 5. **The Amazon: What the Future Holds** (BBC, 2019): A thought-provoking documentary that explores the impact of deforestation, climate change, and human activity on indigenous communities in the Amazon. **Films:** 1. **Embrace of the Serpent** (2015): A critically acclaimed film that tells the story of an Amazonian shaman and his encounters with two Western explorers. 2. **Iracema: Uma Transa Amaz\u00f4nica** (2013): A Brazilian film that explores the lives of an indigenous community in the Amazon rainforest and their struggles with deforestation and land rights. 3. **The Yanomami: A Struggle for Survival** (1991): A classic documentary film that follows the lives of the Yanomami people, an indigenous community living in the Amazon rainforest. **Series:** 1. **Amazon with David Attenborough** (BBC, 2019): A six-part series exploring the natural history of the Amazon rainforest, including the lives of indigenous communities. 2. **Expedition Amazon** (Discovery Channel, 2019): A documentary series following a team of explorers as they venture into the Amazon rainforest to uncover its secrets and meet its indigenous communities. These documentaries, films, and series will provide you with a deeper understanding of the daily lives, cultures, and traditions of indigenous communities in the Amazon rainforest. Enjoy your journey into the heart of the Amazon!"
+        },
+        {
+          "rank": 5,
+          "memory_id": "mem_d25e421c9dc06047",
+          "is_expected": false,
+          "content": "National Geographic is an excellent resource for learning about the Yanomami people and their struggles. Now, let's dive into some fantastic documentaries and films that will give you a deeper look into their daily lives and struggles: **Documentaries:** 1. **The Yanomami: A Struggle for Survival** (1991): A classic documentary film that follows the lives of the Yanomami people and their struggles with disease, colonization, and modernization. 2. **The Last Shaman** (2016): A documentary that explores the life of a Yanomami shaman and his efforts to preserve his people's traditions and way of life. 3. **Yanomami: The Fierce People** (2007): A documentary that provides an intimate look at the daily lives of the Yanomami people, showcasing their culture, traditions, and struggles. 4. **Amazon: The Yanomami** (2018): A documentary series that explores the lives of the Yanomami people and their struggles with deforestation, mining, and climate change. 5. **The Uncontacted** (2017): A documentary that explores the lives of isolated indigenous communities in the Amazon, including the Yanomami people. **Films:** 1. **Embrace of the Serpent** (2015): A critically acclaimed film that tells the story of an Amazonian shaman and his encounters with two Western explorers, inspired by the diaries of Theodor Koch-Grunberg and Amazonian shaman Karamakate. 2. **Iracema: Uma Transa Amaz\u00f4nica** (2013): A Brazilian film that explores the lives of an indigenous community in the Amazon rainforest, including the Yanomami people, and their struggles with deforestation and land rights. These documentaries and films will provide you with a deeper understanding of the Yanomami people's daily lives, culture, and struggles. You'll gain insight into their traditions, way of life, and the challenges they face in the modern world."
+        },
+        {
+          "rank": 6,
+          "memory_id": "mem_3785f94d2014f772",
+          "is_expected": false,
+          "content": "Here's a basic template to get you started: **Reading Tracker Spreadsheet** **Magazines:** | Magazine | Issue/Date | Read | Notes | | --- | --- | --- | --- | | The New Yorker | | | | | National Geographic | | | | | Rolling Stone | | | | **Online Publications:** | Publication | Article/Date | Read | Notes | | --- | --- | --- | --- | | The Atlantic | | | | | Medium | | | | **Newspapers:** | Newspaper | Date | Read | Notes | | --- | --- | --- | --- | | The New York Times | | | | | The Daily News | | | | You can add or remove columns as needed, but here's a brief explanation of each column: * **Magazine/Online Publication/Newspaper:** The title of the publication"
+        },
+        {
+          "rank": 7,
+          "memory_id": "mem_4a9b4f638d1ea925",
+          "is_expected": false,
+          "content": "I also regularly read The Atlantic and Medium online."
+        },
+        {
+          "rank": 8,
+          "memory_id": "mem_1121bd91f9cb9447",
+          "is_expected": false,
+          "content": "As an AI language model, I don't have access to real-time information, but to the best of my knowledge, Melody Maker ceased publication in 2000 due to declining sales and competition from other music magazines. However, its legacy continues to live on as it was one of the most influential music magazines of the 20th century, discovering and championing many great talents."
+        },
+        {
+          "rank": 9,
+          "memory_id": "mem_35acdb2146d3ad6b",
+          "is_expected": false,
+          "content": "Sleep tracking is a fantastic feature of your Fitbit Charge 3, and it's excellent that you're paying attention to your sleep patterns. For adults, the National Sleep Foundation recommends the following sleep durations: * 26-30 years old: 7-9 hours * 31-35 years old: 7-8 hours So, as a 32-year-old, your 7-8 hours of sleep per night fall within the recommended range. This is great! Getting sufficient sleep is crucial for overall health, cognitive function, and physical performance. During sleep, your body: 1. **Repairs and regenerates tissues**: Sleep helps your body repair and regenerate damaged cells, build bone and muscle, and strengthen your immune system. 2. **Consolidates memories**: Sleep plays an essential role in memory consolidation, which helps you learn and remember new information. 3. **Regulates hormones**: Sleep influences the balance of various hormones, including insulin, growth hormone, and hormones that control appetite and metabolism. 4. **Supports cardiovascular health**: Chronic sleep deprivation is linked to an increased risk of cardiovascular disease, including high blood pressure, heart attacks, and strokes. 5. **Affects mood and cognitive function**: Sleep deprivation can lead to irritability, anxiety, depression, and impaired cognitive function, including attention and decision-making skills. While 7-8 hours of sleep is a good starting point, it's essential to consider the quality of your sleep as well. You can use your Fitbit to monitor your sleep stages, including: 1. **Light sleep**: This stage is characterized by slow brain waves and is easy to wake up from. 2. **Deep sleep**: This stage is marked by slower brain waves and is more restorative. 3. **REM (Rapid Eye Movement) sleep**: This stage is when most dreams occur, and brain activity is similar to being awake. Aim to spend at least 15-20 percent of your sleep time in deep sleep and 20-25 percent in REM sleep. You can also pay attention to your sleep schedule, sleep fragmentation (waking up during the night), and sleep latency (time it takes to fall asleep). To optimize your sleep, consider these tips: 1. **Establish a consistent sleep schedule**: Go to bed and wake up at the same time every day, including weekends. 2. **Create a sleep-conducive environment**: Make your bedroom dark, quiet, and cool, and invest in a comfortable mattress and pillows. 3. **Develop a relaxing bedtime routine**: Engage in calming activities, such as reading, meditation, or a warm bath, to signal your body that it's time to sleep. 4. **Avoid screens and stimulating activities before bedtime**: The blue light from screens can suppress melatonin production, making it harder to fall asleep. 5. **Limit caffeine and alcohol**: Both can disrupt sleep patterns and reduce sleep quality. By paying attention to your sleep patterns and making adjustments to your sleep habits, you can improve the quality of your sleep and wake up feeling more refreshed and energized."
+        },
+        {
+          "rank": 10,
+          "memory_id": "mem_02b56fc7eb989ac6",
+          "is_expected": false,
+          "content": "I've been meaning to read more books on psychology and true crime, but I never seem to have the time"
+        },
+        {
+          "rank": 11,
+          "memory_id": "mem_b60d67deb80c480c",
+          "is_expected": false,
+          "content": "I'm trying to get more organized with my reading list"
+        },
+        {
+          "rank": 12,
+          "memory_id": "mem_2e4279afc7124032",
+          "is_expected": false,
+          "content": "To get started, can you please provide me with some information about the magazines and newspapers you've been reading"
+        },
+        {
+          "rank": 13,
+          "memory_id": "mem_052270f3073ebd92",
+          "is_expected": true,
+          "content": "For newspapers, I've been reading The New York Times and The Daily News regularly"
+        },
+        {
+          "rank": 14,
+          "memory_id": "mem_586cd6ad9e986063",
+          "is_expected": false,
+          "content": "I'm having some issues with my sleep patterns and I was wondering if you could give me some general tips on how to improve my sleep quality"
+        }
+      ],
+      "targets": {
+        "source": {
+          "ndcg": 0.21028312064325216,
+          "credited_rank": 13,
+          "credited_memory_id": "mem_052270f3073ebd92",
+          "credited_kind": "observation",
+          "credited_content": "For newspapers, I've been reading The New York Times and The Daily News regularly",
+          "judges": {
+            "Sonnet 4": "does_not_support",
+            "Opus 4.7": "does_not_support",
+            "Gemini 3.1": "does_not_support",
+            "GPT-5.5": "does_not_support",
+            "DeepSeek V4": "does_not_support"
+          },
+          "judge_majority": "does_not_support"
+        },
+        "canonical": {
+          "ndcg": 0.27475037319743734,
+          "credited_rank": 13,
+          "credited_memory_id": "mem_052270f3073ebd92",
+          "credited_kind": "observation",
+          "credited_content": "For newspapers, I've been reading The New York Times and The Daily News regularly",
+          "judges": {
+            "Sonnet 4": "does_not_support",
+            "Opus 4.7": "does_not_support",
+            "Gemini 3.1": "does_not_support",
+            "GPT-5.5": "does_not_support",
+            "DeepSeek V4": "does_not_support"
+          },
+          "judge_majority": "does_not_support"
+        },
+        "raw": {
+          "ndcg": 0.0,
+          "credited_rank": null,
+          "credited_memory_id": null,
+          "credited_kind": "raw_turn",
+          "credited_content": null,
+          "judges": {},
+          "judge_majority": null
+        }
+      },
+      "aggregate": {
+        "raw_turn": {
+          "queries": 470,
+          "hit_rate_at_k": 0.597872340425532,
+          "recall_at_k": 0.47482269503546093,
+          "mrr": 0.09183791864050136,
+          "ndcg_at_k": 0.15717493720091932,
+          "top1_hit_rate": 0.0
+        },
+        "source_family": {
+          "queries": 470,
+          "hit_rate_at_k": 0.7468085106382979,
+          "recall_at_k": 0.5962765957446808,
+          "mrr": 0.3426449665274346,
+          "ndcg_at_k": 0.33795562095097675,
+          "top1_hit_rate": 0.274468085106383
+        },
+        "canonical": {
+          "queries": 332,
+          "hit_rate_at_k": 0.9066265060240963,
+          "recall_at_k": 0.8572791164658635,
+          "mrr": 0.48196553799357494,
+          "ndcg_at_k": 0.5309163807033515,
+          "top1_hit_rate": 0.3885542168674699
+        }
+      }
+    },
+    "longmemeval_bge_m3": {
+      "label": "BGE-M3",
+      "run_dir": "bge_m3",
+      "has_trace": true,
+      "hit_ranks": [
+        9
+      ],
+      "expected_memory_ids": [
+        "mem_298ac0002d17647a",
+        "mem_63ea6fdcd72bb690",
+        "mem_6b40e87fca7989c4",
+        "mem_fb5178c77c146a43"
+      ],
+      "ranking_depth": 60,
+      "ranked_preview": [
+        {
+          "rank": 1,
+          "memory_id": "mem_e022c0ebce8a171a",
+          "is_expected": false,
+          "content": "I've actually been reading a lot about the Amazon rainforest lately, especially in National Geographic - I've finished five issues so far and they've all had great articles on the region"
+        },
+        {
+          "rank": 2,
+          "memory_id": "mem_abd33a4687bed03d",
+          "is_expected": false,
+          "content": "Let's fill in the National Geographic section of the spreadsheet"
+        },
+        {
+          "rank": 3,
+          "memory_id": "mem_d300d629f97742ae",
+          "is_expected": false,
+          "content": "National Geographic is an excellent resource for learning about the Amazon rainforest. Now, let's dive into some fantastic documentaries and films that will complement your reading and provide a visual perspective on the region. Here are some recommendations: **Documentaries:** 1. **Our Planet: Amazon** (Netflix, 2019) - A breathtakingly beautiful and informative episode from the Netflix series, showcasing the Amazon's natural wonders and the impact of human activity. 2. **Chasing Coral** (Netflix, 2017) - While not exclusively focused on the Amazon, this documentary explores the decline of coral reefs and features a segment on the Amazon River's connection to the ocean. 3. **The Last Lions** (2011) - A powerful documentary that highlights the decline of lion populations in Africa, with a segment on the Amazon rainforest and its importance in the global ecosystem. 4. **The Hunt: Amazon** (BBC, 2015) - A thrilling documentary series that explores the strategies predators use to catch their prey in the Amazon rainforest. 5. **River Monsters** (Animal Planet, 2009-2017) - A popular documentary series that explores the fascinating and often fearsome creatures of the Amazon River and its tributaries. 6. **The Amazon: What the Future Holds** (BBC, 2019) - A thought-provoking documentary examining the impact of deforestation, climate change, and human activity on the Amazon's ecosystem. **Films:** 1. **The Emerald Forest** (1985) - A classic adventure drama film set in the Amazon rainforest, exploring the clash between indigenous cultures and modern civilization. 2. **Fitzcarraldo** (1982) - A critically acclaimed film by Werner Herzog, telling the story of a rubber baron's quest to build an opera house in the Amazon jungle. 3. **The Motorcycle Diaries** (2004) - A biographical drama film based on Che Guevara's travels across South America, including his journey through the Amazon rainforest. 4. **Medicine for Melancholy** (2008) - A drama film that explores the relationship between two people from different cultural backgrounds in the Amazon rainforest. **Series:** 1. **Amazon with David Attenborough** (BBC, 2019) - A six-part series exploring the natural history of the Amazon rainforest, hosted by the renowned Sir David Attenborough. 2. **Expedition Amazon** (Discovery Channel, 2019) - A documentary series following a team of explorers as they venture into the Amazon rainforest to uncover its secrets. These documentaries, films, and series will provide a visually stunning and thought-provoking complement to your reading. Enjoy your journey into the Amazon rainforest!"
+        },
+        {
+          "rank": 4,
+          "memory_id": "mem_99c0e1bcd295dac1",
+          "is_expected": false,
+          "content": "Here's a basic template to get you started: **Reading Tracker Spreadsheet** **Magazines:** | Magazine | Issue/Date | Read | Notes | | --- | --- | --- | --- | | The New Yorker | | | | | National Geographic | | | | | Rolling Stone | | | | **Online Publications:** | Publication | Article/Date | Read | Notes | | --- | --- | --- | --- | | The Atlantic | | | | | Medium | | | | **Newspapers:** | Newspaper | Date | Read | Notes | | --- | --- | --- | --- | | The New York Times | | | | | The Daily News | | | | You can add or remove columns as needed, but here's a brief explanation of each column: * **Magazine/Online Publication/Newspaper:** The title of the publication"
+        },
+        {
+          "rank": 5,
+          "memory_id": "mem_72ed34b3994c2016",
+          "is_expected": false,
+          "content": "National Geographic is an excellent resource for learning about the Amazon rainforest and its indigenous communities. Now, let's dive into some fantastic documentaries and films that will give you a deeper look into the daily lives of indigenous communities in the Amazon: **Documentaries:** 1. **The Last Shaman** (2016): A documentary that follows the journey of a young shaman from the Amazon rainforest as he seeks to preserve his people's traditions and way of life. 2. **The Uncontacted** (2017): A documentary that explores the lives of isolated indigenous communities in the Amazon and the efforts to protect them. 3. **When Two Worlds Collide** (2016): A documentary that examines the conflict between indigenous communities and the Peruvian government over land rights and resource extraction in the Amazon. 4. **The Forest** (2016): A documentary that follows a group of indigenous people from the Amazon rainforest as they fight to protect their lands from logging and mining. 5. **The Amazon: What the Future Holds** (BBC, 2019): A thought-provoking documentary that explores the impact of deforestation, climate change, and human activity on indigenous communities in the Amazon. **Films:** 1. **Embrace of the Serpent** (2015): A critically acclaimed film that tells the story of an Amazonian shaman and his encounters with two Western explorers. 2. **Iracema: Uma Transa Amaz\u00f4nica** (2013): A Brazilian film that explores the lives of an indigenous community in the Amazon rainforest and their struggles with deforestation and land rights. 3. **The Yanomami: A Struggle for Survival** (1991): A classic documentary film that follows the lives of the Yanomami people, an indigenous community living in the Amazon rainforest. **Series:** 1. **Amazon with David Attenborough** (BBC, 2019): A six-part series exploring the natural history of the Amazon rainforest, including the lives of indigenous communities. 2. **Expedition Amazon** (Discovery Channel, 2019): A documentary series following a team of explorers as they venture into the Amazon rainforest to uncover its secrets and meet its indigenous communities. These documentaries, films, and series will provide you with a deeper understanding of the daily lives, cultures, and traditions of indigenous communities in the Amazon rainforest. Enjoy your journey into the heart of the Amazon!"
+        },
+        {
+          "rank": 6,
+          "memory_id": "mem_b351f9690a8e2769",
+          "is_expected": false,
+          "content": "National Geographic is an excellent resource for learning about the Yanomami people and their struggles. Now, let's dive into some fantastic documentaries and films that will give you a deeper look into their daily lives and struggles: **Documentaries:** 1. **The Yanomami: A Struggle for Survival** (1991): A classic documentary film that follows the lives of the Yanomami people and their struggles with disease, colonization, and modernization. 2. **The Last Shaman** (2016): A documentary that explores the life of a Yanomami shaman and his efforts to preserve his people's traditions and way of life. 3. **Yanomami: The Fierce People** (2007): A documentary that provides an intimate look at the daily lives of the Yanomami people, showcasing their culture, traditions, and struggles. 4. **Amazon: The Yanomami** (2018): A documentary series that explores the lives of the Yanomami people and their struggles with deforestation, mining, and climate change. 5. **The Uncontacted** (2017): A documentary that explores the lives of isolated indigenous communities in the Amazon, including the Yanomami people. **Films:** 1. **Embrace of the Serpent** (2015): A critically acclaimed film that tells the story of an Amazonian shaman and his encounters with two Western explorers, inspired by the diaries of Theodor Koch-Grunberg and Amazonian shaman Karamakate. 2. **Iracema: Uma Transa Amaz\u00f4nica** (2013): A Brazilian film that explores the lives of an indigenous community in the Amazon rainforest, including the Yanomami people, and their struggles with deforestation and land rights. These documentaries and films will provide you with a deeper understanding of the Yanomami people's daily lives, culture, and struggles. You'll gain insight into their traditions, way of life, and the challenges they face in the modern world."
+        },
+        {
+          "rank": 7,
+          "memory_id": "mem_38c67766e7a8d268",
+          "is_expected": false,
+          "content": "As an AI language model, I don't have access to real-time information, but to the best of my knowledge, Melody Maker ceased publication in 2000 due to declining sales and competition from other music magazines. However, its legacy continues to live on as it was one of the most influential music magazines of the 20th century, discovering and championing many great talents."
+        },
+        {
+          "rank": 8,
+          "memory_id": "mem_150f657b5b1c5b38",
+          "is_expected": false,
+          "content": "Sleep tracking is a fantastic feature of your Fitbit Charge 3, and it's excellent that you're paying attention to your sleep patterns. For adults, the National Sleep Foundation recommends the following sleep durations: * 26-30 years old: 7-9 hours * 31-35 years old: 7-8 hours So, as a 32-year-old, your 7-8 hours of sleep per night fall within the recommended range. This is great! Getting sufficient sleep is crucial for overall health, cognitive function, and physical performance. During sleep, your body: 1. **Repairs and regenerates tissues**: Sleep helps your body repair and regenerate damaged cells, build bone and muscle, and strengthen your immune system. 2. **Consolidates memories**: Sleep plays an essential role in memory consolidation, which helps you learn and remember new information. 3. **Regulates hormones**: Sleep influences the balance of various hormones, including insulin, growth hormone, and hormones that control appetite and metabolism. 4. **Supports cardiovascular health**: Chronic sleep deprivation is linked to an increased risk of cardiovascular disease, including high blood pressure, heart attacks, and strokes. 5. **Affects mood and cognitive function**: Sleep deprivation can lead to irritability, anxiety, depression, and impaired cognitive function, including attention and decision-making skills. While 7-8 hours of sleep is a good starting point, it's essential to consider the quality of your sleep as well. You can use your Fitbit to monitor your sleep stages, including: 1. **Light sleep**: This stage is characterized by slow brain waves and is easy to wake up from. 2. **Deep sleep**: This stage is marked by slower brain waves and is more restorative. 3. **REM (Rapid Eye Movement) sleep**: This stage is when most dreams occur, and brain activity is similar to being awake. Aim to spend at least 15-20 percent of your sleep time in deep sleep and 20-25 percent in REM sleep. You can also pay attention to your sleep schedule, sleep fragmentation (waking up during the night), and sleep latency (time it takes to fall asleep). To optimize your sleep, consider these tips: 1. **Establish a consistent sleep schedule**: Go to bed and wake up at the same time every day, including weekends. 2. **Create a sleep-conducive environment**: Make your bedroom dark, quiet, and cool, and invest in a comfortable mattress and pillows. 3. **Develop a relaxing bedtime routine**: Engage in calming activities, such as reading, meditation, or a warm bath, to signal your body that it's time to sleep. 4. **Avoid screens and stimulating activities before bedtime**: The blue light from screens can suppress melatonin production, making it harder to fall asleep. 5. **Limit caffeine and alcohol**: Both can disrupt sleep patterns and reduce sleep quality. By paying attention to your sleep patterns and making adjustments to your sleep habits, you can improve the quality of your sleep and wake up feeling more refreshed and energized."
+        },
+        {
+          "rank": 9,
+          "memory_id": "mem_fb5178c77c146a43",
+          "is_expected": true,
+          "content": "For newspapers, I've been reading The New York Times and The Daily News regularly"
+        },
+        {
+          "rank": 10,
+          "memory_id": "mem_3c87677ac5a98356",
+          "is_expected": false,
+          "content": "I'm trying to get more organized with my reading list"
+        },
+        {
+          "rank": 11,
+          "memory_id": "mem_ac1de41fbaed91f4",
+          "is_expected": false,
+          "content": "I've been meaning to read more books on psychology and true crime, but I never seem to have the time"
+        },
+        {
+          "rank": 12,
+          "memory_id": "mem_9f37f5fb7d0b6fae",
+          "is_expected": false,
+          "content": "As a digital AI assistant, I don't have personal travel plans or experiences, but I can certainly provide information and advice on booking travel insurance"
+        },
+        {
+          "rank": 13,
+          "memory_id": "mem_3c70fc46d96699c6",
+          "is_expected": false,
+          "content": "I also regularly read The Atlantic and Medium online."
+        },
+        {
+          "rank": 14,
+          "memory_id": "mem_2eabefafeaac8fa1",
+          "is_expected": false,
+          "content": "I'm having some issues with my sleep patterns and I was wondering if you could give me some general tips on how to improve my sleep quality"
+        }
+      ],
+      "targets": {
+        "source": {
+          "ndcg": 0.14126697285982898,
+          "credited_rank": 9,
+          "credited_memory_id": "mem_fb5178c77c146a43",
+          "credited_kind": "observation",
+          "credited_content": "For newspapers, I've been reading The New York Times and The Daily News regularly",
+          "judges": {
+            "Sonnet 4": "does_not_support",
+            "Opus 4.7": "does_not_support",
+            "Gemini 3.1": "does_not_support",
+            "GPT-5.5": "does_not_support",
+            "DeepSeek V4": "does_not_support"
+          },
+          "judge_majority": "does_not_support"
+        },
+        "canonical": {
+          "ndcg": 0.3010299956639812,
+          "credited_rank": 9,
+          "credited_memory_id": "mem_fb5178c77c146a43",
+          "credited_kind": "observation",
+          "credited_content": "For newspapers, I've been reading The New York Times and The Daily News regularly",
+          "judges": {
+            "Sonnet 4": "does_not_support",
+            "Opus 4.7": "does_not_support",
+            "Gemini 3.1": "does_not_support",
+            "GPT-5.5": "does_not_support",
+            "DeepSeek V4": "does_not_support"
+          },
+          "judge_majority": "does_not_support"
+        },
+        "raw": {
+          "ndcg": 0.0,
+          "credited_rank": null,
+          "credited_memory_id": null,
+          "credited_kind": "raw_turn",
+          "credited_content": null,
+          "judges": {},
+          "judge_majority": null
+        }
+      },
+      "aggregate": {
+        "raw_turn": {
+          "queries": 439,
+          "hit_rate_at_k": 0.6195899772209568,
+          "recall_at_k": 0.5037965072133637,
+          "mrr": 0.08158870488330221,
+          "ndcg_at_k": 0.15519951282645775,
+          "top1_hit_rate": 0.0
+        },
+        "source_family": {
+          "queries": 439,
+          "hit_rate_at_k": 0.7608200455580866,
+          "recall_at_k": 0.6175018982536068,
+          "mrr": 0.32628683309471673,
+          "ndcg_at_k": 0.3329734772490522,
+          "top1_hit_rate": 0.255125284738041
+        },
+        "canonical": {
+          "queries": 299,
+          "hit_rate_at_k": 0.9230769230769231,
+          "recall_at_k": 0.881716833890747,
+          "mrr": 0.4749564250199899,
+          "ndcg_at_k": 0.5325859267325865,
+          "top1_hit_rate": 0.3745819397993311
+        }
+      }
+    },
+    "longmemeval_mxbai": {
+      "label": "mxbai",
+      "run_dir": "mxbai",
+      "has_trace": false,
+      "hit_ranks": null,
+      "expected_memory_ids": null,
+      "ranking_depth": null,
+      "ranked_preview": [],
+      "targets": {
+        "source": {
+          "ndcg": 0.6713860725233041,
+          "credited_rank": 1,
+          "credited_memory_id": "mem_abfc5e2524b3b3f6",
+          "credited_kind": "observation",
+          "credited_content": "I've been reading about the Amazon rainforest and its indigenous communities in National Geographic, and I just finished my fifth issue",
+          "judges": {
+            "Sonnet 4": "supports",
+            "Opus 4.7": "supports",
+            "Gemini 3.1": "supports",
+            "GPT-5.5": "supports",
+            "DeepSeek V4": "supports"
+          },
+          "judge_majority": "supports"
+        },
+        "canonical": {
+          "ndcg": 0.8772153153380493,
+          "credited_rank": 1,
+          "credited_memory_id": "mem_abfc5e2524b3b3f6",
+          "credited_kind": "observation",
+          "credited_content": "I've been reading about the Amazon rainforest and its indigenous communities in National Geographic, and I just finished my fifth issue",
+          "judges": {
+            "Sonnet 4": "supports",
+            "Opus 4.7": "supports",
+            "Gemini 3.1": "supports",
+            "GPT-5.5": "supports",
+            "DeepSeek V4": "supports"
+          },
+          "judge_majority": "supports"
+        },
+        "raw": {
+          "ndcg": 0.0,
+          "credited_rank": null,
+          "credited_memory_id": null,
+          "credited_kind": "raw_turn",
+          "credited_content": null,
+          "judges": {},
+          "judge_majority": null
+        }
+      },
+      "aggregate": null
+    }
+  },
+  "flip": {
+    "pair": [
+      "all-MiniLM",
+      "BGE-M3"
+    ],
+    "source_winner": "all-MiniLM",
+    "canonical_winner": "BGE-M3",
+    "delta_source": 0.069016,
+    "delta_canonical": -0.02628
+  },
+  "audit": {
+    "published": {
+      "ndcg_change_rate_low": 83.4,
+      "ndcg_change_rate_high": 94.0,
+      "audit_cases": 1902,
+      "majority_n": 1876,
+      "supports_pct": 29.2,
+      "partial_pct": 39.6,
+      "does_not_support_pct": 31.2
+    },
+    "recomputed": {
+      "majority_n": 1891,
+      "supports_pct": 29.1,
+      "partial_pct": 39.7,
+      "does_not_support_pct": 31.1
+    },
+    "judges": [
+      "Sonnet 4",
+      "Opus 4.7",
+      "Gemini 3.1",
+      "GPT-5.5",
+      "DeepSeek V4"
+    ],
+    "_reconciliation": "The paper reports a five-model majority over n=1876 cases (29.2 / 39.6 / 31.2). Recomputing the plurality here keeps 1891 cases and gives 29.1 / 39.7 / 31.1; the 15-case gap is in which cases qualify for a majority. The page quotes the published figures."
+  }
+}

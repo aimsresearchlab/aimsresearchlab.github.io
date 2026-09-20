@@ -22,6 +22,10 @@ export interface Person {
   category: Category;
   image?: string;       // path under /public, e.g. "/people/jane.jpg". Omit for a placeholder.
   links?: PersonLink[];
+  // Faculty only: title line and the longer blurb on the featured card at the
+  // top of /people. Set both, or neither and the person renders as a card.
+  role?: string;
+  bio?: string;
   // Term they finished, e.g. "Spring 2026". Setting it moves the person out of
   // the current roster and into the Alumni section on /people.
   graduated?: string;
@@ -33,6 +37,8 @@ export const people: Person[] = [
     topic: 'AIMS Lab Director',
     category: 'faculty',
     image: '/people/rabab-abdelfattah.webp',
+    role: 'Founder and Director',
+    bio: 'Artificial intelligence, computer vision, multimodal and vision-language models, trustworthy evaluation, and edge AI.',
     links: [
       { type: 'website', url: 'https://www.usm.edu/faculty-directory/profile.php?id=2458606' },
       { type: 'scholar', url: 'https://scholar.google.com/citations?user=p4FzqnIAAAAJ' },

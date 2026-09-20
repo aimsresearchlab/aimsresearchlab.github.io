@@ -1,8 +1,9 @@
 ---
 title: 'Outcome Monitors'
 claim: 'Recovery affordances that let an agent notice and repair tool calls that failed silently.'
+cover: /projects/outcome-monitors.webp
 tags: [AIAgents, TrustworthyAI]
-featured: 3
+featured: 4
 links:
   - { kind: arxiv, url: 'https://arxiv.org/abs/2608.19303' }
 publications:

@@ -1,0 +1,43 @@
+---
+// Sheet 2: a header band with the heading and the numbers, then the five lines
+// of work as a row of image cards. The image carries the area, the icon badge
+// keeps the brand on it, and the row fills the frame that the old five-bar
+// list left half empty. The areas do not share one thesis, so the header does
+// not claim one; each card speaks for its own line.
+import { Icon } from 'astro-icon/components';
+import Sheet from './Sheet.astro';
+import { areas, stats } from '../../data/deck';
+interface Props {
+  projectCount: number;
+}
+const { projectCount } = Astro.props;
+const numbers = stats(projectCount);
+---
+
+<Sheet>
+  <header class="work-head">
+    <div>
+      <p class="kicker ui">What we do</p>
+      <h2 class="slide-title">Five lines of work</h2>
+    </div>
+    <div class="stat-band">
+      {numbers.map((s) => (
+        <p class="stat"><span class="stat-n">{s.n}</span> <span class="stat-l ui">{s.label}</span></p>
+      ))}
+    </div>
+  </header>
+  <ol class="work-list">
+    {areas.map((a) => (
+      <li class="work">
+        <span class="work-shot">
+          <img src={a.image} alt="" width="640" height="400" />
+          <span class="area-icon"><Icon name={a.icon} /></span>
+        </span>
+        <span class="work-copy">
+          <span class="area-title">{a.title}</span>
+          <span class="area-line">{a.line}</span>
+        </span>
+      </li>
+    ))}
+  </ol>
+</Sheet>

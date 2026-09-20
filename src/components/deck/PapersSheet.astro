@@ -1,0 +1,38 @@
+---
+// Sheet: selected papers, each with somewhere to go. The address is a QR
+// rather than printed text, because nobody in a room types a DOI off a slide.
+import Sheet from './Sheet.astro';
+import QrCard from './QrCard.astro';
+import { publications } from '../../data/publications';
+import { paperDestination } from '../../data/deck';
+import type { ProjectEntry } from '../../data/projects';
+interface Props {
+  projects: ProjectEntry[];
+  /** How many fit the sheet at display size. */
+  limit?: number;
+}
+const { projects, limit = 4 } = Astro.props;
+const papers = publications.slice(0, limit);
+const destination = paperDestination(projects);
+---
+
+<Sheet>
+  <p class="kicker ui">Publications</p>
+  <h2 class="slide-title">Selected papers</h2>
+  <div class="pub-grid">
+    {papers.map((p) => {
+      const where = destination(p.title, p.url);
+      return (
+        <div class="pub">
+          <div class="pub-copy">
+            <p class="pub-title">{p.title}</p>
+            <p class="pub-authors ui">{p.authors}</p>
+            <p class="pub-venue ui">{p.venue} · {p.year}</p>
+          </div>
+          {where && <QrCard src={where.qr} alt={`QR code for ${where.text}`} size="tiny" />}
+        </div>
+      );
+    })}
+  </div>
+  <p class="alumni ui">Full list: aimsresearchlab.com/publications/</p>
+</Sheet>

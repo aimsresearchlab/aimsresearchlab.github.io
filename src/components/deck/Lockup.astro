@@ -1,0 +1,25 @@
+---
+// The AIMS mark and wordmark. Half the mark is deep navy, so the dark sheets
+// get the light variant; both are in the markup and CSS picks one, which keeps
+// the sheet themable without any script.
+// `bare` drops the mark, for a sheet that already shows it somewhere else.
+interface Props {
+  small?: boolean;
+  bare?: boolean;
+}
+const { small = false, bare = false } = Astro.props;
+const px = small ? 64 : 96;
+---
+
+<div class:list={['lockup', small && 'small']}>
+  {!bare && (
+    <Fragment>
+      <img class="mark on-light" src="/logo-mark.svg" alt="" width={px} height={px} />
+      <img class="mark on-dark" src="/logo-mark-light.svg" alt="" width={px} height={px} />
+    </Fragment>
+  )}
+  <div>
+    <p class="wordmark">AIMS</p>
+    <p class="expansion">Artificial Intelligence &amp; Multimodal Systems</p>
+  </div>
+</div>

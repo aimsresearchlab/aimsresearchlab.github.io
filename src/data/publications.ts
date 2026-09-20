@@ -9,7 +9,7 @@ export interface Publication {
   venue: string;        // "ACL 2027", "arXiv preprint", etc.
   year: number;
   url?: string;         // link to PDF / arXiv / project page
-  award?: string;       // e.g. "Best Paper" — renders an ochre badge
+  award?: string;       // e.g. "Best Paper", renders an ochre badge
 }
 
 export const publications: Publication[] = [

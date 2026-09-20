@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { title, claim, tags, cover, links } = project.data;
+const { title, claim, tags, cover, coverVideo, coverCaption, links } = project.data;
 const { Content } = await render(project);
 
 // Papers listed in frontmatter, in the order publications.ts defines.
@@ -26,7 +26,7 @@ const papers = publications.filter((p) => titles.has(p.title));
 <Base title={`${title} · AIMS Lab`} description={claim} type="article">
   <article>
     <div class="wide cover-slot">
-      <Cover src={cover} alt={`${title} project cover`} />
+      <Cover src={cover} video={coverVideo} caption={coverCaption} alt={`${title} project cover`} controls />
     </div>
 
     <header class="head">
@@ -62,7 +62,9 @@ const papers = publications.filter((p) => titles.has(p.title));
 </Base>
 
 <style>
-  .cover-slot { margin-bottom: 2.5rem; }
+  /* main has no top padding, and the cover is the page's first element, so it
+     needs its own gap under the header. */
+  .cover-slot { margin-top: 3rem; margin-bottom: 2.5rem; }
   .head { margin-bottom: 2rem; }
   .crumb { font-size: 0.85rem; margin: 0 0 0.75rem; }
   .crumb a { color: var(--ink-soft); text-decoration: none; }
@@ -89,6 +91,6 @@ const papers = publications.filter((p) => titles.has(p.title));
 
   .prose :global(h2) { font-size: 1.25rem; margin-top: 2.25rem; }
   .prose :global(p) { margin: 0 0 1.1rem; }
-  .papers { border-top: 1px solid var(--rule); padding-top: 0.5rem; }
-  .papers h2 { font-size: 1.25rem; }
+  .papers { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.75rem; }
+  .papers h2 { font-size: 1.25rem; margin-top: 0; }
 </style>

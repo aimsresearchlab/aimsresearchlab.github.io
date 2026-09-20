@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIAP: which stored memory should get the credit?</title>
+<link rel="canonical" href="https://aimsresearchlab.com/tiap/">
+<meta name="description" content="One query, one saved ranked list, three scoring targets. Retrieval never reruns, the ranking never moves, and the winner changes anyway.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AIMS Lab">
+<meta property="og:url" content="https://aimsresearchlab.com/tiap/">
+<meta property="og:title" content="TIAP: which stored memory should get the credit?">
+<meta property="og:description" content="One query, one saved ranked list, three scoring targets. Retrieval never reruns, the ranking never moves, and the winner changes anyway.">
+<meta property="og:image" content="https://aimsresearchlab.com/tiap/og-tiap.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A saved ranked list of memories, rescored under three different credited targets.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TIAP: which stored memory should get the credit?">
+<meta name="twitter:description" content="One query, one saved ranked list, three scoring targets. Retrieval never reruns, the ranking never moves, and the winner changes anyway.">
+<meta name="twitter:image" content="https://aimsresearchlab.com/tiap/og-tiap.jpg">
+<meta name="theme-color" content="#1652EC">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{
+    --ink:#14161a; --ink-2:#4a5058; --ink-3:#878e98;
+    --paper:#ffffff; --page:#eceae6; --line:#e2e0da;
+    --brand:#1652EC;
+    --raw:#878e98; --source:#b8791f; --canon:#1652EC;
+    --miss:#c2402f; --hit:#1f8a63; --ghost:#9aa0aa;
+    /* the three stage tints, taken from the paper's framework figure */
+    --s1:#b8791f; --s1-bg:#fdf8ef;
+    --s2:#1652EC; --s2-bg:#f2f5fe;
+    --s3:#c2402f; --s3-bg:#fdf3f1;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--page);font-family:var(--sans);color:var(--ink)}
+  a{color:inherit}
+
+  /* nav ------------------------------------------------------------------ */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(236,234,230,.86);backdrop-filter:blur(10px);
+       border-bottom:1px solid var(--line)}
+  .nav .in{max-width:1300px;margin:0 auto;padding:13px 26px;display:flex;align-items:center;gap:22px}
+  .brand{display:flex;align-items:baseline;gap:9px;font-weight:700;letter-spacing:-.02em;font-size:18px}
+  .brand span{font:600 11.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+  .links{margin-left:auto;display:flex;gap:6px;align-items:center}
+  .links a{padding:7px 13px;border-radius:8px;font-size:14.5px;font-weight:550;color:var(--ink-2);text-decoration:none}
+  .links a:hover{background:#e2dfd9}
+  .links .gh{display:flex;align-items:center;gap:7px}
+  .links .gh svg{width:16px;height:16px}
+  .links button{padding:7px 13px;border-radius:8px;font:550 14.5px/1 var(--sans);color:var(--ink-2);
+                border:1px solid var(--line);background:var(--paper);cursor:pointer}
+  .links button:hover{background:#f4f2ee;color:var(--ink)}
+  .bibwrap{position:relative}
+  .bibpop{position:absolute;top:calc(100% + 9px);right:0;z-index:70;width:min(560px,86vw);
+          background:var(--paper);border:1px solid var(--line);border-radius:12px;
+          box-shadow:0 18px 44px rgba(20,22,26,.16);padding:14px 15px 15px;display:none}
+  .bibpop.open{display:block}
+  .bibpop .hd{display:flex;align-items:center;gap:10px;margin-bottom:9px;font:600 13.5px/1 var(--sans)}
+  .bibpop .hd span{margin-right:auto}
+  .bibpop button{padding:6px 11px;border-radius:7px;font:550 13px/1 var(--sans);
+                 color:var(--ink-2);border:1px solid var(--line);background:var(--paper);cursor:pointer}
+  .bibpop button.done{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bibpop pre{margin:0;font:12.5px/1.55 var(--mono);white-space:pre-wrap;color:var(--ink-2);
+              max-height:40vh;overflow:auto}
+
+  /* stage ---------------------------------------------------------------- */
+  .stage{max-width:1300px;margin:0 auto;padding:20px 26px 30px}
+  .lede{max-width:74ch;margin:6px 0 20px;font-size:17px;line-height:1.6;color:var(--ink-2)}
+  .lede b{color:var(--ink);font-weight:650}
+  .shell{position:relative}
+  /* Fixed 16:9 above the breakpoint so a screen capture needs no cropping.
+     Below it the aspect lock is released and everything stacks, so the film
+     reflows on a phone. Nothing is transform-scaled: cursor targets are
+     measured from the live DOM and the timeline rebuilds on resize. */
+  .frame{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:14px;
+         overflow:hidden;box-shadow:0 22px 50px rgba(20,22,26,.09)}
+  @media (min-width:881px){ .frame{aspect-ratio:16/9} }
+
+  header.bar{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line);
+             background:#f7f5f1;position:relative;z-index:30}
+  .dots{display:flex;gap:6px}
+  .dots i{width:11px;height:11px;border-radius:50%;background:#dcd9d2;display:block}
+  .bar .title{font:650 16px/1 var(--sans)}
+  .bar .title span{font-weight:450;color:var(--ink-3)}
+  .steps{margin-left:auto;display:flex;gap:6px;align-items:center}
+  /* the chips are real buttons: clicking one jumps the film to that scene */
+  .step{font:650 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+        color:var(--ink-3);border:1px solid var(--line);border-radius:6px;padding:6px 8px;
+        background:var(--paper);cursor:pointer;font-family:var(--sans)}
+  .step:hover{color:var(--ink);border-color:var(--ink-3)}
+  .step:focus-visible{outline:2px solid var(--canon);outline-offset:2px}
+  .step.on{color:#fff;background:var(--ink);border-color:var(--ink)}
+  .step.on:hover{color:#fff}
+
+  /* the scenes stack and cross-fade ---------------------------------------- */
+  .scenes{position:relative}
+  @media (min-width:881px){ .scenes{position:absolute;inset:53px 0 0 0} }
+  @media (max-width:880px){ .scenes{min-height:720px} }
+  .scene{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column}
+  .pad{padding:26px 30px}
+  .schead{font:700 12.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;
+          color:var(--canon);margin-bottom:11px}
+  .sclede{font:700 clamp(21px,2.2vw,30px)/1.26 var(--sans);letter-spacing:-.022em;max-width:34ch}
+  .scsub{font:18px/1.55 var(--sans);color:var(--ink-2);max-width:70ch;margin-top:16px;opacity:0}
+  .scsub b{color:var(--ink);font-weight:650}
+  .scsub em{font-style:normal;color:var(--canon)}
+
+  /* SCENE 1: one turn, many descendants ------------------------------------ */
+  .fan{display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1.12fr);
+       align-items:center;flex:1;min-height:0;margin-top:18px}
+  .turn{border:1px solid var(--line);border-radius:11px;padding:26px 24px;background:#fbfaf8;opacity:0}
+  .turn .lbl{font:650 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;
+             color:var(--ink-3);margin-bottom:15px}
+  .turn .txt{font:24px/1.42 var(--sans);color:var(--ink);letter-spacing:-.012em}
+  .arrows{display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:24px;opacity:0}
+  .desc{display:flex;flex-direction:column;gap:13px}
+  .dcard{border:1px solid var(--line);border-radius:9px;padding:19px 16px;background:var(--paper);
+         display:flex;align-items:center;gap:15px;opacity:0}
+  .dcard .kind{font:650 13px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;
+               padding:8px 10px;border-radius:5px;color:var(--ink-3);background:#f2f0ec;
+               flex:none;min-width:92px;text-align:center}
+  .dcard .txt{font:18px/1.4 var(--sans);color:var(--ink-2)}
+  .dcard.is-raw .kind{color:var(--raw);background:rgba(135,142,152,.14)}
+  .dcard.is-can .kind{color:var(--canon);background:rgba(22,82,236,.12)}
+
+  /* SCENE 2: the audit console --------------------------------------------- */
+  .body{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);flex:1;min-height:0}
+  .col-l{padding:16px 18px;border-right:1px solid var(--line);min-width:0;display:flex;flex-direction:column}
+  .col-r{padding:16px 18px;min-width:0;display:flex;flex-direction:column}
+  .colhead{font:650 12px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;
+           color:var(--ink-3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .qcard{border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:#fbfaf8;
+         margin-bottom:13px;flex:none}
+  .qcard .q{font:650 19px/1.4 var(--sans);min-height:1.4em;letter-spacing:-.01em}
+  .qmeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .chip{font:550 12.5px/1 var(--mono);color:var(--ink-3);border:1px solid var(--line);
+        border-radius:5px;padding:5px 8px;background:var(--paper)}
+  .chip b{color:var(--ink-2);font-weight:650}
+  .listhead{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex:none}
+  .frozen{opacity:0;font:700 11.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;
+          color:var(--ink-2);border:1px solid var(--ink-2);border-radius:5px;padding:5px 8px;
+          transform:rotate(-1.4deg)}
+  .rows{display:flex;flex-direction:column;gap:4px}
+  .row{display:grid;grid-template-columns:30px 1fr;gap:11px;align-items:start;
+       padding:7px 9px;border-radius:8px;border:1px solid transparent;opacity:0}
+  .row .rk{font:700 14px/1.45 var(--mono);color:var(--ink-3);text-align:right}
+  .row .tx{font:15px/1.45 var(--sans);color:var(--ink-2);overflow:hidden}
+  .row .mid{display:block;font:12px/1.4 var(--mono);color:#b3b8c0;margin-top:3px}
+  .row.gap{opacity:.55;border-style:dashed;border-color:var(--line);justify-items:center}
+  .row.gap .tx{font:13px/1.4 var(--mono);color:var(--ink-3)}
+  .row.dim{opacity:.32}
+  .row.dim .tx{color:var(--ghost)}
+  .row.cred{background:rgba(22,82,236,.08);border-color:rgba(22,82,236,.34)}
+  .row.cred .rk{color:var(--canon)}
+  .row.cred .tx{color:var(--ink)}
+  .row.cred-src{background:rgba(184,121,31,.1);border-color:rgba(184,121,31,.38)}
+  .row.cred-src .rk{color:var(--source)}
+  .row.cred-src .tx{color:var(--ink)}
+  .row.answer{background:rgba(194,64,47,.08);border-color:rgba(194,64,47,.36)}
+  .row.answer .tx{color:var(--ink)}
+  .row .mark{display:inline;background:rgba(194,64,47,.17);box-shadow:inset 0 -2px 0 rgba(194,64,47,.5);
+             color:#a8321f;font-weight:650}
+  .tagpill{display:inline-block;margin-left:7px;font:700 11px/1 var(--sans);letter-spacing:.07em;
+           text-transform:uppercase;padding:4px 6px;border-radius:4px;vertical-align:1px;opacity:0}
+  .tagpill.no{color:var(--miss);background:rgba(194,64,47,.13)}
+  .tagpill.yes{color:var(--canon);background:rgba(22,82,236,.13)}
+  .depth{margin-top:9px;font:13px/1.5 var(--mono);color:var(--ink-3);text-align:center;opacity:0}
+
+  .targets{display:flex;flex-direction:column;gap:9px;flex:none}
+  .tcard{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--paper);opacity:.5}
+  .tcard.live{opacity:1}
+  .tcard .th{display:flex;align-items:baseline;gap:9px}
+  .tcard .tname{font:700 16px/1 var(--sans)}
+  .tcard .tdef{font:13.5px/1.4 var(--sans);color:var(--ink-3);margin-top:6px}
+  .tcard .score{margin-left:auto;display:flex;align-items:baseline;gap:9px}
+  .tcard .num{font:700 20px/1 var(--mono);color:var(--ink);opacity:0}
+  .tcard .verdict{font:700 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+                  padding:5px 7px;border-radius:4px;opacity:0}
+  .v-miss{color:var(--miss);background:rgba(194,64,47,.13)}
+  .v-hit{color:var(--hit);background:rgba(31,138,99,.13)}
+  #t-raw.live{border-color:rgba(135,142,152,.55);box-shadow:0 0 0 2px rgba(135,142,152,.14)}
+  #t-source.live{border-color:rgba(184,121,31,.55);box-shadow:0 0 0 2px rgba(184,121,31,.14)}
+  #t-canonical.live{border-color:rgba(22,82,236,.5);box-shadow:0 0 0 2px rgba(22,82,236,.13)}
+  .note{margin-top:12px;font:14.5px/1.55 var(--sans);color:var(--ink-2);opacity:0;flex:none}
+  .note b{color:var(--ink);font-weight:650}
+  .stack{position:relative;flex:1;min-height:0;margin-top:14px}
+  .stack > *{position:absolute;inset:0 0 auto 0}
+  .board{border:1px solid var(--line);border-radius:10px;overflow:hidden;opacity:0;background:var(--paper)}
+  .board .bh{font:700 12px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);
+             padding:10px 13px;background:#f7f5f1;border-bottom:1px solid var(--line)}
+  .board table{width:100%;border-collapse:collapse}
+  .board th,.board td{padding:10px 13px;text-align:right;font:15px/1 var(--mono);color:var(--ink-2)}
+  .board th{font:700 12px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .board th:first-child,.board td:first-child{text-align:left;font-family:var(--sans);font-weight:650;color:var(--ink)}
+  .board tbody tr+tr td{border-top:1px solid var(--line)}
+  .board td.win{position:relative}
+  .board td.win::after{content:"";position:absolute;inset:4px 6px;border:2px solid rgba(22,82,236,.45);
+                       border-radius:5px;opacity:0}
+  .board td.win.on{color:var(--canon);font-weight:700}
+  .board td.win.on::after{opacity:1}
+  .audit{border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:#fbfaf8;opacity:0}
+  .audit .ah{font:700 12px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;
+             color:var(--ink-3);margin-bottom:9px}
+  .audit .quote{font:15px/1.5 var(--sans);color:var(--ink);border-left:3px solid var(--line);
+                padding-left:11px;margin-bottom:11px}
+  .judges{display:flex;flex-wrap:wrap;gap:6px}
+  /* the five judge models, with the vendor marks from public/tiap/icons */
+  .judge{font:600 13px/1 var(--sans);padding:6px 9px 6px 7px;border-radius:6px;opacity:0;
+         display:inline-flex;align-items:center;gap:7px;
+         color:var(--ink-2);background:var(--paper);border:1px solid var(--line)}
+  .judge img{width:16px;height:16px;flex:none;display:block}
+
+  /* SCENE 3: the framework figure, rebuilt --------------------------------- */
+  .figlede{margin-bottom:2px}
+  .fig{display:grid;grid-template-columns:1fr 32px 1fr 32px 1fr;flex:1;min-height:0;
+       gap:0;align-items:stretch;margin-top:18px}
+  .figcol{border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:13px;opacity:0;
+          min-width:0;justify-content:space-between}
+  .figcol.c1{background:var(--s1-bg);border:1px solid rgba(184,121,31,.26)}
+  .figcol.c2{background:var(--s2-bg);border:1px solid rgba(22,82,236,.2)}
+  .figcol.c3{background:var(--s3-bg);border:1px solid rgba(194,64,47,.2)}
+  .figtitle{font:700 13.5px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+  .c1 .figtitle{color:var(--s1)} .c2 .figtitle{color:var(--s2)} .c3 .figtitle{color:var(--s3)}
+  .figarrow{display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:20px;opacity:0}
+  .grp{border:1px dashed rgba(20,22,26,.16);border-radius:9px;padding:12px;display:flex;
+       flex-direction:column;gap:9px}
+  .grp .gh{font:700 15px/1 var(--sans);color:var(--ink);display:flex;align-items:center;gap:6px}
+  .box{background:var(--paper);border:1px solid rgba(20,22,26,.1);border-radius:7px;padding:11px 12px;opacity:0}
+  .box .bt{font:700 15px/1.25 var(--sans)}
+  .box .bd{font:13.5px/1.4 var(--sans);color:var(--ink-3);margin-top:5px}
+  /* Raw is the strict target, not a disabled one, so it gets ink rather than grey */
+  .box.r .bt{color:var(--ink-2)} .box.s .bt{color:var(--source)} .box.c .bt{color:var(--canon)}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .trace{font:14px/1.7 var(--mono);color:var(--ink-2);margin-top:4px}
+  .trace b{color:var(--ink)}
+  .lock{font:650 13.5px/1 var(--sans);color:var(--ink-2);background:rgba(20,22,26,.06);
+        border-radius:6px;padding:10px 9px;text-align:center;opacity:0}
+  .tchips{display:flex;gap:5px}
+  .tchips span{flex:1;text-align:center;font:700 13.5px/1 var(--mono);padding:10px 4px;border-radius:6px;
+               border:1px solid}
+  .tchips .a{color:var(--raw);border-color:rgba(135,142,152,.4);background:rgba(135,142,152,.1)}
+  .tchips .b{color:var(--source);border-color:rgba(184,121,31,.4);background:rgba(184,121,31,.1)}
+  .tchips .c{color:var(--canon);border-color:rgba(22,82,236,.35);background:rgba(22,82,236,.09)}
+  .formula{font:15px/1.5 var(--mono);color:var(--ink);text-align:center;
+           background:rgba(20,22,26,.045);border-radius:7px;padding:12px 9px;opacity:0}
+  .formula small{display:block;font:12.5px/1.4 var(--sans);color:var(--ink-3);margin-top:5px}
+  .chgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .chip2{font:14px/1.3 var(--sans);color:var(--ink-2);background:var(--paper);
+         border:1px solid rgba(20,22,26,.1);border-radius:7px;padding:11px 8px;text-align:center;opacity:0}
+  .verdicts{display:flex;flex-direction:column;gap:6px}
+  .vrow{display:flex;align-items:center;gap:9px;background:var(--paper);
+        border:1px solid rgba(20,22,26,.1);border-radius:7px;padding:11px 10px;opacity:0}
+  .vrow .ic{font:700 14.5px/1 var(--mono);width:16px;text-align:center}
+  .vrow .tx{font:14px/1.35 var(--sans);color:var(--ink-2)}
+  .vrow.ok .ic{color:var(--hit)} .vrow.mid .ic{color:var(--s1)} .vrow.no .ic{color:var(--miss)}
+  .tni{background:rgba(194,64,47,.09);border:1px solid rgba(194,64,47,.34);border-radius:9px;
+       padding:13px;opacity:0;margin-top:auto}
+  .tni .h{font:700 15px/1.2 var(--sans);color:var(--miss);margin-bottom:6px}
+  .tni .d{font:13.5px/1.45 var(--sans);color:var(--ink-2)}
+
+  /* SCENE 4: deployed ------------------------------------------------------- */
+  .deploy{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;
+          flex:1;min-height:0;margin-top:16px}
+  .dcol{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .dtable{border:1px solid var(--line);border-radius:11px;overflow:hidden;opacity:0}
+  .dtable .dh{font:700 12px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);
+              padding:11px 14px;background:#f7f5f1;border-bottom:1px solid var(--line)}
+  .dtable table{width:100%;border-collapse:collapse}
+  .dtable th,.dtable td{padding:11px 14px;text-align:right;font:15px/1 var(--mono);color:var(--ink-2)}
+  .dtable th{font:700 11.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .dtable th:first-child,.dtable td:first-child{text-align:left;font-family:var(--sans);
+                                                font-weight:650;color:var(--ink)}
+  .dtable tbody tr+tr td{border-top:1px solid var(--line)}
+  .dtable td.hi{color:var(--canon);font-weight:700}
+  .dtable td.warn{color:var(--miss)}
+  .dnotes{display:flex;flex-direction:column;gap:11px}
+  .dnote{border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:#fbfaf8;opacity:0}
+  .dnote .h{font:700 13.5px/1.2 var(--sans);margin-bottom:6px}
+  .dnote .d{font:13.5px/1.45 var(--sans);color:var(--ink-2)}
+  .dnote.alert{background:rgba(194,64,47,.06);border-color:rgba(194,64,47,.28)}
+  .dnote.alert .h{color:var(--miss)}
+
+  /* SCENE 5: outro ---------------------------------------------------------- */
+  .outro{display:flex;flex-direction:column;justify-content:space-between;flex:1;min-height:0}
+  .ohead{font:700 clamp(26px,3.2vw,42px)/1.22 var(--sans);letter-spacing:-.025em;max-width:30ch}
+  .ohead em{font-style:normal;color:var(--canon)}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  .stat{opacity:0}
+  .stat .n{font:700 clamp(28px,3vw,40px)/1 var(--sans);letter-spacing:-.024em;color:var(--ink)}
+  .stat .l{margin-top:10px;font:14.5px/1.45 var(--sans);color:var(--ink-2);max-width:26ch}
+  .otop{display:flex;align-items:flex-start;gap:28px}
+  .otop > div:first-child{flex:1;min-width:0}
+  /* the end card's QR, sized to be scannable off a projector */
+  .qr{flex:none;text-align:center;opacity:0}
+  .qr img{display:block;width:184px;height:184px}
+  .qrcap{margin-top:9px;font:600 12px/1 var(--mono);color:var(--ink-3)}
+  .ometa{border-top:1px solid var(--line);padding-top:15px;display:flex;align-items:flex-end;
+         gap:24px;flex-wrap:wrap}
+  .olinks{display:flex;gap:10px;flex-wrap:wrap}
+  .olink{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+         font:650 14.5px/1 var(--sans);color:var(--ink);background:var(--paper);
+         border:1px solid var(--line);border-radius:9px;padding:11px 14px}
+  .olink:hover{border-color:var(--canon);color:var(--canon)}
+  .olink svg{width:17px;height:17px;flex:none}
+  /* the play control sits in the bottom right corner, so the citation stops short of it */
+  .ocite{margin-left:auto;margin-right:46px;text-align:right;font:13.5px/1.55 var(--sans);
+         color:var(--ink-3);max-width:52ch}
+  .ocite b{color:var(--ink-2)}
+
+  /* cursor, caption, control ------------------------------------------------ */
+  .cursor{position:absolute;width:26px;height:26px;left:0;top:0;pointer-events:none;z-index:50;
+          filter:drop-shadow(0 2px 4px rgba(20,22,26,.3));opacity:0}
+  .ripple{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;
+          background:rgba(22,82,236,.4);pointer-events:none;opacity:0;z-index:49}
+  .cap{margin-top:16px;min-height:1.6em;font:18px/1.55 var(--sans);color:var(--ink-2);text-align:center}
+  .ctl{position:absolute;right:14px;bottom:14px;z-index:55;width:36px;height:36px;border-radius:50%;
+       border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--ink-2);
+       font:14px/1 var(--sans);cursor:pointer}
+  .ctl:hover{color:var(--ink)}
+
+  @media (max-width:880px){
+    .nav .in{flex-wrap:wrap;gap:10px;padding:11px 16px}
+    .brand span{display:none}
+    .stage{padding:16px 16px 28px}
+    .steps{display:none}
+    .pad{padding:18px 16px}
+    .body{grid-template-columns:1fr}
+    .col-l{border-right:0;border-bottom:1px solid var(--line)}
+    .stack{min-height:230px}
+    .fan{grid-template-columns:1fr;gap:12px}
+    .arrows{transform:rotate(90deg);height:26px}
+    .fig{grid-template-columns:1fr;gap:10px}
+    .figarrow{transform:rotate(90deg);height:24px}
+    .deploy{grid-template-columns:1fr;gap:14px}
+    .tiles{grid-template-columns:1fr;gap:16px}
+    .cap{font-size:16px}
+  }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <div class="brand">TIAP <span>target invariance audit</span></div>
+  <div class="links">
+    <a href="/">AIMS</a>
+    <a href="https://arxiv.org/abs/2605.24060" target="_blank" rel="noopener">Paper</a>
+    <a class="gh" href="https://github.com/aimsresearchlab/Same-Ranking-Different-Winner-How-Scoring-Targets-Shape-LLM-Memory-Benchmarks" target="_blank" rel="noopener" title="Source on GitHub">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      GitHub</a>
+    <button id="bib" type="button">BibTeX</button>
+  </div>
+</div></nav>
+
+<div class="stage">
+  <p class="lede">A memory store keeps the original turn and everything derived from it, so scoring
+  retrieval means deciding <b>which stored form is allowed to earn credit</b>. TIAP holds the saved
+  ranked output fixed and changes only that.</p>
+
+  <div class="shell" id="shell">
+    <div class="frame">
+      <header class="bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <div class="title">TIAP <span data-film-subtitle>the scoring target problem</span></div>
+        <div class="steps">
+          <button type="button" class="step" data-step="0" data-goto="problem">Problem</button>
+          <button type="button" class="step" data-step="1" data-goto="ways">Three ways</button>
+          <button type="button" class="step" data-step="2" data-goto="method">Method</button>
+          <button type="button" class="step" data-step="3" data-goto="scale">At scale</button>
+          <button type="button" class="step" data-step="4" data-goto="outro">Release</button>
+        </div>
+      </header>
+
+      <div class="scenes">
+
+        <!-- SCENE 1: the problem --------------------------------------------- -->
+        <section class="scene pad" data-scene="0">
+          <div class="schead">The problem</div>
+          <div class="sclede">One turn becomes many stored memories. Only some of them are allowed
+            to earn credit.</div>
+          <div class="fan">
+            <div class="turn" data-fan-turn>
+              <div class="lbl">Source turn</div>
+              <div class="txt">&ldquo;I just finished my fifth issue of National Geographic.&rdquo;</div>
+            </div>
+            <div class="arrows" data-fan-arrow>&rarr;</div>
+            <div class="desc">
+              <div class="dcard is-raw" data-fan-card><div class="kind">raw turn</div>
+                <div class="txt">the original message, stored verbatim</div></div>
+              <div class="dcard is-can" data-fan-card><div class="kind">fact</div>
+                <div class="txt">reads National Geographic</div></div>
+              <div class="dcard is-can" data-fan-card><div class="kind">summary</div>
+                <div class="txt">a digest of the reading session</div></div>
+              <div class="dcard is-can" data-fan-card><div class="kind">event</div>
+                <div class="txt">a dated entry on the timeline</div></div>
+            </div>
+          </div>
+          <div class="scsub" data-fan-q>All four descend from the same evidence and sit in the same
+            index. When the query arrives, <em>which one counts as the right answer?</em> Most memory
+            benchmarks never say, and the answer changes the score.</div>
+        </section>
+
+        <!-- SCENE 2: the audit console ---------------------------------------- -->
+        <section class="scene" data-scene="1">
+          <div class="body">
+            <div class="col-l">
+              <div class="colhead">The query</div>
+              <div class="qcard">
+                <div class="q"><span data-film-q></span></div>
+                <div class="qmeta">
+                  <span class="chip">answer <b>Five</b></span>
+                  <span class="chip">top-k <b>60</b></span>
+                </div>
+              </div>
+              <div class="listhead">
+                <div class="colhead" style="margin:0">Saved ranked output</div>
+                <div class="frozen" data-film-frozen>frozen</div>
+              </div>
+              <div class="rows" data-film-rows></div>
+              <div class="depth" data-film-depth>47 further results not shown</div>
+            </div>
+
+            <div class="col-r">
+              <div class="colhead">Credited target</div>
+              <div class="targets">
+                <div class="tcard" id="t-raw">
+                  <div class="th"><div class="tname" style="color:var(--raw)">Raw</div>
+                    <div class="score"><span class="num" data-film-num="raw"></span>
+                      <span class="verdict v-miss" data-film-verdict="raw">miss</span></div></div>
+                  <div class="tdef">Only the original source turn earns credit.</div>
+                </div>
+                <div class="tcard" id="t-source">
+                  <div class="th"><div class="tname" style="color:var(--source)">Source</div>
+                    <div class="score"><span class="num" data-film-num="source"></span>
+                      <span class="verdict v-hit" data-film-verdict="source">hit</span></div></div>
+                  <div class="tdef">Any stored descendant of the same evidence earns credit.</div>
+                </div>
+                <div class="tcard" id="t-canonical">
+                  <div class="th"><div class="tname" style="color:var(--canon)">Canonical</div>
+                    <div class="score"><span class="num" data-film-num="canonical"></span>
+                      <span class="verdict v-hit" data-film-verdict="canonical">hit</span></div></div>
+                  <div class="tdef">Only the transformed serving forms earn credit.</div>
+                </div>
+              </div>
+              <div class="note" data-film-note></div>
+              <div class="stack">
+                <div class="board" data-film-board>
+                  <div class="bh">Same saved outputs, two systems</div>
+                  <table>
+                    <thead><tr><th>system</th><th>Source</th><th>Canonical</th></tr></thead>
+                    <tbody>
+                      <tr><td>all-MiniLM</td>
+                        <td class="win" data-film-cell="a-src">0.210</td>
+                        <td data-film-cell="a-can">0.275</td></tr>
+                      <tr><td>BGE-M3</td>
+                        <td data-film-cell="b-src">0.141</td>
+                        <td class="win" data-film-cell="b-can">0.301</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="audit" data-film-audit>
+                  <div class="ah">What actually got the credit</div>
+                  <div class="quote">&ldquo;For newspapers, I&rsquo;ve been reading The New York Times
+                    and The Daily News regularly&rdquo;</div>
+                  <div class="judges">
+                    <span class="judge"><img src="icons/claude-color.svg" alt="" width="16" height="16">Sonnet 4</span>
+                    <span class="judge"><img src="icons/claude-color.svg" alt="" width="16" height="16">Opus 4.7</span>
+                    <span class="judge"><img src="icons/gemini-color.svg" alt="" width="16" height="16">Gemini 3.1</span>
+                    <span class="judge"><img src="icons/openai.svg" alt="" width="16" height="16">GPT-5.5</span>
+                    <span class="judge"><img src="icons/deepseek-color.svg" alt="" width="16" height="16">DeepSeek V4</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCENE 3: the framework figure -------------------------------------- -->
+        <section class="scene pad" data-scene="2">
+          <!-- one short line: the title bar already says this is the audit, and the
+               height it gives back goes to the figure -->
+          <div class="sclede figlede">Three stages, over output that never moves.</div>
+          <div class="fig">
+            <div class="figcol c1" data-fig-col>
+              <div class="figtitle">Stage I &middot; construct scoring targets</div>
+              <div class="grp">
+                <div class="gh">Inputs</div>
+                <div class="duo">
+                  <div class="box" data-fig-box><div class="bt">Query q</div></div>
+                  <div class="box" data-fig-box><div class="bt">Gold source s(q)</div></div>
+                </div>
+              </div>
+              <div class="grp">
+                <div class="gh">Scoring targets</div>
+                <div class="box r" data-fig-box><div class="bt">Raw &middot; T<sub>raw</sub>(q, S)</div>
+                  <div class="bd">only the exact raw source turn</div></div>
+                <div class="box s" data-fig-box><div class="bt">Source &middot; T<sub>src</sub>(q, S)</div>
+                  <div class="bd">any stored descendant of s(q)</div></div>
+                <div class="box c" data-fig-box><div class="bt">Canonical &middot; T<sub>can</sub>(q, S)</div>
+                  <div class="bd">transformed serving memories</div></div>
+                <div class="formula" data-fig-formula>T<sub>raw</sub> &sube; T<sub>src</sub> &supe; T<sub>can</sub>
+                  <small>Raw and Canonical are usually disjoint</small></div>
+              </div>
+            </div>
+
+            <div class="figarrow" data-fig-arrow>&rarr;</div>
+
+            <div class="figcol c2" data-fig-col>
+              <div class="figtitle">Stage II &middot; rescore fixed outputs</div>
+              <div class="grp">
+                <div class="gh">Saved outputs</div>
+                <div class="box" data-fig-box>
+                  <div class="bt">Ranked trace R(q)</div>
+                  <div class="trace" data-fig-trace></div>
+                </div>
+                <div class="lock" data-fig-lock>retrieval never rerun</div>
+              </div>
+              <div class="grp">
+                <div class="gh">Rescoring</div>
+                <div class="tchips" data-fig-chips>
+                  <span class="a">T<sub>raw</sub></span><span class="b">T<sub>src</sub></span>
+                  <span class="c">T<sub>can</sub></span>
+                </div>
+                <div class="box" data-fig-box><div class="bt">Shared-subset control</div>
+                  <div class="bd">compare only queries that all three targets cover</div></div>
+                <div class="formula" data-fig-formula>&Delta;<sub>t</sub>(A, B) = M<sub>t</sub>(A) &minus; M<sub>t</sub>(B)
+                  <small>system gap under target t</small></div>
+              </div>
+            </div>
+
+            <div class="figarrow" data-fig-arrow>&rarr;</div>
+
+            <div class="figcol c3" data-fig-col>
+              <div class="figtitle">Stage III &middot; target sensitivity</div>
+              <div class="grp">
+                <div class="gh">What can change</div>
+                <div class="chgrid">
+                  <div class="chip2" data-fig-chip2>score shifts &Delta;<sub>t</sub></div>
+                  <div class="chip2" data-fig-chip2>hit and miss flips</div>
+                  <div class="chip2" data-fig-chip2>winner flips</div>
+                  <div class="chip2" data-fig-chip2>design flips</div>
+                </div>
+              </div>
+              <div class="grp">
+                <div class="gh">Semantic audit &middot; n = 1,902</div>
+                <div class="verdicts">
+                  <div class="vrow ok" data-fig-vrow><div class="ic">&check;</div>
+                    <div class="tx">fully supports s(q) &middot; only 29.2%</div></div>
+                  <div class="vrow mid" data-fig-vrow><div class="ic">~</div>
+                    <div class="tx">partial support, needs context</div></div>
+                  <div class="vrow no" data-fig-vrow><div class="ic">&times;</div>
+                    <div class="tx">contradicts or irrelevant</div></div>
+                </div>
+              </div>
+              <div class="tni" data-fig-tni>
+                <div class="h">Target noninvariance</div>
+                <div class="d">benchmark conclusions can change while ranked outputs stay fixed</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCENE 4: deployed ---------------------------------------------------- -->
+        <section class="scene pad" data-scene="3">
+          <div class="schead">In a deployed setting</div>
+          <div class="sclede">Run the same audit over a whole benchmark and the gap is not an
+            outlier. It is the norm.</div>
+          <div class="deploy">
+            <div class="dcol">
+              <div class="dtable" data-dep-table>
+                <div class="dh">all-MiniLM on LongMemEval-S, every query</div>
+                <table>
+                  <thead><tr><th>target</th><th>queries</th><th>nDCG</th><th>hit rate</th></tr></thead>
+                  <tbody>
+                    <tr><td>Raw</td><td>470</td><td>0.157</td><td>0.598</td></tr>
+                    <tr><td>Source</td><td>470</td><td>0.338</td><td>0.747</td></tr>
+                    <tr><td>Canonical</td><td class="warn">332</td><td class="hi">0.531</td><td>0.907</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="dtable" data-dep-table>
+                <div class="dh">BGE-M3, a different retriever, the same shape</div>
+                <table>
+                  <thead><tr><th>target</th><th>queries</th><th>nDCG</th><th>hit rate</th></tr></thead>
+                  <tbody>
+                    <tr><td>Raw</td><td>439</td><td>0.155</td><td>0.620</td></tr>
+                    <tr><td>Source</td><td>439</td><td>0.333</td><td>0.761</td></tr>
+                    <tr><td>Canonical</td><td class="warn">299</td><td class="hi">0.533</td><td>0.923</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="dnotes">
+              <div class="dnote" data-dep-note>
+                <div class="h">The same run, three verdicts</div>
+                <div class="d">nDCG more than triples from Raw to Canonical on identical saved
+                  output. A paper reporting one of these numbers is reporting a choice.</div>
+              </div>
+              <div class="dnote alert" data-dep-note>
+                <div class="h">And the rows are not comparable</div>
+                <div class="d">Canonical covers only 332 of the 470 queries, because not every turn
+                  produces a serving memory. Comparing it against the other two unrestricted would
+                  confound the target with query difficulty, which is why TIAP falls back to the
+                  shared subset.</div>
+              </div>
+              <div class="dnote" data-dep-note>
+                <div class="h">Across the bundle</div>
+                <div class="d">83.4 to 94.0% of shared queries change nDCG under a target switch,
+                  over 16 saved runs spanning two benchmarks, four retrievers, a parser density
+                  sweep, and the Mem0 and MemoryOS transfers.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCENE 5: outro -------------------------------------------------------- -->
+        <section class="scene pad" data-scene="4">
+          <div class="outro">
+            <div class="otop">
+              <div>
+                <div class="schead">We release TIAP</div>
+                <div class="ohead">Retrieval never reran. The ranking never moved.<br>
+                  The <em>winner</em> changed anyway.</div>
+              </div>
+              <div class="qr" data-outro-qr>
+                <img src="qr-tiap.svg" alt="QR code linking to aimsresearchlab.com/tiap"
+                     width="184" height="184">
+                <div class="qrcap">aimsresearchlab.com/tiap</div>
+              </div>
+            </div>
+            <div class="tiles">
+              <div class="stat" data-stat><div class="n">83.4&ndash;94.0%</div>
+                <div class="l">of shared queries change nDCG when only the credited target changes</div></div>
+              <div class="stat" data-stat><div class="n">29.2%</div>
+                <div class="l">of contested credit is fully justified, over a 1,902 case semantic audit</div></div>
+              <div class="stat" data-stat><div class="n">MTEL-Mem</div>
+                <div class="l">the scoring engine and all 16 saved runs, so every number reproduces</div></div>
+            </div>
+            <div class="ometa">
+              <div class="olinks">
+                <a class="olink" href="https://arxiv.org/abs/2605.24060" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.842 0a1 1 0 0 0-.922.608c-.153.369-.044.627.294 1.111l6.919 8.36l-1.023 1.106a1.04 1.04 0 0 0 .003 1.423l1.23 1.313l-5.44 6.444c-.28.3-.453.823-.297 1.199a1.025 1.025 0 0 0 .959.635a.91.91 0 0 0 .689-.34l5.783-6.126l7.49 8.005a.85.85 0 0 0 .684.26a.96.96 0 0 0 .877-.615c.158-.377-.017-.75-.306-1.14L13.73 13.9l1.064-1.13a.963.963 0 0 0 .009-1.316L4.633.464S4.26.01 3.867 0zm0 .272h.017c.218.005.487.272.564.364l.005.006l.005.005l10.17 10.99a.69.69 0 0 1-.008.946l-1.066 1.133l-1.498-1.772l-8.6-10.39c-.328-.472-.352-.619-.26-.841a.73.73 0 0 1 .671-.44Zm14.341 1.57a.88.88 0 0 0-.655.242l-5.696 6.158l1.694 1.832l5.309-6.514c.325-.433.479-.66.325-1.029a1.12 1.12 0 0 0-.977-.689m-7.655 12.282l1.318 1.414l-5.786 6.13a.65.65 0 0 1-.496.26a.75.75 0 0 1-.706-.467c-.112-.269.036-.687.244-.909l.005-.005l.005-.006z"/></svg>
+                  arXiv 2605.24060</a>
+                <a class="olink" href="https://github.com/aimsresearchlab/Same-Ranking-Different-Winner-How-Scoring-Targets-Shape-LLM-Memory-Benchmarks" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                  MTEL-Mem on GitHub</a>
+              </div>
+              <div class="ocite"><b>Same Ranking, Different Winner: How Scoring Targets Shape LLM
+                Memory Benchmarks</b><br>
+                Panthi, Abdelfattah &middot; Findings of EMNLP 2026</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <svg class="cursor" data-film-cursor viewBox="0 0 24 24" fill="none">
+        <path d="M5 2.5 19.5 12 12.6 13.2 9.4 20.2Z" fill="#14161a" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      <div class="ripple" data-film-ripple></div>
+      <button class="ctl" data-film-ctl>&#10074;&#10074;</button>
+    </div>
+    <div class="cap"><span data-film-cap></span></div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+  const root = document.getElementById('shell');
+  const q = s => root.querySelector(s);
+  const qa = s => Array.from(root.querySelectorAll(s));
+
+  // DATA:BEGIN
+  // Verbatim from public/tiap/data/tiap-case.json, which scripts/sync-tiap-data.py
+  // extracts from the paper repo. Do not hand-edit these values.
+  const QUERY = "How many issues of National Geographic have I finished reading?";
+
+  // The saved top-60 of the all-MiniLM run: a contiguous head of five, then the
+  // elided middle, then the one row that earns credit. The memory id is shown
+  // only where it is worth tracing: the answer and the credit.
+  const ROWS = [
+    { r:1, id:"mem_597c0d6eee47f08d", x:false,
+      t:"I've actually been reading a lot about the Amazon rainforest lately, especially in National Geographic - ",
+      ans:"I've finished five issues so far" },
+    { r:2, x:false, t:"Let's fill in the National Geographic section of the spreadsheet" },
+    { r:3, x:false, t:"National Geographic is an excellent resource for learning about the Amazon rainforest…" },
+    { r:4, x:false, t:"National Geographic is an excellent resource for learning about the Amazon and its indigenous communities…" },
+    { r:5, x:false, t:"National Geographic is an excellent resource for learning about the Yanomami people…" },
+    { gap:true, t:"ranks 6 to 12" },
+    { r:13, id:"mem_052270f3073ebd92", x:true, t:"For newspapers, I've been reading The New York Times and The Daily News regularly" }
+  ];
+
+  // nDCG for the all-MiniLM run under each target, on this one query.
+  const SCORE = { raw:"0.000", source:"0.210", canonical:"0.275" };
+  // The credited rank under Source and Canonical. Raw credits nothing here.
+  const CREDITED_RANK = 13;
+  // The short ranked trace drawn in the method scene. This one is the paper
+  // figure's own illustration, not a row of the saved run.
+  const FIG_TRACE = [["1", "m7", "0.73"], ["2", "m3", "0.62"], ["3", "m9", "0.21"]];
+  // DATA:END
+
+  const cursor = q('[data-film-cursor]'), ripple = q('[data-film-ripple]');
+  const rowsEl = q('[data-film-rows]'), qEl = q('[data-film-q]');
+  const frozen = q('[data-film-frozen]'), depth = q('[data-film-depth]');
+  const note = q('[data-film-note]'), board = q('[data-film-board]');
+  const audit = q('[data-film-audit]'), cap = q('[data-film-cap]');
+  const subtitle = q('[data-film-subtitle]');
+  const tcards = { raw:q('#t-raw'), source:q('#t-source'), canonical:q('#t-canonical') };
+  const scenes = qa('.scene'), stepEls = qa('.step');
+
+  const SUBTITLE = ['the scoring target problem', 'fixed-output rescoring', 'how the audit works',
+                    'across the benchmark', 'what we release'];
+
+  // build the ranked rows and the figure trace once, from the data above
+  const esc = s => s.replace(/[&<>]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]));
+  rowsEl.innerHTML = ROWS.map(d => {
+    if (d.gap) return '<div class="row gap" data-row="gap"><div class="rk"></div>' +
+      '<div class="tx">' + esc(d.t) + '</div></div>';
+    const body = esc(d.t) + (d.ans ? '<span class="mark">' + esc(d.ans) + '</span>' : '');
+    return '<div class="row" data-row="' + d.r + '">' +
+      '<div class="rk">' + d.r + '</div>' +
+      '<div class="tx">' + body +
+        '<span class="tagpill" data-pill="' + d.r + '"></span>' +
+        (d.id ? '<span class="mid">' + d.id + '</span>' : '') +
+      '</div></div>';
+  }).join('');
+  q('[data-fig-trace]').innerHTML = FIG_TRACE
+    .map(([r, m, s]) => r + ' &middot; <b>' + m + '</b> &middot; score ' + s).join('<br>');
+
+  const rowEl = r => rowsEl.querySelector('[data-row="' + r + '"]');
+  const pillEl = r => rowsEl.querySelector('[data-pill="' + r + '"]');
+  const allRows = qa('.row');
+
+  const frameEl = root.querySelector('.frame');
+  const measure = el => {
+    const f = frameEl.getBoundingClientRect(), r = el.getBoundingClientRect();
+    return { x: Math.round(r.left + r.width/2 - f.left), y: Math.round(r.top + r.height/2 - f.top) };
+  };
+  const measureAll = () => {
+    const f = frameEl.getBoundingClientRect();
+    return {
+      raw: measure(tcards.raw), source: measure(tcards.source), canonical: measure(tcards.canonical),
+      credited: measure(rowEl(CREDITED_RANK)), answer: measure(rowEl(1)), board: measure(board),
+      off: { x: Math.round(f.width) + 60, y: Math.round(f.height) - 90 }
+    };
+  };
+  let POS = measureAll();
+
+  const setStep = i => {
+    stepEls.forEach((s, n) => s.classList.toggle('on', n === i));
+    subtitle.textContent = SUBTITLE[i];
+  };
+
+  const REVEALED = '[data-fan-turn],[data-fan-arrow],[data-fan-card],[data-fan-q],' +
+    '[data-fig-col],[data-fig-arrow],[data-fig-box],[data-fig-formula],[data-fig-lock],' +
+    '[data-fig-chips],[data-fig-chip2],[data-fig-vrow],[data-fig-tni],' +
+    '[data-dep-table],[data-dep-note],[data-stat],[data-outro-qr]';
+
+  // Static fallback: every scene stacked, no motion, whole argument readable.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const box = root.querySelector('.scenes');
+    box.style.position = 'relative'; box.style.inset = 'auto';
+    frameEl.style.aspectRatio = 'auto';
+    scenes.forEach(s => {
+      s.style.opacity = 1; s.style.position = 'relative'; s.style.inset = 'auto';
+      s.style.borderBottom = '1px solid var(--line)';
+    });
+    qa(REVEALED).forEach(el => { el.style.opacity = 1; });
+    qEl.textContent = QUERY;
+    allRows.forEach(r => { r.style.opacity = 1; });
+    rowEl(CREDITED_RANK).classList.add('cred');
+    rowEl(1).classList.add('answer');
+    const pc = pillEl(CREDITED_RANK);
+    pc.className = 'tagpill yes'; pc.textContent = 'credited'; pc.style.opacity = 1;
+    const pa = pillEl(1);
+    pa.className = 'tagpill no'; pa.textContent = 'no credit'; pa.style.opacity = 1;
+    frozen.style.opacity = 1; depth.style.opacity = 1;
+    Object.keys(tcards).forEach(k => {
+      tcards[k].classList.add('live');
+      const n = q('[data-film-num="' + k + '"]');
+      n.textContent = SCORE[k]; n.style.opacity = 1;
+      q('[data-film-verdict="' + k + '"]').style.opacity = 1;
+    });
+    note.innerHTML = 'The ranking is identical under all three targets. Only the credited set changes.';
+    note.style.opacity = 1;
+    audit.style.opacity = 1;
+    qa('.judge').forEach(j => { j.style.opacity = 1; });
+    qa('[data-film-cell]').forEach(c => { if (c.classList.contains('win')) c.classList.add('on'); });
+    setStep(0);
+    q('[data-film-ctl]').style.display = 'none';
+    return;
+  }
+
+  // The whole choreography is rebuilt from scratch whenever the layout changes,
+  // because every cursor position is measured from the DOM.
+  let tl;
+  const build = () => {
+    if (tl) tl.kill();
+    POS = measureAll();
+
+    // reset everything the timeline touches
+    qEl.textContent = '';
+    allRows.forEach(r => {
+      r.className = r.dataset.row === 'gap' ? 'row gap' : 'row';
+      gsap.set(r, { opacity: 0 });
+    });
+    qa('.tagpill').forEach(p => { p.className = 'tagpill'; p.textContent = ''; gsap.set(p, { opacity: 0 }); });
+    Object.values(tcards).forEach(c => c.classList.remove('live'));
+    qa('[data-film-num]').forEach(n => { n.textContent = ''; gsap.set(n, { opacity: 0 }); });
+    qa('[data-film-verdict]').forEach(v => gsap.set(v, { opacity: 0 }));
+    qa('[data-film-cell]').forEach(c => c.classList.remove('on'));
+    gsap.set(qa(REVEALED), { opacity: 0 });
+    gsap.set([frozen, depth, note, board, audit], { opacity: 0 });
+    gsap.set(qa('.judge'), { opacity: 0 });
+    gsap.set(scenes, { opacity: 0 });
+    gsap.set(cap, { autoAlpha: 0 });
+    gsap.set(cursor, { x: POS.off.x, y: POS.off.y, opacity: 0, scale: 1 });
+
+    tl = gsap.timeline({ repeat: -1, repeatDelay: 1.8, defaults: { ease: 'power3.out' } });
+
+    // helpers -------------------------------------------------------------
+    const T = p => {
+      if (typeof p === 'number') return p;
+      const m = /^([A-Za-z_][\w]*)\+=([\d.]+)$/.exec(p);
+      if (m) return T(tl.labels[m[1]]) + parseFloat(m[2]);
+      return tl.labels[p] !== undefined ? tl.labels[p] : parseFloat(p);
+    };
+    const click = (p, label) => {
+      const t = T(label);
+      tl.set(ripple, { x: p.x, y: p.y, scale: .25, autoAlpha: .6 }, t)
+        .to(cursor, { scale: .88, duration: .08, ease: 'power2.out' }, t)
+        .to(ripple, { scale: 3.4, autoAlpha: 0, duration: .55, ease: 'power2.out' }, t)
+        .to(cursor, { scale: 1, duration: .16, ease: 'back.out(2.2)' }, t + .09);
+    };
+    const moveTo = (p, label, dur) => {
+      tl.to(cursor, { x: p.x, y: p.y, duration: dur || .7, ease: 'power2.inOut' }, T(label));
+    };
+    const type = (el, text, label, dur) => {
+      const c = { i: 0 };
+      tl.to(c, { i: text.length, duration: dur, ease: 'none',
+        onUpdate(){ el.textContent = text.slice(0, Math.round(c.i)); } }, T(label))
+        .add(() => { c.i = 0; }, 0);
+    };
+    const say = (text, label) => {
+      const t = T(label);
+      tl.to(cap, { autoAlpha: 0, duration: .18 }, t)
+        .add(() => { cap.textContent = text; }, t + .2)
+        .to(cap, { autoAlpha: 1, duration: .28 }, t + .22);
+    };
+    const noteTo = (html, label) => {
+      const t = T(label);
+      tl.to(note, { opacity: 0, duration: .18 }, t)
+        .add(() => { note.innerHTML = html; }, t + .2)
+        .to(note, { opacity: 1, duration: .3 }, t + .22);
+    };
+    const score = (target, value, label) => {
+      const t = T(label);
+      const numEl = q('[data-film-num="' + target + '"]');
+      const vEl = q('[data-film-verdict="' + target + '"]');
+      const end = parseFloat(value), c = { v: 0 };
+      tl.add(() => { tcards[target].classList.add('live'); }, t)
+        .to(numEl, { opacity: 1, duration: .2 }, t)
+        .to(c, { v: end, duration: .7, ease: 'power2.out',
+          onUpdate(){ numEl.textContent = c.v.toFixed(3); } }, t)
+        .add(() => { numEl.textContent = value; c.v = 0; }, t + .72)
+        .to(vEl, { opacity: 1, duration: .3, ease: 'back.out(2)' }, t + .8);
+    };
+    const credit = (ranks, cls, label) => {
+      tl.add(() => {
+        allRows.forEach(r => {
+          const raw = r.dataset.row;
+          if (raw === 'gap') return;
+          const n = parseInt(raw, 10);
+          r.classList.remove('cred', 'cred-src');
+          r.classList.toggle('dim', !ranks.includes(n) && n !== 1);
+          if (ranks.includes(n)) r.classList.add(cls);
+        });
+      }, T(label));
+    };
+    // bring one scene forward and retire the others
+    const enter = (i, label) => {
+      const t = T(label);
+      tl.add(() => setStep(i), t);
+      scenes.forEach((s, n) => {
+        tl.to(s, { opacity: n === i ? 1 : 0, duration: n === i ? .5 : .35 }, t);
+      });
+      // the cursor only belongs to the audit console
+      tl.to(cursor, { opacity: i === 1 ? 1 : 0, duration: .3 }, t);
+    };
+
+    // ==== SCENE 1: the problem ==============================================
+    tl.addLabel('problem', 0);
+    enter(0, 'problem');
+    say('A transformed memory store does not keep one copy of what you said.', 'problem+=.2');
+    tl.to(q('[data-fan-turn]'), { opacity: 1, duration: .45 }, 'problem+=.5');
+    tl.to(q('[data-fan-arrow]'), { opacity: 1, duration: .3 }, 'problem+=1.0');
+    tl.to(qa('[data-fan-card]'), { opacity: 1, duration: .38, stagger: .17 }, 'problem+=1.2');
+    say('It keeps the turn, and the fact, and the summary, and the timeline entry.', 'problem+=1.7');
+    tl.to(q('[data-fan-q]'), { opacity: 1, duration: .45 }, 'problem+=2.8');
+    say('All four sit in the index. Only some are allowed to be correct.', 'problem+=3.2');
+
+    // ==== SCENE 2: three ways to credit the same list =======================
+    tl.addLabel('ways', 'problem+=6.4');
+    enter(1, 'ways');
+    type(qEl, QUERY, 'ways+=.4', 1.4);
+    say('Here is one real query, and the list its retriever actually returned.', 'ways+=.5');
+    tl.to(allRows, { opacity: 1, duration: .3, stagger: .06 }, 'ways+=1.6');
+    tl.to(depth, { opacity: 1, duration: .4 }, 'ways+=2.3');
+    tl.fromTo(frozen, { opacity: 0, scale: .9 },
+      { opacity: 1, scale: 1, duration: .45, ease: 'back.out(2.4)' }, 'ways+=3.0');
+    say('Retrieval has finished. From here the list can never move again.', 'ways+=3.0');
+    noteTo('Everything that follows rescores <b>these exact 60 results</b>. ' +
+           'The only thing that changes is which stored memory may earn credit.', 'ways+=3.5');
+
+    tl.addLabel('raw', 'ways+=6.2');
+    moveTo(POS.raw, 'raw', .8);
+    click(POS.raw, 'raw+=.85');
+    credit([], 'cred', 'raw+=.95');
+    score('raw', SCORE.raw, 'raw+=1.0');
+    say('Way one. Credit only the original source turn.', 'raw+=1.1');
+    noteTo('Under <b>Raw</b> this system scores <b>0.000</b>, not because it retrieved badly, but ' +
+           'because the one form it was allowed to earn credit for was never stored in the index.',
+           'raw+=1.7');
+
+    tl.addLabel('source', 'raw+=4.8');
+    moveTo(POS.source, 'source', .7);
+    click(POS.source, 'source+=.75');
+    credit([CREDITED_RANK], 'cred-src', 'source+=.85');
+    tl.add(() => {
+      const p = pillEl(CREDITED_RANK);
+      p.className = 'tagpill yes'; p.textContent = 'credited';
+    }, T('source+=.85'));
+    tl.to(pillEl(CREDITED_RANK), { opacity: 1, duration: .3 }, 'source+=.9');
+    score('source', SCORE.source, 'source+=1.0');
+    say('Way two. Credit any descendant of the same evidence.', 'source+=1.1');
+    noteTo('The same ranked list is suddenly a <b>hit</b>, worth <b>0.210</b>. ' +
+           'Nothing was retrieved differently. One row changed status.', 'source+=1.8');
+    moveTo(POS.credited, 'source+=2.6', .8);
+
+    tl.addLabel('canon', 'source+=4.8');
+    moveTo(POS.canonical, 'canon', .7);
+    click(POS.canonical, 'canon+=.75');
+    credit([CREDITED_RANK], 'cred', 'canon+=.85');
+    score('canonical', SCORE.canonical, 'canon+=1.0');
+    say('Way three. Credit only the transformed serving forms.', 'canon+=1.1');
+    noteTo('<b>0.275</b>, from the identical ranking and the identical credited row. The score moved ' +
+           'because the set of memories that <i>could</i> have counted got smaller, so the ideal ' +
+           'ranking it is measured against changed too.', 'canon+=1.8');
+
+    // the trouble with all three
+    tl.addLabel('answer', 'canon+=4.8');
+    moveTo(POS.answer, 'answer', .8);
+    tl.add(() => {
+      rowEl(1).classList.remove('dim');
+      rowEl(1).classList.add('answer');
+      const p = pillEl(1);
+      p.className = 'tagpill no'; p.textContent = 'no credit';
+    }, T('answer+=.6'));
+    tl.to(pillEl(1), { opacity: 1, duration: .3 }, 'answer+=.65');
+    say('Now the trouble. Look at rank 1.', 'answer+=.5');
+    noteTo('Rank 1 states the answer outright and earns <b>nothing</b> under any of the three targets. ' +
+           'It is not in this query’s eligible set, so no choice of target can reach it.', 'answer+=1.2');
+
+    tl.addLabel('flip', 'answer+=4.4');
+    tl.to(board, { opacity: 1, duration: .45 }, 'flip');
+    moveTo(POS.board, 'flip+=.2', .8);
+    say('And the choice decides which system looks better.', 'flip+=.2');
+    tl.add(() => { q('[data-film-cell="a-src"]').classList.add('on'); }, T('flip+=1.0'));
+    noteTo('Under <b>Source</b>, all-MiniLM wins by 0.069.', 'flip+=1.0');
+    tl.add(() => {
+      q('[data-film-cell="a-src"]').classList.remove('on');
+      q('[data-film-cell="b-can"]').classList.add('on');
+    }, T('flip+=2.6'));
+    say('Change only the credited target. The winner changes with it.', 'flip+=2.6');
+    noteTo('Under <b>Canonical</b>, BGE-M3 wins by 0.026. Same saved outputs, opposite conclusion.',
+           'flip+=3.2');
+
+    tl.addLabel('judge', 'flip+=5.4');
+    tl.to(board, { opacity: 0, duration: .35 }, 'judge');
+    tl.to(audit, { opacity: 1, duration: .45 }, 'judge+=.3');
+    say('Worse, the credit that produced those scores is about newspapers.', 'judge+=.4');
+    tl.to(qa('.judge'), { opacity: 1, duration: .3, stagger: .1 }, 'judge+=1.0');
+    noteTo('All five judge models label this credit <b>does not support</b>. Provenance is not ' +
+           'semantic support.', 'judge+=1.6');
+
+    // ==== SCENE 3: the method figure ========================================
+    tl.addLabel('method', 'judge+=5.2');
+    enter(2, 'method');
+    say('So TIAP turns that choice into a procedure you can run and report.', 'method+=.3');
+
+    tl.to(q('.figcol.c1'), { opacity: 1, duration: .45 }, 'method+=.6');
+    tl.to(qa('.figcol.c1 [data-fig-box]'), { opacity: 1, duration: .3, stagger: .16 }, 'method+=.9');
+    tl.to(q('.figcol.c1 [data-fig-formula]'), { opacity: 1, duration: .35 }, 'method+=2.0');
+    say('Stage I enumerates what each target is even allowed to credit.', 'method+=1.2');
+
+    tl.to(qa('[data-fig-arrow]')[0], { opacity: 1, duration: .3 }, 'method+=2.6');
+    tl.to(q('.figcol.c2'), { opacity: 1, duration: .45 }, 'method+=2.8');
+    tl.to(qa('.figcol.c2 [data-fig-box]'), { opacity: 1, duration: .3, stagger: .16 }, 'method+=3.1');
+    tl.to(q('[data-fig-lock]'), { opacity: 1, duration: .35 }, 'method+=3.6');
+    tl.to(q('[data-fig-chips]'), { opacity: 1, duration: .35 }, 'method+=3.9');
+    tl.to(q('.figcol.c2 [data-fig-formula]'), { opacity: 1, duration: .35 }, 'method+=4.3');
+    say('Stage II rescores the saved traces. Nothing is retrieved twice.', 'method+=3.0');
+
+    tl.to(qa('[data-fig-arrow]')[1], { opacity: 1, duration: .3 }, 'method+=4.9');
+    tl.to(q('.figcol.c3'), { opacity: 1, duration: .45 }, 'method+=5.1');
+    tl.to(qa('[data-fig-chip2]'), { opacity: 1, duration: .28, stagger: .1 }, 'method+=5.4');
+    tl.to(qa('[data-fig-vrow]'), { opacity: 1, duration: .28, stagger: .14 }, 'method+=6.1');
+    say('Stage III counts what flipped, then audits whether the credit was deserved.', 'method+=5.2');
+    tl.to(q('[data-fig-tni]'), { opacity: 1, duration: .45 }, 'method+=7.0');
+    say('A conclusion that does not survive the switch is target noninvariant.', 'method+=7.2');
+
+    // ==== SCENE 4: deployed ==================================================
+    tl.addLabel('scale', 'method+=10.4');
+    enter(3, 'scale');
+    say('Run it over a whole benchmark and the one query was not a fluke.', 'scale+=.3');
+    tl.to(qa('[data-dep-table]'), { opacity: 1, duration: .45, stagger: 1.7 }, 'scale+=.6');
+    tl.to(qa('[data-dep-note]'), { opacity: 1, duration: .4, stagger: .7 }, 'scale+=1.4');
+    say('The same run scores 0.157, 0.338 or 0.531 depending only on what counts.', 'scale+=1.8');
+    say('And the targets do not even cover the same queries.', 'scale+=3.6');
+    say('Which is why the audit compares them on a shared subset.', 'scale+=5.4');
+
+    // ==== SCENE 5: outro ======================================================
+    tl.addLabel('outro', 'scale+=8.0');
+    enter(4, 'outro');
+    tl.to(cap, { autoAlpha: 0, duration: .3 }, 'outro');
+    tl.to(q('[data-outro-qr]'), { opacity: 1, duration: .5 }, 'outro+=.5');
+    tl.to(qa('[data-stat]'), { opacity: 1, duration: .4, stagger: .16 }, 'outro+=.7');
+    say('Define your scoring target, and report it.', 'outro+=1.6');
+    tl.to({}, { duration: 3.4 }, 'outro+=3.2');
+
+    window.__tl = tl;
+  };
+  build();
+
+  // rebuild on resize (debounced), only when the frame actually changed width
+  let lastW = Math.round(frameEl.getBoundingClientRect().width), timer;
+  addEventListener('resize', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const w = Math.round(frameEl.getBoundingClientRect().width);
+      if (Math.abs(w - lastW) < 12) return;
+      lastW = w;
+      build();
+    }, 220);
+  });
+
+  const ctl = q('[data-film-ctl]');
+  ctl.addEventListener('click', () => {
+    if (tl.paused()) { tl.play(); ctl.innerHTML = '&#10074;&#10074;'; }
+    else { tl.pause(); ctl.innerHTML = '&#9654;'; }
+  });
+
+  // Jumping to a scene. Captions and row states are written by callbacks, so a
+  // backwards seek would leave the previous scene's text on screen. Rewinding
+  // to zero and stepping forward replays those callbacks in order, which is
+  // cheap enough to do synchronously on a click.
+  const goTo = label => {
+    const target = tl.labels[label];
+    if (target === undefined) return;
+    tl.pause();
+    tl.seek(0, false);
+    for (let t = 0; t < target; t = Math.min(t + 0.25, target)) tl.seek(t, false);
+    tl.seek(target, false);
+    tl.play();
+    ctl.innerHTML = '&#10074;&#10074;';
+  };
+  qa('.step').forEach(btn => btn.addEventListener('click', () => goTo(btn.dataset.goto)));
+})();
+</script>
+
+<script>
+(function(){
+  const BIB = "@inproceedings{panthi2026tiap,\n  title     = {Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks},\n  author    = {Panthi, Sugam and Abdelfattah, Rabab},\n  booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2026},\n  year      = {2026},\n  eprint    = {2605.24060},\n  archivePrefix = {arXiv},\n  primaryClass  = {cs.CL},\n  url       = {https://arxiv.org/abs/2605.24060}\n}";
+  const btn = document.getElementById('bib');
+  const wrap = btn.parentElement;
+  wrap.classList.add('bibwrap');
+
+  const pop = document.createElement('div');
+  pop.className = 'bibpop';
+  pop.innerHTML = '<div class="hd"><span>Cite this work</span>' +
+    '<button type="button" id="bibcopy">Copy</button></div><pre></pre>';
+  pop.querySelector('pre').textContent = BIB;
+  wrap.appendChild(pop);
+
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(BIB); }
+    catch (e) {                                     // clipboard API needs a secure context
+      const ta = document.createElement('textarea');
+      ta.value = BIB; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    const c = pop.querySelector('#bibcopy');
+    c.textContent = 'Copied';
+    c.classList.add('done');
+    setTimeout(() => { c.textContent = 'Copy'; c.classList.remove('done'); }, 1600);
+  };
+
+  btn.addEventListener('click', e => { e.stopPropagation(); pop.classList.toggle('open'); });
+  pop.addEventListener('click', e => {
+    e.stopPropagation();
+    if (e.target.id === 'bibcopy') copy();
+  });
+  document.addEventListener('click', () => pop.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') pop.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>

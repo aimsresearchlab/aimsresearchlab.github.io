@@ -3,17 +3,64 @@
 // AIMS mark on a hairline box) so the layout does not shift when a real
 // cover lands.
 // Real image covers: public/projects/<slug>.webp, 1600x900, quality 82.
-// Real video covers: public/projects/<slug>.mp4, 1600x900 (or any 16:9 size),
-// h264, silent or not (it always plays muted). `src` still works as the
-// poster frame shown before the video starts / if it fails to load.
+// Real video covers: pass either the .webm or .mp4 path in `coverVideo`
+// (public/projects/<slug>.{webm,mp4}, 1600x900 or any 16:9 size); the sibling
+// with the other extension is expected to sit next to it, so both are served
+// as <source> alternatives (Safari/iOS play the mp4, everyone else the webm).
+// `src` still works as the poster frame shown before the video starts / if it
+// fails to load, and as the reduced-motion fallback image below.
+//
+// `controls` adds the browser's native control bar (with its own fullscreen
+// button). Leave it off for small card thumbnails; pass it on the project
+// detail page where the cover is large.
+//
+// `compact` asks for the small, heavily compressed cut of the video, for the
+// cards on / and /projects, where the cover renders about 300px wide and the
+// full-size file is wasted bytes. The convention is a `-thumb` sibling next to
+// the real file (public/projects/<name>-thumb.{webm,mp4}, 640x360). It is used
+// only if it exists at build time, so a project without one still works. Make
+// one with:
+//
+//   ffmpeg -i <name>.mp4 -vf scale=640:360 -an -c:v libx264 -crf 30 \
+//     -preset slow -movflags +faststart <name>-thumb.mp4
+//   ffmpeg -i <name>.webm -vf scale=640:360 -an -c:v libvpx-vp9 -crf 38 \
+//     -b:v 0 -row-mt 1 <name>-thumb.webm
 //
 // Optional `caption` renders as a title bar over the bottom of the cover.
-interface Props { src?: string; video?: string; alt?: string; caption?: string; }
-const { src, video, alt = '', caption } = Astro.props;
+import { existsSync } from 'node:fs';
+
+interface Props { src?: string; video?: string; alt?: string; caption?: string; controls?: boolean; compact?: boolean; }
+const { src, video, alt = '', caption, controls = false, compact = false } = Astro.props;
+
+// A public/ path that exists on disk, else undefined. Runs at build time only.
+const onDisk = (path: string) =>
+  existsSync(new URL(`../../public${path}`, import.meta.url)) ? path : undefined;
+
+const pick = (path: string) => {
+  if (!compact) return path;
+  return onDisk(path.replace(/(\.\w+)$/, '-thumb$1')) ?? path;
+};
+
+const webmSrc = video && pick(video.endsWith('.webm') ? video : video.replace(/\.mp4$/, '.webm'));
+const mp4Src = video && pick(video.endsWith('.mp4') ? video : video.replace(/\.webm$/, '.mp4'));
 ---
 {video ? (
   <div class="cover">
-    <video src={video} poster={src} autoplay muted loop playsinline preload="metadata" aria-label={alt}></video>
+    {/* Shown instead of the video when the viewer has requested reduced
+        motion; CSS alone can hide the <video>, but it cannot stop the
+        autoplay/loop attributes from playing it, so this is a visual-only
+        substitute, not a way to avoid decoding the video. */}
+    <div class={`cover-fallback${src ? '' : ' cover-fallback-empty'}`} aria-hidden="true">
+      {src ? (
+        <img src={src} alt="" width="1600" height="900" />
+      ) : (
+        <img src="/logo-mark.svg" alt="" width="72" height="72" />
+      )}
+    </div>
+    <video poster={src} autoplay muted loop playsinline preload="metadata" aria-label={alt} controls={controls}>
+      <source src={webmSrc} type="video/webm" />
+      <source src={mp4Src} type="video/mp4" />
+    </video>
     {caption && (
       <div class="cover-caption"><p>{caption}</p></div>
     )}
@@ -55,6 +102,21 @@ const { src, video, alt = '', caption } = Astro.props;
   }
   .cover-empty { background: #fff; }
   .cover-empty img { width: 20%; max-width: 72px; height: auto; opacity: 0.12; }
+  .cover-fallback {
+    position: absolute;
+    inset: 0;
+    display: none;
+  }
+  .cover-fallback-empty {
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+  .cover-fallback-empty img { width: 20%; max-width: 72px; height: auto; opacity: 0.12; }
+  @media (prefers-reduced-motion: reduce) {
+    .cover video { display: none; }
+    .cover-fallback { display: flex; }
+  }
   .cover-caption {
     position: absolute;
     left: 0;

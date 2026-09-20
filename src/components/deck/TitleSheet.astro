@@ -1,0 +1,39 @@
+---
+// Sheet 1: who we are, and the one thing a visitor can act on.
+import { Icon } from 'astro-icon/components';
+import Sheet from './Sheet.astro';
+import Lockup from './Lockup.astro';
+import QrCard from './QrCard.astro';
+import { titleTags } from '../../data/deck';
+---
+
+<Sheet variant="s-title" mark={false}>
+  <div class="title-grid">
+    <div class="title-copy">
+      <div class="cobrand">
+        <img class="cobrand-mark" src="/logo-mark.svg" alt="AIMS Lab" width="96" height="96" />
+        <span class="cobrand-cross" aria-hidden="true">&#215;</span>
+        <img class="cobrand-usm" src="/usm-logo.svg" alt="The University of Southern Mississippi" width="206" height="80" />
+      </div>
+      <Lockup bare />
+      <p class="lede">
+        A research group building AI systems that learn from images, video,
+        text, speech and sensor data, and stay reliable under uncertainty.
+      </p>
+      <p class="pills ui">
+        {titleTags.map((tag) => <span class="pill">{tag}</span>)}
+      </p>
+    </div>
+    <div class="title-qr">
+      <QrCard src="/slides/qr-aimsresearchlab.svg" alt="QR code for aimsresearchlab.com" />
+      <p class="qr-label ui">Scan for papers, projects and people</p>
+      <p class="qr-url">aimsresearchlab.com</p>
+    </div>
+  </div>
+  <ul class="foot ui">
+    <li><Icon name="ph:globe-simple" /><span class="foot-strong">aimsresearchlab.com</span></li>
+    <li><Icon name="simple-icons:github" />github.com/aimsresearchlab</li>
+    <li><Icon name="ph:map-pin" />TEC 340, Hattiesburg, MS</li>
+    <li><Icon name="ph:user" />Directed by Dr. Rabab Abdelfattah</li>
+  </ul>
+</Sheet>

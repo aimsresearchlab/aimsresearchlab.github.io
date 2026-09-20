@@ -1,0 +1,39 @@
+---
+// A project that has a figure worth the whole sheet: figure on one side, the
+// claim on the other, and a QR for the project page.
+import Sheet from './Sheet.astro';
+import QrCard from './QrCard.astro';
+import { linkLabels } from '../../data/deck';
+import type { ProjectEntry } from '../../data/projects';
+interface Props {
+  project: ProjectEntry;
+}
+const { project } = Astro.props;
+const { title, claim, cover, tags, links, publications } = project.data;
+---
+
+<Sheet>
+  <p class="kicker ui">Project</p>
+  <h2 class="slide-title">{title}</h2>
+  <div class="spot-grid">
+    <div class="spot-figure"><img src={cover} alt="" width="1600" height="900" /></div>
+    <div class="spot-copy">
+      <p class="card-tags ui">{tags.map((t) => <span class="tag">#{t}</span>)}</p>
+      <p class="spot-claim">{claim}</p>
+      {publications[0] && <p class="spot-meta ui">{publications[0]}</p>}
+      <div class="spot-foot">
+        <QrCard
+          src={`/slides/qr-${project.id}.svg`}
+          alt={`QR code for the ${title} project page`}
+          size="tiny"
+        />
+        <div>
+          <p class="spot-links ui">
+            {links.map((l) => <span class="link-pill">{linkLabels[l.kind] ?? l.kind}</span>)}
+          </p>
+          <p class="spot-scan ui">Scan for the project page</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Sheet>
