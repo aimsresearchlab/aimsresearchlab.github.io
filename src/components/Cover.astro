@@ -41,8 +41,16 @@ const pick = (path: string) => {
   return onDisk(path.replace(/(\.\w+)$/, '-thumb$1')) ?? path;
 };
 
-const webmSrc = video && pick(video.endsWith('.webm') ? video : video.replace(/\.mp4$/, '.webm'));
-const mp4Src = video && pick(video.endsWith('.mp4') ? video : video.replace(/\.webm$/, '.mp4'));
+// Only sources that are actually on disk: a project with just one of the two
+// formats used to emit a <source> for the missing sibling, which every browser
+// requested and got a 404 for before falling back.
+const sibling = (ext: '.webm' | '.mp4') => {
+  if (!video) return undefined;
+  const path = video.endsWith(ext) ? video : video.replace(/\.(webm|mp4)$/, ext);
+  return onDisk(path) && pick(path);
+};
+const webmSrc = sibling('.webm');
+const mp4Src = sibling('.mp4');
 ---
 {video ? (
   <div class="cover">
@@ -58,8 +66,8 @@ const mp4Src = video && pick(video.endsWith('.mp4') ? video : video.replace(/\.w
       )}
     </div>
     <video poster={src} autoplay muted loop playsinline preload="metadata" aria-label={alt} controls={controls}>
-      <source src={webmSrc} type="video/webm" />
-      <source src={mp4Src} type="video/mp4" />
+      {webmSrc && <source src={webmSrc} type="video/webm" />}
+      {mp4Src && <source src={mp4Src} type="video/mp4" />}
     </video>
     {caption && (
       <div class="cover-caption"><p>{caption}</p></div>
