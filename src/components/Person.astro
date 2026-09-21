@@ -1,5 +1,5 @@
 ---
-// One person: circular avatar, name, topic, and link icons.
+// One person: square photo, name, topic, and link icons.
 import { Icon } from 'astro-icon/components';
 import type { Person, LinkType } from '../data/people';
 
@@ -56,7 +56,6 @@ const initials = person.name
   .avatar {
     width: 96px;
     height: 96px;
-    border-radius: 50%;
     object-fit: cover;
     margin-bottom: 0.4rem;
   }

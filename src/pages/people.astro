@@ -1,9 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
-import Person from '../components/Person.astro';
 import PageHeader from '../components/PageHeader.astro';
 import { people, groupedPeople, alumni } from '../data/people';
-import type { LinkType } from '../data/people';
+import type { LinkType, Person, Category } from '../data/people';
 
 // The director gets the featured card at the top; the rest of the roster keeps
 // the grouped list below it.
@@ -14,9 +13,33 @@ const peopleGroups = groupedPeople()
   .filter((g) => g.members.length > 0);
 const alumniGroups = alumni();
 
-// Text labels for the featured card; the roster cards use icons instead.
+const linkHref = (type: LinkType, url: string) =>
+  type === 'email' ? `mailto:${url}` : url;
+
+// Section heading, count line, and card kicker for each roster category.
+const heading: Record<Category, string> = {
+  faculty: 'Faculty',
+  phd: 'Doctoral Researchers',
+  masters: "Master's Researchers",
+  undergrad: 'Undergraduate Researchers',
+};
+const role: Record<Category, string> = {
+  faculty: 'Faculty',
+  phd: 'PhD Researcher',
+  masters: "Master's Researcher",
+  undergrad: 'Undergraduate Researcher',
+};
+const count = (members: Person[]) => {
+  const n = members.length;
+  const noun = n === 1 ? 'student' : 'students';
+  return members[0]?.category === 'phd' ? `${n} PhD ${noun}` : `${n} ${noun}`;
+};
+const initials = (name: string) =>
+  name.split(' ').map((w) => w[0]).slice(0, 2).join('');
+
+// Text labels for the link pills. The director's website is her USM profile.
 const linkLabel: Record<LinkType, string> = {
-  website: 'USM Profile',
+  website: 'Website',
   scholar: 'Google Scholar',
   github: 'GitHub',
   x: 'X',
@@ -53,7 +76,7 @@ const linkLabel: Record<LinkType, string> = {
             {person.links && person.links.length > 0 && (
               <p class="featured-links ui">
                 {person.links.map((l) => (
-                  <a href={l.type === 'email' ? `mailto:${l.url}` : l.url}>{linkLabel[l.type]}</a>
+                  <a href={linkHref(l.type, l.url)}>{l.type === 'website' ? 'USM Profile' : linkLabel[l.type]}</a>
                 ))}
               </p>
             )}
@@ -74,9 +97,32 @@ const linkLabel: Record<LinkType, string> = {
 
     {peopleGroups.map((group) => (
       <div class="people-group">
-        <h2 class="group-label ui">{group.label}</h2>
-        <ul class="people">
-          {group.members.map((person) => <Person person={person} />)}
+        <div class="section-head">
+          <h2>{heading[group.members[0].category]}</h2>
+          <span class="ui">{count(group.members)}</span>
+        </div>
+        <ul class="cards">
+          {group.members.map((person) => (
+            <li class="card">
+              <div class="card-photo">
+                {person.image ? (
+                  <img src={person.image} alt={person.name} width="192" height="192" loading="lazy" />
+                ) : (
+                  <span class="initials ui" aria-hidden="true">{initials(person.name)}</span>
+                )}
+              </div>
+              <div class="card-body">
+                <p class="role ui">{role[person.category]}</p>
+                <h3 class="card-name">{person.name}</h3>
+                <p class="card-topic">{person.topic}</p>
+                {person.links && person.links.length > 0 && (
+                  <p class="featured-links ui">
+                    {person.links.map((l) => <a href={linkHref(l.type, l.url)}>{linkLabel[l.type]}</a>)}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
     ))}
@@ -88,8 +134,28 @@ const linkLabel: Record<LinkType, string> = {
       {alumniGroups.map((group) => (
         <div class="people-group">
           <h3 class="group-label ui">{group.label}</h3>
-          <ul class="people">
-            {group.members.map((person) => <Person person={person} />)}
+          <ul class="cards">
+            {group.members.map((person) => (
+              <li class="card">
+                <div class="card-photo">
+                  {person.image ? (
+                    <img src={person.image} alt={person.name} width="192" height="192" loading="lazy" />
+                  ) : (
+                    <span class="initials ui" aria-hidden="true">{initials(person.name)}</span>
+                  )}
+                </div>
+                <div class="card-body">
+                  <p class="role ui">{role[person.category]}</p>
+                  <h3 class="card-name">{person.name}</h3>
+                  <p class="card-topic">{person.topic}</p>
+                  {person.links && person.links.length > 0 && (
+                    <p class="featured-links ui">
+                      {person.links.map((l) => <a href={linkHref(l.type, l.url)}>{linkLabel[l.type]}</a>)}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       ))}
@@ -110,15 +176,34 @@ const linkLabel: Record<LinkType, string> = {
     padding-bottom: 0.5rem;
     margin: 0 0 1.75rem;
   }
-  .people {
+  .cards {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
   }
-  .people :global(.person) { flex: 0 0 11.25rem; }
+  .card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .card-photo { aspect-ratio: 4 / 3; background: var(--rule); }
+  .card-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--ink-soft);
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+  .card-body { padding: 1.45rem; }
+  .card-name { margin: 0 0 0.45rem; font-size: 1.48rem; line-height: 1.15; }
+  .card-topic { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
   .alumni { border-top: 1px solid var(--rule); padding-top: 2rem; }
   .alumni h2 { margin-top: 0; }
   .section-head {
@@ -216,10 +301,12 @@ const linkLabel: Record<LinkType, string> = {
 
   @media (max-width: 60rem) {
     .leadership { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 40rem) {
     .featured { grid-template-columns: 1fr; }
     .portrait-wrap { min-height: 0; aspect-ratio: 4 / 3; }
     .featured-body { padding: 1.75rem; }
+    .cards { grid-template-columns: 1fr; }
   }
 </style>

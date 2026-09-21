@@ -105,7 +105,8 @@ src/layouts/Base.astro         page shell: <head>, fonts, USM band, centered <ma
 src/components/Header.astro    logo + nav (edit the nav array at the top)
 src/components/Footer.astro    copyright + GitHub org link
 src/components/PageHeader.astro  the charcoal band every page below / opens with
-src/components/Person.astro    one person card (avatar, name, topic, link icons)
+src/components/Person.astro    one homepage roster entry (square photo, name, topic, link icons);
+                               /people draws its own larger cards in people.astro
 src/components/Publication.astro
 src/components/ProjectCard.astro  one project card (homepage + /projects)
 src/components/Cover.astro     16:9 project cover (image, video, or placeholder)
@@ -183,7 +184,11 @@ another band; `/projects` carried its own copy for a while and they drifted.
 - `role` and `bio` together promote a faculty member to the featured card at
   the top of `/people`. Set both or neither.
 - `topic` is one short line (two to four words). It must fit on one line in a
-  10.5rem card; if it wraps, shorten it. Cards in a row must line up.
+  10.5rem card on the homepage; if it wraps, shorten it. Cards in a row must
+  line up.
+- On `/people` every student and alum is a card: a 4:3 photo on top, then the
+  role kicker (from `category`), name, topic, and text link pills, three
+  cards per row. Each category gets its own heading with a student count.
 - Names are forced onto one line (`white-space: nowrap`). If a name is too long
   for the card, widen `.people :global(.person)` in `src/pages/index.astro`
   rather than letting it wrap.
@@ -204,8 +209,12 @@ another band; `/projects` carried its own copy for a while and they drifted.
 
 - Sources so far: the USM faculty directory for faculty; personal sites or
   GitHub avatars for students. Ask before scraping a photo from anywhere else.
+- Photos are never circles: 96px squares on the homepage, 4:3 card photos on
+  `/people` (cropped from the square file, so keep the face centered). The
+  cards show the 192x192 file at about 360px wide, so a larger source looks
+  sharper there.
 - No photo yet: point `image` at `/people/aims-placeholder.webp` (the AIMS
-  mark in brand blue on the grey circle). Omitting `image` shows initials
+  mark in brand blue on a grey tile). Omitting `image` shows initials
   instead; either is fine, but do not use a stock placeholder image.
 - The featured card renders its portrait near 285x370, so the director's file
   wants a larger source than 192x192.
