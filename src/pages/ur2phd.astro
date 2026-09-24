@@ -8,6 +8,9 @@ import { cohorts } from '../data/ur2phd';
 // UR2PhD flyer. Edit it here; the participant list lives in src/data/ur2phd.ts.
 const email = 'Rabab.Abdelfattah@usm.edu';
 const applyHref = `mailto:${email}?subject=UR2PhD_YourName`;
+// CRA's UR2PhD page (checked 2026-09-24). The logo is CRA's own PNG from cra.org;
+// they publish no SVG.
+const craHref = 'https://cra.org/ur2phd/';
 
 const goals = [
   'Prepare undergraduate students for research',
@@ -79,13 +82,17 @@ const whyJoin = [
       Undergraduate Research to PhD Mentoring Program at the University of
       Southern Mississippi.
     </p>
+    <a slot="aside" class="cra-badge ui" href={craHref}>
+      <span>A program of</span>
+      <img src="/assets/cra-logo.png" alt="Computing Research Association (CRA)" width="195" height="88" />
+    </a>
   </PageHeader>
 
   <section class="wide intro">
     <div class="intro-text">
       <h2 class="kicker ui">What is UR2PhD?</h2>
       <p class="intro-lede">
-        UR2PhD is a program by the Computing Research Association (CRA) that
+        UR2PhD is a program by the <a href={craHref}>Computing Research Association (CRA)</a> that
         helps students gain research experience early and prepares them for PhD
         studies in computing fields.
       </p>
@@ -195,6 +202,24 @@ const whyJoin = [
 </Base>
 
 <style>
+  /* CRA mark in the banner: its grey wordmark needs a light plate on charcoal. */
+  .cra-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.8rem 0.45rem 1rem;
+    background: var(--paper);
+    border-radius: 10px;
+    color: var(--ink);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .cra-badge img { display: block; width: auto; height: 40px; }
+  .cra-badge:hover { color: var(--ink); background: var(--surface); }
+
   .kicker {
     margin: 0 0 0.6rem;
     font-size: 0.8rem;

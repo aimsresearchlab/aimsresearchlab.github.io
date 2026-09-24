@@ -5,17 +5,23 @@
 //
 // `width` picks the inner column: `wide` lines the title up with a card grid
 // (--content-wide), `prose` with body text (--content-width). Anything in the
-// slot sits under the title; a `<p class="lede">` is the usual case.
+// slot sits under the title; a `<p class="lede">` is the usual case. An
+// optional `aside` slot sits to the right of the title block (the CRA mark on
+// /ur2phd) and drops below it on narrow screens.
 interface Props {
   title: string;
   width?: 'wide' | 'prose';
 }
 const { title, width = 'wide' } = Astro.props;
+const hasAside = Astro.slots.has('aside');
 ---
 <section class="page-head" data-width={width}>
-  <div class="page-head-inner">
-    <h1>{title}</h1>
-    <slot />
+  <div class="page-head-inner" data-aside={hasAside || undefined}>
+    <div class="page-head-main">
+      <h1>{title}</h1>
+      <slot />
+    </div>
+    {hasAside && <div class="page-head-aside"><slot name="aside" /></div>}
   </div>
 </section>
 
@@ -33,6 +39,15 @@ const { title, width = 'wide' } = Astro.props;
     padding: 3rem 0 2.5rem;
   }
   .page-head[data-width='prose'] .page-head-inner { width: var(--content-width); }
+  .page-head-inner[data-aside] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.25rem 2.5rem;
+  }
+  .page-head-inner[data-aside] .page-head-main { flex: 1 1 28rem; min-width: 0; }
+  .page-head-aside { flex: none; }
   .page-head h1 {
     font-size: clamp(2.5rem, 4.5vw, 3.25rem);
     letter-spacing: -0.01em;

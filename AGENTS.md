@@ -135,6 +135,7 @@ public/lab.webp                homepage banner, 1600x640 (5:2), lab photo
 public/assets/aims-lab-logo.png  the header logo
 public/assets/usm1.png         USM logo in the footer (trimmed, no margins)
 public/assets/aims-lab-logo-trim.png  AIMS logo for the footer (aims-lab-logo.png trimmed)
+public/assets/cra-logo.png     CRA logo (their PNG from cra.org, no SVG exists), /ur2phd banner
 public/usm-logo.svg            USM mark for the deck title sheet
 public/slides/                 deck exports (.pptx) and QR codes
 public/seam/                   SEAM-Bench demo + leaderboard, served at /seam/
@@ -168,7 +169,9 @@ Two pieces stack above every page, in this order:
 
 `width` picks the inner column so the title lines up with what follows:
 `wide` (the default, `--content-wide`) on pages that open with a grid,
-`prose` (`--content-width`) on pages that open with text. Do not hand-roll
+`prose` (`--content-width`) on pages that open with text. An optional
+`slot="aside"` element sits to the right of the title (the CRA badge on
+`/ur2phd`) and wraps below it on narrow screens. Do not hand-roll
 another band; `/projects` carried its own copy for a while and they drifted.
 
 ## Content rules
