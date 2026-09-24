@@ -61,6 +61,12 @@ export const people: Person[] = [
     image: '/people/siyan-luo.webp',
   },
   {
+    name: 'Ticauris Stokes',
+    topic: 'Computer vision',
+    category: 'phd',
+    image: '/people/ticauris-stokes.webp',
+  },
+  {
     name: 'Ashim Dahal',
     topic: 'Computer vision',
     category: 'undergrad',
@@ -154,10 +160,12 @@ export const people: Person[] = [
     image: '/people/murad-hasan.webp',
     graduated: 'Spring 2026',
   },
+  // Also on the current roster: finished a master's here, then joined the
+  // lab as a PhD student.
   {
     name: 'Ticauris Stokes',
-    topic: 'Computer vision',
-    category: 'phd',
+    topic: 'PhD student in AIMS',
+    category: 'masters',
     image: '/people/ticauris-stokes.webp',
     graduated: 'Spring 2026',
   },

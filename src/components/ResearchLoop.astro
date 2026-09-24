@@ -158,11 +158,11 @@ const connectors = areas.map((a) => {
       <circle cx={c.x2} cy={c.y2} r="5" fill="var(--paper)" stroke={c.color} stroke-width="2" />
     </g>
   ))}
-  <circle cx={CX} cy={CY} r={R} fill="var(--paper)" stroke="var(--brand)" stroke-width="2" />
+  <circle cx={CX} cy={CY} r={R} fill="var(--gold)" stroke="var(--charcoal)" stroke-width="3" />
   <text class="mark" x={CX} y={CY - 42} text-anchor="middle">AIMS</text>
   <text class="expansion" x={CX} y={CY - 10} text-anchor="middle">Artificial Intelligence</text>
   <text class="expansion" x={CX} y={CY + 12} text-anchor="middle">&amp; Multimodal Systems</text>
-  <line x1={CX - 76} y1={CY + 28} x2={CX + 76} y2={CY + 28} stroke="var(--rule)" stroke-width="1" />
+  <line x1={CX - 76} y1={CY + 28} x2={CX + 76} y2={CY + 28} stroke="var(--charcoal)" stroke-opacity="0.3" stroke-width="1" />
   <text class="blurb" x={CX} y={CY + 52} text-anchor="middle">Intelligent systems that</text>
   <text class="blurb" x={CX} y={CY + 72} text-anchor="middle">perceive, understand, reason,</text>
   <text class="blurb" x={CX} y={CY + 92} text-anchor="middle">interact, and act reliably.</text>
@@ -189,8 +189,10 @@ const connectors = areas.map((a) => {
         stroke={a.color}
         stroke-width="2"
       />
-      <g transform={`translate(${a.x + 22}, ${a.y + 40})`} color={a.color}>
-        <Icon name={a.icon} width="52" height="52" />
+      {/* Icon on a tinted disc in the area's colour, as the site's icon discs. */}
+      <circle cx={a.x + 48} cy={a.y + 66} r="34" style={`fill: color-mix(in srgb, ${a.color} 14%, #fff)`} />
+      <g transform={`translate(${a.x + 28}, ${a.y + 46})`} color={a.color}>
+        <Icon name={a.icon} width="40" height="40" />
       </g>
       {a.title.map((line, i) => (
         <text class="card-title" x={a.x + 92} y={a.y + 42 + i * 24} fill={a.color}>{line}</text>
@@ -217,7 +219,7 @@ const connectors = areas.map((a) => {
     letter-spacing: 0.02em;
   }
   .expansion { font-size: 16px; font-weight: 600; fill: var(--ink); }
-  .blurb { font-size: 14px; fill: var(--ink-soft); }
+  .blurb { font-size: 14px; fill: var(--ink); }
   .verb { font-size: 16px; font-weight: 700; letter-spacing: 0.1em; }
   .card-title { font-size: 19px; font-weight: 700; }
   .card-body { font-size: 15px; fill: var(--ink-soft); }

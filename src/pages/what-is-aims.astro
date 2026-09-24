@@ -2,47 +2,73 @@
 import Base from '../layouts/Base.astro';
 import ResearchLoop from '../components/ResearchLoop.astro';
 import PageHeader from '../components/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+
+// Topics from the lab description, and what students practice. Edit here.
+const topics = [
+  { icon: 'ph:scan', label: 'Visual recognition and segmentation' },
+  { icon: 'ph:image', label: 'Vision-language models' },
+  { icon: 'ph:magnifying-glass', label: 'Retrieval-augmented generation (RAG)' },
+  { icon: 'ph:chats-circle', label: 'Conversational memory' },
+  { icon: 'ph:robot', label: 'AI agents' },
+  { icon: 'ph:shield-check', label: 'Robust and trustworthy AI' },
+  { icon: 'ph:users-three', label: 'Human-centered AI applications' },
+];
+const skills = [
+  { icon: 'ph:compass', label: 'Research design' },
+  { icon: 'ph:flask', label: 'Experimentation' },
+  { icon: 'ph:chart-bar', label: 'Evaluation' },
+  { icon: 'ph:pen-nib', label: 'Scientific writing' },
+  { icon: 'ph:handshake', label: 'Collaboration' },
+];
 ---
 <Base
   title="What is AIMS? · AIMS Lab"
   description="How the Artificial Intelligence and Multimodal Systems Lab develops intelligent systems that perceive, understand, reason, interact, and act reliably."
 >
-  <PageHeader title="What is AIMS?" width="prose">
+  <PageHeader title="What is AIMS?">
     <p class="lede">
       Artificial Intelligence and Multimodal Systems at the University of
       Southern Mississippi.
     </p>
   </PageHeader>
-  <section>
-    <p>
-      The Artificial Intelligence and Multimodal Systems (AIMS) Lab develops
-      intelligent systems that can perceive, understand, reason, interact, and
-      operate reliably. Our research brings together computer vision, multimodal
-      AI, language models, trustworthy AI, and human-centered intelligent
-      systems to investigate how AI can learn from diverse forms of information
-      and use that information effectively.
-    </p>
-    <p>
-      Modern AI systems increasingly process information from multiple sources,
-      including images, video, text, speech, and sensor data. AIMS researchers
-      investigate how these systems can better understand visual and multimodal
-      information, reason with retrieved and remembered knowledge, interact
-      effectively with users, and remain reliable under uncertainty and
-      challenging real-world conditions. Our research spans visual recognition
-      and segmentation, vision-language models, retrieval-augmented generation
-      (RAG), conversational memory, AI agents, robust and trustworthy AI, and
-      human-centered AI applications.
-    </p>
-    <p>
-      As a student in the AIMS Lab, you will have opportunities to contribute to
-      projects across these research areas, from developing and evaluating new
-      AI methods to applying them to real-world problems. Students gain
-      hands-on experience in research design, experimentation, evaluation,
-      scientific writing, and collaboration while contributing to ongoing
-      research projects and scholarly publications.
-    </p>
+  <!-- Intro: the lab in prose on the left, its research areas as an icon list on the right. -->
+  <section class="wide split">
+    <div class="prose">
+      <p class="kicker ui">The lab</p>
+      <p class="big">
+        The Artificial Intelligence and Multimodal Systems (AIMS) Lab develops
+        intelligent systems that can perceive, understand, reason, interact, and
+        operate reliably.
+      </p>
+      <p>
+        Our research brings together computer vision, multimodal AI, language
+        models, trustworthy AI, and human-centered intelligent systems to
+        investigate how AI can learn from diverse forms of information and use
+        that information effectively.
+      </p>
+      <p>
+        Modern AI systems increasingly process information from multiple
+        sources, including images, video, text, speech, and sensor data. AIMS
+        researchers investigate how these systems can better understand visual
+        and multimodal information, reason with retrieved and remembered
+        knowledge, interact effectively with users, and remain reliable under
+        uncertainty and challenging real-world conditions.
+      </p>
+    </div>
+    <aside class="panel dark" aria-labelledby="topics-heading">
+      <h2 id="topics-heading" class="panel-title">What we work on</h2>
+      <ul class="icon-list">
+        {topics.map((t) => (
+          <li><span class="disc"><Icon name={t.icon} aria-hidden="true" /></span>{t.label}</li>
+        ))}
+      </ul>
+    </aside>
+  </section>
 
-    <figure class="wide diagram">
+  <section class="wide">
+    <div class="section-head"><h2>The research loop</h2></div>
+    <figure class="diagram">
       <ResearchLoop />
       <figcaption>
         The six areas of the lab and the loop they form: perceive, reason, act,
@@ -50,28 +76,131 @@ import PageHeader from '../components/PageHeader.astro';
       </figcaption>
     </figure>
   </section>
+
+  <!-- Students: what joining looks like on the left, what you gain on the right. -->
+  <section class="wide split">
+    <div class="prose">
+      <p class="kicker ui">For students</p>
+      <p class="big">
+        As a student in the AIMS Lab, you will have opportunities to contribute
+        to projects across these research areas.
+      </p>
+      <p>
+        That work runs from developing and evaluating new AI methods to
+        applying them to real-world problems. Students contribute to ongoing
+        research projects and scholarly publications.
+      </p>
+    </div>
+    <aside class="panel gold" aria-labelledby="gain-heading">
+      <h2 id="gain-heading" class="panel-title">Hands-on experience in</h2>
+      <ul class="icon-list">
+        {skills.map((t) => (
+          <li><span class="disc"><Icon name={t.icon} aria-hidden="true" /></span>{t.label}</li>
+        ))}
+      </ul>
+      <a class="panel-link ui" href="mailto:rabab.abdelfattah@usm.edu?subject=Interest%20in%20joining%20AIMS%20Lab">Work with us →</a>
+    </aside>
+  </section>
 </Base>
 
 <style>
   .lede { font-size: 1.15rem; color: var(--ink-soft); margin: 0 0 2.5rem; max-width: 42rem; }
-  .diagram {
-    /* margin-block only: the inline margins belong to .wide, which is what
-       centres the figure on the page instead of on the text column. */
-    margin-block: 3.5rem 0;
-    padding: 1.5rem;
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-radius: 6px;
+
+  /* Text beside an icon panel. */
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+    margin-block: 1rem 3rem;
   }
-  .diagram a { display: block; }
-  .diagram img { display: block; width: 100%; height: auto; }
+  .kicker {
+    margin: 0 0 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+  .prose p { margin: 0 0 1rem; font-size: 1.1rem; line-height: 1.65; color: var(--ink-soft); }
+  .prose .big { font-size: 1.45rem; line-height: 1.4; color: var(--ink); }
+
+  .panel { border-radius: 18px; padding: 1.75rem 1.9rem; }
+  .panel.dark { background: var(--charcoal); border-bottom: 5px solid var(--gold); }
+  .panel.gold { background: var(--gold); }
+  .panel-title { margin: 0 0 1.1rem; font-size: 1.35rem; }
+  .panel.dark .panel-title { color: #fff; }
+  .icon-list { list-style: none; margin: 0; padding: 0; }
+  .icon-list li { display: flex; align-items: center; gap: 0.85rem; font-size: 1.05rem; line-height: 1.35; }
+  .icon-list li + li { margin-top: 0.7rem; }
+  .panel.dark .icon-list li { color: #fff; }
+  .panel.gold .icon-list li { color: var(--ink); }
+  /* Icon discs, as on /ur2phd: gold on charcoal, charcoal on gold. */
+  .disc {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    font-size: 1.25rem;
+  }
+  .panel.dark .disc { background: var(--gold); color: var(--charcoal); }
+  .panel.gold .disc { background: var(--charcoal); color: var(--gold); }
+  .panel-link {
+    display: inline-block;
+    margin-top: 1.4rem;
+    padding-bottom: 0.15rem;
+    border-bottom: 2px solid var(--ink);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .panel-link:hover { color: var(--ink); border-bottom-color: var(--charcoal); }
+
+  .section-head { margin: 1rem 0 1.5rem; }
+  .section-head h2 {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding-bottom: 0.6rem;
+    font-size: clamp(1.9rem, 3vw, 2.25rem);
+  }
+  .section-head h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 4.5rem;
+    height: 4px;
+    /* two-tone: the lab's blue, then USM gold */
+    background: linear-gradient(90deg, var(--brand) 50%, var(--gold) 50%);
+  }
+
+  .diagram {
+    margin: 0 0 3.5rem;
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--charcoal);
+    border-radius: 18px;
+  }
   .diagram figcaption {
     margin-top: 1rem;
     padding-top: 0.85rem;
-    border-top: 1px solid var(--rule);
+    border-top: 1px solid var(--line);
     font-family: var(--font-ui);
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     color: var(--ink-soft);
+  }
+
+  @media (max-width: 56rem) {
+    .split { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+  }
+  @media (max-width: 40rem) {
+    .diagram { padding: 0.9rem; }
+    .panel { padding: 1.4rem; }
   }
 </style>

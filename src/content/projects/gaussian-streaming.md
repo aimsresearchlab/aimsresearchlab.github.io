@@ -4,7 +4,7 @@ claim: 'Which Gaussians you pick as anchors barely matters: cheap samplers match
 cover: /projects/gaussian-streaming.webp
 coverVideo: /projects/anchor_policies.mp4
 tags: [ComputerVision, GaussianSplatting]
-featured: 3
+featured: 1
 links:
   - { kind: arxiv, url: 'https://arxiv.org/abs/2603.17227' }
 publications:

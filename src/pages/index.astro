@@ -44,6 +44,18 @@ const areas = [
         <p class="areas ui" aria-label="Research areas">
           {areas.map((a) => <a class="area-pill" href="#projects">#{a}</a>)}
         </p>
+        <!-- Join card: the /people culture card's message, so the left column
+             carries as much as the news panel beside it. -->
+        <aside class="join">
+          <p class="join-kicker ui">Join the lab</p>
+          <p class="join-quote">
+            Research is a team practice. Graduate and undergraduate researchers
+            work side by side, with close mentorship and room to own ambitious
+            ideas.
+          </p>
+          <p class="join-note">We take on undergraduate researchers every semester.</p>
+          <a class="join-link ui" href="mailto:rabab.abdelfattah@usm.edu?subject=Interest%20in%20joining%20AIMS%20Lab">Work with us →</a>
+        </aside>
       </div>
       <!-- News (pulled from src/data/news.ts) -->
       <aside id="news" class="news" aria-labelledby="news-heading">
@@ -71,7 +83,7 @@ const areas = [
       <a class="ui see-all" href="/projects/">All projects →</a>
     </div>
     <div class="projects">
-      {projects.map((project) => <ProjectCard project={project} cover />)}
+      {projects.map((project, i) => <ProjectCard project={project} cover lead={i === 0} />)}
     </div>
   </section>
 
@@ -173,6 +185,34 @@ const areas = [
   }
   .area-pill:hover { background: var(--brand-deep); color: #fff; }
 
+  /* Join card: charcoal so it pairs with, not repeats, the gold news panel. */
+  .join {
+    margin-top: 2.25rem;
+    padding: 1.75rem 2rem;
+    background: var(--charcoal);
+    border-radius: 18px;
+  }
+  .join-kicker {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .join-quote { margin: 0.8rem 0 0.6rem; font-size: 1.45rem; line-height: 1.3; color: #fff; }
+  .join-note { margin: 0 0 1.1rem; font-size: 1.05rem; color: var(--on-charcoal); }
+  .join-link {
+    display: inline-block;
+    padding-bottom: 0.15rem;
+    border-bottom: 2px solid var(--gold);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .join-link:hover { color: #fff; border-bottom-color: #fff; }
+
   /* News feed: a dated list in the right column */
   /* A gold panel, the same as the culture card on /people. Brand blue is too
      light to read at small sizes on gold, so links here stay ink. */
@@ -201,10 +241,15 @@ const areas = [
   .news-text a:hover { text-decoration: underline; }
 
   /* Projects: a card grid in the wide column. Card styles live in ProjectCard.astro. */
+  /* The first featured project leads at full width; the next two sit side by side. */
   .projects {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .projects :global(.lead) { grid-column: 1 / -1; }
+  @media (max-width: 40rem) {
+    .projects { grid-template-columns: minmax(0, 1fr); }
   }
 
   .people-group + .people-group { margin-top: 2.5rem; }
@@ -228,11 +273,29 @@ const areas = [
   }
   .people :global(.person) { flex: 0 0 12.95rem; } /* fixed width, left-aligned; wide enough for two-word names on one line */
 
+  /* Section titles match the other pages: same size, blue and gold bar under. */
   .section-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
+    margin: 3.5rem 0 1.5rem;
+  }
+  .section-head h2 {
+    position: relative;
+    margin: 0;
+    padding-bottom: 0.6rem;
+    font-size: clamp(1.9rem, 3vw, 2.25rem);
+  }
+  .section-head h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 4.5rem;
+    height: 4px;
+    /* two-tone: the lab's blue, then USM gold */
+    background: linear-gradient(90deg, var(--brand) 50%, var(--gold) 50%);
   }
   .see-all { font-size: 0.9rem; white-space: nowrap; }
 </style>

@@ -4,12 +4,12 @@ import { Icon } from 'astro-icon/components';
 import Cover from './Cover.astro';
 import { linkMeta, type ProjectEntry } from '../data/projects';
 
-interface Props { project: ProjectEntry; cover?: boolean; }
-const { project, cover = false } = Astro.props;
+interface Props { project: ProjectEntry; cover?: boolean; lead?: boolean; }
+const { project, cover = false, lead = false } = Astro.props;
 const { title, claim, tags, links } = project.data;
 const href = `/projects/${project.id}/`;
 ---
-<article class="project">
+<article class:list={["project", { lead }]}>
  {cover && (
     <a class="cover-link" href={href} tabindex="-1" aria-hidden="true">
       <Cover src={project.data.cover} video={project.data.coverVideo} caption={project.data.coverCaption} compact />
@@ -34,38 +34,52 @@ const href = `/projects/${project.id}/`;
 
 <style>
   .project {
-    border: 1px solid var(--rule);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   .cover-link { display: block; }
-  .cover-link :global(.cover) { border: 0; border-bottom: 1px solid var(--rule); }
+  .cover-link :global(.cover) { border: 0; border-bottom: 1px solid var(--line); }
   .body {
     padding: 1.25rem 1.4rem 1.1rem;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
-  .project h3 { margin: 0 0 0.4rem; }
+  .project h3 { margin: 0 0 0.45rem; font-size: 1.25rem; }
+  /* Lead card (first on the homepage): full-width cover, larger type. */
+  .lead h3 { font-size: 1.75rem; }
+  .lead .claim { font-size: 1.15rem; max-width: 48rem; }
+  .lead .body { padding: 1.5rem 1.75rem 1.4rem; }
   .project h3 a { color: var(--ink); text-decoration: none; }
   .project h3 a:hover { color: var(--brand); }
   .claim { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }
-  .tags { margin: 0 0 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
-  .tag { font-size: 0.8rem; color: var(--brand-deep); }
-  .tags .tag + .tag { margin-left: 0.5rem; }
-  .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tags { margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--brand-deep);
+    background: color-mix(in srgb, var(--brand) 10%, transparent);
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+  }
+  .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  /* Link pills and tags match the rest of the site (/people, /ur2phd). */
   .link-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--brand);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--brand-deep);
     text-decoration: none;
-    border: 1px solid var(--brand);
-    border-radius: 0.3rem;
-    padding: 0.25rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
   }
-  .link-pill:hover { background: var(--paper); border-color: var(--brand-deep); color: var(--brand-deep); }
+  .link-pill:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
   .link-pill [data-icon] { font-size: 1rem; }
 </style>

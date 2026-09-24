@@ -72,21 +72,29 @@ const papers = publications.filter((p) => titles.has(p.title));
   .head h1 { margin: 0 0 0.6rem; }
   .claim { font-size: 1.2rem; color: var(--ink-soft); margin: 0 0 1.25rem; }
   .tags { margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .tag { font-size: 0.85rem; color: var(--brand-deep); }
+  .tag {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--brand-deep);
+    background: color-mix(in srgb, var(--brand) 10%, transparent);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+  }
   .project-links { margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  /* Link pills and tags match the rest of the site (/people, /ur2phd). */
   .link-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--brand);
+    font-weight: 700;
+    color: var(--brand-deep);
     text-decoration: none;
-    border: 1px solid var(--brand);
-    border-radius: 0.3rem;
-    padding: 0.3rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
   }
-  .link-pill:hover { background: var(--paper); border-color: var(--brand-deep); color: var(--brand-deep); }
+  .link-pill:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
   .link-pill [data-icon] { font-size: 1rem; }
 
   .prose :global(h2) { font-size: 1.25rem; margin-top: 2.25rem; }

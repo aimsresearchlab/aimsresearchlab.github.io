@@ -1,0 +1,487 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+import { cohorts } from '../data/ur2phd';
+
+// Copy follows the School of Computing Sciences and Computer Engineering
+// UR2PhD flyer. Edit it here; the participant list lives in src/data/ur2phd.ts.
+const email = 'Rabab.Abdelfattah@usm.edu';
+const applyHref = `mailto:${email}?subject=UR2PhD_YourName`;
+
+const goals = [
+  'Prepare undergraduate students for research',
+  'Increase interest in graduate (PhD) studies',
+  'Build strong research and mentoring skills',
+  'Expand access to research opportunities',
+];
+const howItWorks = [
+  { icon: 'ph:video-camera', text: 'Online live (synchronous) sessions led by CRA' },
+  { icon: 'ph:users-three', text: 'Students work in teams of 2 to 4 on research projects' },
+  { icon: 'ph:chalkboard-teacher', text: 'Guided by faculty and graduate mentors' },
+  { icon: 'ph:flask', text: 'Focus on practical research skills' },
+];
+const audiences = [
+  {
+    title: 'Undergraduates',
+    icon: 'ph:student',
+    tone: 'gold',
+    items: [
+      'Learn how to read and write research papers',
+      'Work on a real research project in a team',
+      'Improve presentation and communication skills',
+      'Connect with mentors and researchers',
+      'Become eligible for funding opportunities',
+    ],
+  },
+  {
+    title: 'Graduate students',
+    icon: 'ph:chalkboard-teacher',
+    tone: 'dark',
+    items: [
+      'Learn how to mentor undergraduate students',
+      'Develop leadership and communication skills',
+      'Gain formal training in research mentorship',
+      'Receive a $1,000 stipend (if requirements are met)',
+    ],
+  },
+  {
+    title: 'Faculty members',
+    icon: 'ph:users-three',
+    tone: 'gold',
+    items: [
+      'Save time training students on research basics',
+      'Work with better-prepared students',
+      'Build stronger research teams',
+      'Research funding up to $4,000',
+    ],
+  },
+];
+const funding = [
+  { label: 'Undergraduate research', amount: 'Up to $8,000' },
+  { label: 'Conference travel', amount: 'Up to $2,000' },
+  { label: 'Graduate mentor stipend', amount: '$1,000' },
+  { label: 'Faculty research', amount: 'Up to $4,000' },
+];
+const whyJoin = [
+  'Students become research-ready early',
+  'Less time spent teaching the basics',
+  'A strong pipeline to PhD programs',
+];
+
+---
+<Base
+  title="UR2PhD · AIMS Lab"
+  description="UR2PhD at the University of Southern Mississippi: the Computing Research Association's Undergraduate Research to PhD mentoring program, coordinated by Dr. Rabab Abdelfattah."
+>
+  <PageHeader title="UR2PhD" width="wide">
+    <p class="lede">
+      Undergraduate Research to PhD Mentoring Program at the University of
+      Southern Mississippi.
+    </p>
+  </PageHeader>
+
+  <section class="wide intro">
+    <div class="intro-text">
+      <h2 class="kicker ui">What is UR2PhD?</h2>
+      <p class="intro-lede">
+        UR2PhD is a program by the Computing Research Association (CRA) that
+        helps students gain research experience early and prepares them for PhD
+        studies in computing fields.
+      </p>
+    </div>
+    <aside class="coordinator">
+      <p class="kicker ui">USM coordinator</p>
+      <p class="coord-name">Dr. Rabab Abdelfattah</p>
+      <p class="coord-role ui">School of Computing Sciences and Computer Engineering</p>
+      <a class="coord-mail ui" href={`mailto:${email}`}><Icon name="ph:envelope-simple" aria-hidden="true" />{email}</a>
+    </aside>
+  </section>
+
+  <section class="goals-band" aria-labelledby="goals-heading">
+    <div class="goals-inner">
+      <h2 id="goals-heading" class="band-title">Program goals</h2>
+      <ol class="goals">
+        {goals.map((g, i) => (
+          <li><span class="goal-num ui">{String(i + 1).padStart(2, '0')}</span><span>{g}</span></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="wide">
+    <div class="section-head"><h2>How the program works</h2></div>
+    <ol class="steps">
+      {howItWorks.map((step) => (
+        <li>
+          <span class="step-icon"><Icon name={step.icon} aria-hidden="true" /></span>
+          <span class="step-text">{step.text}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="wide">
+    <div class="section-head"><h2>Who it is for</h2></div>
+    <div class="audiences">
+      {audiences.map((a) => (
+        <div class="audience" data-tone={a.tone}>
+          <div class="audience-head">
+            <Icon name={a.icon} class="audience-icon" aria-hidden="true" />
+            <h3>{a.title}</h3>
+          </div>
+          <ul class="ticks">{a.items.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="wide">
+    <div class="section-head"><h2>Funding opportunities</h2></div>
+    <ul class="funding">
+      {funding.map((f) => (
+        <li>
+          <span class="fund-label ui">{f.label}</span>
+          <span class="fund-amount">{f.amount}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wide pair">
+    <div class="panel">
+      <h2 class="panel-title">Sessions</h2>
+      <p class="sessions-lede">Live online (synchronous) sessions.</p>
+      <dl class="schedule">
+        <dt>Undergraduates</dt>
+        <dd>Twice a week</dd>
+        <dt>Graduate students</dt>
+        <dd>Once a week</dd>
+      </dl>
+    </div>
+    <div class="panel">
+      <h2 class="panel-title">Why join?</h2>
+      <ul class="ticks">{whyJoin.map((g) => <li>{g}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="wide apply">
+    <div>
+      <p class="kicker ui">How to apply</p>
+      <p class="apply-text">
+        If you are an active and motivated student interested in UR2PhD,
+        complete the undergraduate or graduate form and email it to
+        Dr. Abdelfattah with the subject line <strong>UR2PhD_YourName</strong>.
+      </p>
+    </div>
+    <a class="apply-link ui" href={applyHref}><Icon name="ph:envelope-simple" aria-hidden="true" />Email to apply</a>
+  </section>
+
+  <section class="wide">
+    <div class="section-head">
+      <h2>Participants</h2>
+    </div>
+    {cohorts.map((c) => (
+      <div class="cohort">
+        <h3 class="group-label ui">{c.term} cohort · {c.students.length} students</h3>
+        <ul class="names">
+          {c.students.map((st) => (
+            <li><span class="name">{st.first} {st.last}</span></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+</Base>
+
+<style>
+  .kicker {
+    margin: 0 0 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+
+  /* Intro: the definition beside a gold coordinator card. */
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+  .intro-lede { margin: 0; font-size: 1.4rem; line-height: 1.5; color: var(--ink); }
+  .coordinator {
+    background: var(--gold);
+    border-radius: 18px;
+    padding: 1.6rem 1.75rem;
+  }
+  .coordinator .kicker { color: var(--ink); }
+  .coord-name { margin: 0; font-size: 1.6rem; font-weight: 700; line-height: 1.2; color: var(--ink); }
+  .coord-role { margin: 0.35rem 0 0.9rem; font-size: 0.9rem; color: var(--ink); }
+  .coord-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 0.1rem;
+    overflow-wrap: anywhere;
+  }
+  .coord-mail:hover { color: var(--ink); border-bottom-color: var(--charcoal); }
+
+  /* Panels: off-white cards with a blue top rule. */
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-block: 1.25rem;
+  }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--charcoal);
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem 1.5rem;
+  }
+  .panel-title { margin: 0 0 0.8rem; font-size: 1.35rem; }
+  .ticks { list-style: none; margin: 0; padding: 0; }
+  .ticks li { position: relative; padding-left: 1.2rem; font-size: 1.05rem; line-height: 1.5; }
+  .ticks li + li { margin-top: 0.4rem; }
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 2px;
+    background: var(--gold-ink);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 3.5rem 0 1.5rem;
+  }
+  .section-head h2 {
+    position: relative;
+    margin: 0;
+    padding-bottom: 0.6rem;
+    font-size: clamp(1.9rem, 3vw, 2.25rem);
+  }
+  .section-head h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 4.5rem;
+    height: 4px;
+    /* two-tone: the lab's blue, then USM gold */
+    background: linear-gradient(90deg, var(--brand) 50%, var(--gold) 50%);
+  }
+  .section-head span {
+    color: var(--gold-ink);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-weight: 700;
+  }
+
+  /* Goals: a full-bleed charcoal band with big gold numbers. */
+  .goals-band {
+    margin: 3.5rem calc(50% - 50vw) 0;
+    background: var(--charcoal);
+    border-top: 5px solid var(--gold);
+    border-bottom: 5px solid var(--gold);
+  }
+  .goals-inner { width: var(--content-wide); margin-inline: auto; padding: 2.75rem 0 3rem; }
+  .band-title { margin: 0 0 1.75rem; font-size: clamp(1.9rem, 3vw, 2.25rem); color: #fff; }
+  .goals {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem 2rem;
+  }
+  .goals li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+    color: #fff;
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+  .goal-num { font-size: 2.6rem; font-weight: 800; line-height: 1; color: var(--gold); }
+
+  /* How it works: four steps, gold discs joined by a rule. */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    right: calc((100% - 4.5rem) / 4 - 2rem); /* ends at the last disc's centre */
+    height: 2px;
+    background: var(--charcoal);
+  }
+  .steps li { position: relative; display: flex; flex-direction: column; gap: 0.9rem; }
+  .step-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--charcoal);
+    color: var(--charcoal);
+    font-size: 1.8rem;
+  }
+  .step-text { font-size: 1.15rem; line-height: 1.45; color: var(--ink); }
+
+  /* Who it is for: solid header per audience, alternating gold and charcoal. */
+  .audiences {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .audience {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .audience-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.1rem 1.5rem;
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .audience[data-tone='dark'] .audience-head { background: var(--charcoal); color: #fff; }
+  .audience[data-tone='dark'] .audience-icon { color: var(--gold); }
+  .audience-head h3 { margin: 0; font-size: 1.4rem; color: inherit; }
+  .audience-icon { flex: none; font-size: 1.9rem; }
+  .audience .ticks { padding: 1.25rem 1.5rem 1.5rem; }
+
+  /* Funding: charcoal tiles with gold amounts, the page header's colours. */
+  .funding {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .funding li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.4rem 1.5rem;
+    background: var(--charcoal);
+    border-bottom: 5px solid var(--gold);
+    border-radius: 14px;
+  }
+  .fund-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-charcoal);
+  }
+  .fund-amount { font-size: 1.9rem; font-weight: 700; line-height: 1.1; color: var(--gold); }
+
+  .sessions-lede { margin: 0 0 0.9rem; font-size: 1.05rem; color: var(--ink); }
+  .schedule { margin: 0; }
+  .schedule dt { font-weight: 700; font-size: 1.1rem; color: var(--ink); }
+  .schedule dd { margin: 0.15rem 0 0.9rem; font-size: 1.05rem; line-height: 1.5; color: var(--ink-soft); }
+  .schedule dd:last-child { margin-bottom: 0; }
+
+  /* How to apply: a gold band with the mail link as a button. */
+  .apply {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2.5rem;
+    margin-top: 2.5rem;
+    padding: 1.75rem 2rem;
+    background: var(--gold);
+    border-radius: 18px;
+  }
+  .apply .kicker { color: var(--ink); }
+  .apply-text { margin: 0; font-size: 1.2rem; line-height: 1.5; color: var(--ink); max-width: 44rem; }
+  .apply-link {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.3rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .apply-link:hover { background: var(--charcoal); color: var(--gold); }
+
+  /* Participants: one name grid per cohort. */
+  .cohort + .cohort { margin-top: 2rem; }
+  .group-label {
+    margin: 0 0 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+  .names {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 1.25rem;
+  }
+  .names li {
+    padding: 0.7rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .name { font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+
+  @media (max-width: 60rem) {
+    .intro, .audiences { grid-template-columns: minmax(0, 1fr); }
+    .funding, .goals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .steps::before { display: none; }
+  }
+  @media (max-width: 40rem) {
+    .pair, .funding, .goals, .steps { grid-template-columns: minmax(0, 1fr); }
+    .steps::before { display: block; top: 2rem; bottom: 2rem; left: 2rem; right: auto; width: 2px; height: auto; }
+    .steps li { flex-direction: row; align-items: center; }
+    .apply { flex-direction: column; align-items: flex-start; padding: 1.4rem; }
+    .intro-lede { font-size: 1.2rem; }
+  }
+</style>
