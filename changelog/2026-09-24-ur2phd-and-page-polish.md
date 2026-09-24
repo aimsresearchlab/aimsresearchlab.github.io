@@ -8,10 +8,9 @@
   Summer 2026 cohort from `Summer 2026 UR2PhD.xlsx` (23 names) in
   `src/data/ur2phd.ts`. The nav link to News became UR2PhD; `/news` is still
   linked from the homepage news panel.
-- Homepage: the first featured project (now 4D Gaussian Streaming) is a lead
-  card with a full-width cover, and the next two sit side by side. `/projects`
-  is two columns. The Gaussian thumb was re-cut at 960px so the lead cover is
-  sharp without autoplaying the 14MB source.
+- A lead-project homepage layout (one full-width cover, two below) and a
+  two-column `/projects` were tried and reverted in the same session; the
+  grid, featured order, and Gaussian thumb are as they were.
 - Project cards and project pages use the site's card and pill styles.
 - Homepage: a charcoal "Join the lab" card under the research tags balances
   the news panel. Section titles match the other pages (36px, blue and gold

@@ -279,9 +279,8 @@ publications:
 - Quote `title` and `claim`. A colon in an unquoted YAML scalar breaks the parse.
 - The body is the project page: two or three short `##` sections (overview, what
   we found, what is next). Keep it to what the papers actually support.
-- `featured` orders the homepage grid, which shows the first three. The first
-  (`featured: 1`) is the lead card at full width with a large cover; the next
-  two sit side by side under it. `/projects` is two columns in the same order.
+- `featured` orders the homepage grid, which shows the first three. Raise the
+  limit in `src/pages/index.astro` if you want two rows.
 - `links` use `kind`: `arxiv`, `github`, `paper`, or `demo`. Each renders as an
   outlined pill with the matching icon. Only canonical records (arXiv, DOI,
   public GitHub repo, a demo on this site). Do not link private repos.
@@ -299,12 +298,9 @@ adding a real image later does not move the layout.
 Video covers (`coverVideo`) are the same 16:9 box and autoplay muted on loop.
 The rules that keep them from costing a visitor megabytes:
 
-- **Ship a `-thumb` cut.** The cards on `/` and `/projects` render about 500px
+- **Ship a `-thumb` cut.** The cards on `/` and `/projects` render about 300px
   wide, and `Cover.astro` asks for `<name>-thumb.{webm,mp4}` at 640x360 when it
   has one. Without it, the card serves the full file. Aim for a few hundred KB.
-  The homepage lead project's cover renders about 1024px wide, so its thumb is
-  a 960px cut instead (`anchor_policies-thumb.mp4`, about 3MB, h264 crf 35).
-  Re-cut the thumb when a different project becomes `featured: 1`.
 - `Cover.astro` emits only the formats that exist on disk, so a cover can be
   mp4 only. Prefer both when both compress well; check the sizes before
   assuming webm wins, because vp9 is much worse than h264 on noisy content

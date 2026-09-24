@@ -4,7 +4,7 @@ claim: 'The scoring target a memory benchmark picks can flip which LLM wins, eve
 tags: [ConversationalMemory, Evaluation]
 cover: /projects/same-ranking-different-winner.webp
 coverVideo: /projects/tiap-live-audit-demo-v2.webm
-featured: 2
+featured: 1
 links:
   - { kind: demo, url: '/tiap/' }
   - { kind: arxiv, url: 'https://arxiv.org/abs/2605.24060' }

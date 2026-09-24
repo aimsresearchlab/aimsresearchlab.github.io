@@ -83,7 +83,7 @@ const areas = [
       <a class="ui see-all" href="/projects/">All projects →</a>
     </div>
     <div class="projects">
-      {projects.map((project, i) => <ProjectCard project={project} cover lead={i === 0} />)}
+      {projects.map((project) => <ProjectCard project={project} cover />)}
     </div>
   </section>
 
@@ -241,15 +241,10 @@ const areas = [
   .news-text a:hover { text-decoration: underline; }
 
   /* Projects: a card grid in the wide column. Card styles live in ProjectCard.astro. */
-  /* The first featured project leads at full width; the next two sit side by side. */
   .projects {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
-  .projects :global(.lead) { grid-column: 1 / -1; }
-  @media (max-width: 40rem) {
-    .projects { grid-template-columns: minmax(0, 1fr); }
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 2rem;
   }
 
   .people-group + .people-group { margin-top: 2.5rem; }

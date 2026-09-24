@@ -4,12 +4,12 @@ import { Icon } from 'astro-icon/components';
 import Cover from './Cover.astro';
 import { linkMeta, type ProjectEntry } from '../data/projects';
 
-interface Props { project: ProjectEntry; cover?: boolean; lead?: boolean; }
-const { project, cover = false, lead = false } = Astro.props;
+interface Props { project: ProjectEntry; cover?: boolean; }
+const { project, cover = false } = Astro.props;
 const { title, claim, tags, links } = project.data;
 const href = `/projects/${project.id}/`;
 ---
-<article class:list={["project", { lead }]}>
+<article class="project">
  {cover && (
     <a class="cover-link" href={href} tabindex="-1" aria-hidden="true">
       <Cover src={project.data.cover} video={project.data.coverVideo} caption={project.data.coverCaption} compact />
@@ -50,10 +50,6 @@ const href = `/projects/${project.id}/`;
     flex: 1;
   }
   .project h3 { margin: 0 0 0.45rem; font-size: 1.25rem; }
-  /* Lead card (first on the homepage): full-width cover, larger type. */
-  .lead h3 { font-size: 1.75rem; }
-  .lead .claim { font-size: 1.15rem; max-width: 48rem; }
-  .lead .body { padding: 1.5rem 1.75rem 1.4rem; }
   .project h3 a { color: var(--ink); text-decoration: none; }
   .project h3 a:hover { color: var(--brand); }
   .claim { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; flex: 1; }

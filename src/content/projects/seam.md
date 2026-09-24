@@ -4,7 +4,7 @@ claim: 'Measuring how much typed user speech gets absorbed into edited artifacts
 tags: [HumanCenteredAI, LLMEditing]
 cover: /projects/seam.webp
 coverVideo: /projects/seam-demo.webm
-featured: 3
+featured: 2
 links:
   - { kind: demo, url: '/seam/' }
   - { kind: github, url: 'https://github.com/aimsresearchlab/seam' }
