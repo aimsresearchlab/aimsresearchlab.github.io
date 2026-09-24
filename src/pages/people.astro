@@ -16,18 +16,12 @@ const alumniGroups = alumni();
 const linkHref = (type: LinkType, url: string) =>
   type === 'email' ? `mailto:${url}` : url;
 
-// Section heading, count line, and card kicker for each roster category.
+// Section heading and count line for each roster category.
 const heading: Record<Category, string> = {
   faculty: 'Faculty',
   phd: 'Doctoral Researchers',
   masters: "Master's Researchers",
   undergrad: 'Undergraduate Researchers',
-};
-const role: Record<Category, string> = {
-  faculty: 'Faculty',
-  phd: 'PhD Researcher',
-  masters: "Master's Researcher",
-  undergrad: 'Undergraduate Researcher',
 };
 const count = (members: Person[]) => {
   const n = members.length;
@@ -104,15 +98,12 @@ const linkLabel: Record<LinkType, string> = {
         <ul class="cards">
           {group.members.map((person) => (
             <li class="card">
-              <div class="card-photo">
-                {person.image ? (
-                  <img src={person.image} alt={person.name} width="192" height="192" loading="lazy" />
-                ) : (
-                  <span class="initials ui" aria-hidden="true">{initials(person.name)}</span>
-                )}
-              </div>
+              {person.image ? (
+                <img class="card-photo" src={person.image} alt={person.name} width="192" height="192" loading="lazy" />
+              ) : (
+                <span class="card-photo initials ui" aria-hidden="true">{initials(person.name)}</span>
+              )}
               <div class="card-body">
-                <p class="role ui">{role[person.category]}</p>
                 <h3 class="card-name">{person.name}</h3>
                 <p class="card-topic">{person.topic}</p>
                 {person.links && person.links.length > 0 && (
@@ -134,26 +125,18 @@ const linkLabel: Record<LinkType, string> = {
       {alumniGroups.map((group) => (
         <div class="people-group">
           <h3 class="group-label ui">{group.label}</h3>
-          <ul class="cards">
+          <ul class="alumni-list">
             {group.members.map((person) => (
-              <li class="card">
-                <div class="card-photo">
-                  {person.image ? (
-                    <img src={person.image} alt={person.name} width="192" height="192" loading="lazy" />
-                  ) : (
-                    <span class="initials ui" aria-hidden="true">{initials(person.name)}</span>
-                  )}
-                </div>
-                <div class="card-body">
-                  <p class="role ui">{role[person.category]}</p>
-                  <h3 class="card-name">{person.name}</h3>
-                  <p class="card-topic">{person.topic}</p>
-                  {person.links && person.links.length > 0 && (
-                    <p class="featured-links ui">
-                      {person.links.map((l) => <a href={linkHref(l.type, l.url)}>{linkLabel[l.type]}</a>)}
-                    </p>
-                  )}
-                </div>
+              <li>
+                {person.image ? (
+                  <img class="alumni-photo" src={person.image} alt="" width="192" height="192" loading="lazy" />
+                ) : (
+                  <span class="alumni-photo initials ui" aria-hidden="true">{initials(person.name)}</span>
+                )}
+                <span>
+                  <span class="alumni-name">{person.name}</span>
+                  <span class="alumni-topic ui">{person.topic}</span>
+                </span>
               </li>
             ))}
           </ul>
@@ -165,108 +148,129 @@ const linkLabel: Record<LinkType, string> = {
 
 <style>
   .lede { font-size: 1.15rem; color: var(--ink-soft); margin: 0 0 3rem; max-width: 42rem; }
-  .people-group + .people-group { margin-top: 3rem; }
-  .group-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-    font-weight: 600;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.5rem;
-    margin: 0 0 1.75rem;
+  .people-group + .people-group { margin-top: 3.5rem; }
+
+  /* Section heads: title with a short brand bar under it, count beside it. */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 3.5rem 0 1.75rem;
   }
+  .section-head h2 {
+    position: relative;
+    margin: 0;
+    padding-bottom: 0.6rem;
+    font-size: clamp(1.9rem, 3vw, 2.25rem);
+  }
+  .section-head h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 3rem;
+    height: 4px;
+    background: var(--brand);
+  }
+  .section-head span {
+    color: var(--brand-deep);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-weight: 700;
+  }
+
+  /* Roster cards: photo beside text. Sources are 192px squares, so the photo
+     is shown at 128px rather than stretched across the card. */
   .cards {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
   }
   .card {
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-radius: 18px;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 1.35rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
   }
-  .card-photo { aspect-ratio: 4 / 3; background: var(--rule); }
-  .card-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .card-photo {
+    flex: 0 0 128px;
+    width: 128px;
+    height: 128px;
+    object-fit: cover;
+    object-position: 50% 20%;
+    border-radius: 10px;
+    background: var(--paper);
+  }
   .initials {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    color: var(--ink-soft);
-    font-size: 2.4rem;
+    color: var(--brand-deep);
+    font-size: 2.2rem;
     font-weight: 700;
   }
-  .card-body { padding: 1.45rem; }
-  .card-name { margin: 0 0 0.45rem; font-size: 1.48rem; line-height: 1.15; }
-  .card-topic { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
-  .alumni { border-top: 1px solid var(--rule); padding-top: 2rem; }
-  .alumni h2 { margin-top: 0; }
-  .section-head {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 2rem;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 1.1rem;
-    margin: 3rem 0 2rem;
-  }
-  .section-head h2 { margin: 0; font-size: clamp(2.1rem, 4vw, 3.2rem); }
-  .section-head span {
-    color: var(--ink-soft);
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.13em;
-    font-weight: 600;
-  }
+  .card-body { min-width: 0; }
+  .card-name { margin: 0 0 0.3rem; font-size: 1.5rem; line-height: 1.15; }
+  .card-topic { margin: 0; color: var(--brand-deep); font-size: 1.1rem; line-height: 1.35; }
 
   .leadership {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: 1.25rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: 1rem;
   }
 
+  /* Director card: the portrait is a framed square, near the 192px source. */
   .featured {
     display: grid;
-    grid-template-columns: 43% 1fr;
-    background: #fff;
-    border: 1px solid var(--rule);
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--brand);
     border-radius: 18px;
-    overflow: hidden;
   }
-  .portrait-wrap { background: var(--rule); min-height: 22rem; }
-  .portrait { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .featured-body {
-    padding: 2.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .portrait-wrap { line-height: 0; }
+  .portrait {
+    width: 192px;
+    height: 192px;
+    object-fit: cover;
+    object-position: 50% 20%;
+    border-radius: 12px;
+    background: var(--paper);
   }
+  .featured-body { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
   .role {
-    color: var(--gold-ink);
-    font-size: 0.72rem;
+    color: var(--brand);
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.13em;
     font-weight: 700;
     margin: 0 0 0.5rem;
   }
-  .featured-name { margin: 0 0 0.45rem; font-size: 2.25rem; line-height: 1.15; }
-  .featured-bio { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
-  .featured-links { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 1.15rem 0 0; }
+  .featured-name { margin: 0 0 0.5rem; font-size: 2.25rem; line-height: 1.15; white-space: nowrap; }
+  .featured-bio { margin: 0; color: var(--ink-soft); font-size: 1.1rem; line-height: 1.5; }
+  .featured-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.9rem 0 0; }
   .featured-links a {
-    border: 1px solid var(--rule);
+    border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
     border-radius: 999px;
-    padding: 0.42rem 0.72rem;
-    font-size: 0.72rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--brand-deep);
+    text-decoration: none;
   }
-  .featured-links a:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .featured-links a:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
 
   .culture {
     background: var(--gold);
@@ -277,7 +281,7 @@ const linkLabel: Record<LinkType, string> = {
     justify-content: space-between;
   }
   .kicker {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -294,19 +298,59 @@ const linkLabel: Record<LinkType, string> = {
     align-self: flex-start;
     border-bottom: 2px solid var(--ink);
     padding-bottom: 0.15rem;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--ink);
   }
 
+  /* Alumni: a compact list, not full cards. */
+  .alumni { margin-top: 4rem; padding-top: 0.5rem; }
+  .alumni h2 { margin: 0 0 1.5rem; font-size: 1.75rem; }
+  .group-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand-deep);
+    font-weight: 700;
+    margin: 0 0 0.9rem;
+  }
+  .alumni-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem 1.5rem;
+  }
+  .alumni-list li { display: flex; align-items: center; gap: 0.9rem; }
+  .alumni-photo {
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    object-position: 50% 20%;
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 1.1rem;
+  }
+  .alumni-name { display: block; font-weight: 700; font-size: 1.15rem; line-height: 1.2; }
+  .alumni-topic { display: block; color: var(--ink-soft); font-size: 0.9rem; }
+
   @media (max-width: 60rem) {
     .leadership { grid-template-columns: 1fr; }
-    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .alumni-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 44rem) {
+    .cards { grid-template-columns: 1fr; }
+    .alumni-list { grid-template-columns: 1fr; }
   }
   @media (max-width: 40rem) {
-    .featured { grid-template-columns: 1fr; }
-    .portrait-wrap { min-height: 0; aspect-ratio: 4 / 3; }
-    .featured-body { padding: 1.75rem; }
-    .cards { grid-template-columns: 1fr; }
+    .featured { grid-template-columns: 1fr; justify-items: start; padding: 1.4rem; gap: 1.25rem; }
+    .portrait { width: 160px; height: 160px; }
+    .featured-name { font-size: 1.6rem; }
+    .card { gap: 1rem; padding: 1rem; }
+    .card-photo { flex-basis: 96px; width: 96px; height: 96px; }
+    .card-name { font-size: 1.3rem; }
+    .card-topic { font-size: 1rem; }
   }
 </style>

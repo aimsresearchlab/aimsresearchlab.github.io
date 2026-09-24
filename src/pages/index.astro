@@ -102,14 +102,33 @@ const areas = [
 </Base>
 
 <style>
-  .hero { padding-top: 1rem; }
+  /* The charcoal band from the page header, full bleed behind the top of the
+     lab photo, with the same gold rule; the photo sits over it. */
+  .hero { position: relative; padding-top: 2.5rem; }
+  .hero::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: calc(50% - 50vw);
+    width: 100vw;
+    height: calc(2.5rem + var(--content-wide) * 0.4 * 0.6);
+    background: var(--charcoal);
+    border-bottom: 5px solid var(--gold);
+  }
   .banner {
+    /* Framed print: an even beige border, lifted off the band.
+       content-box so the 5:2 shape belongs to the photo, not the frame. */
+    --frame: 0.6rem;
     display: block;
-    width: 100%;
+    box-sizing: content-box;
+    width: calc(100% - 2 * var(--frame));
     height: auto;
     aspect-ratio: 5 / 2;
     object-fit: cover;
-    border: 1px solid var(--rule);
+    padding: var(--frame);
+    background: var(--paper);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--charcoal) 35%, transparent);
     margin-bottom: 2.5rem;
   }
   .hero-grid {
@@ -120,6 +139,9 @@ const areas = [
   }
   @media (max-width: 56rem) {
     .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+  @media (max-width: 40rem) {
+    .banner { --frame: 0.4rem; }
   }
   .hero h1 { margin-top: 0; margin-bottom: 0.25rem; }
   .expansion {
@@ -152,24 +174,31 @@ const areas = [
   .area-pill:hover { background: var(--brand-deep); color: #fff; }
 
   /* News feed: a dated list in the right column */
-  .news { border-left: 2px solid var(--brand); padding-left: 1.25rem; }
+  /* A gold panel, the same as the culture card on /people. Brand blue is too
+     light to read at small sizes on gold, so links here stay ink. */
+  .news { background: var(--gold); border-radius: 18px; padding: 1.3125rem 1.5rem; }
   .news-heading {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-soft);
-    font-weight: 600;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.14em;
     margin: 0 0 1rem;
   }
   .news-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-  .news-heading .news-all { font-weight: 400; text-decoration: none; }
+  .news-heading .news-all { font-weight: 700; color: var(--ink); text-decoration: none; }
+  .news-heading .news-all:hover { text-decoration: underline; }
   .news-list { list-style: none; margin: 0; padding: 0; }
   .news-list li { display: flex; flex-direction: column; gap: 0.1rem; }
-  .news-list li + li { margin-top: 0.9rem; }
-  .news-list time { font-size: 0.8rem; color: var(--ink-soft); }
-  .news-text { font-size: 1rem; line-height: 1.45; }
+  .news-list li + li {
+    margin-top: 0.675rem;
+    padding-top: 0.675rem;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+  .news-list time { font-size: 0.875rem; color: var(--ink); font-weight: 500; }
+  .news-text { font-size: 1.1rem; line-height: 1.45; }
   .news-text a { color: var(--ink); text-decoration: none; }
-  .news-text a:hover { color: var(--brand); }
+  .news-text a:hover { text-decoration: underline; }
 
   /* Projects: a card grid in the wide column. Card styles live in ProjectCard.astro. */
   .projects {
@@ -180,7 +209,7 @@ const areas = [
 
   .people-group + .people-group { margin-top: 2.5rem; }
   .group-label {
-    font-size: 0.8rem;
+    font-size: 0.92rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--ink-soft);
@@ -197,7 +226,7 @@ const areas = [
     flex-wrap: wrap;
     gap: 2.5rem 1.5rem;
   }
-  .people :global(.person) { flex: 0 0 11.25rem; } /* fixed width, left-aligned; wide enough for two-word names on one line */
+  .people :global(.person) { flex: 0 0 12.95rem; } /* fixed width, left-aligned; wide enough for two-word names on one line */
 
   .section-head {
     display: flex;

@@ -61,12 +61,6 @@ export const people: Person[] = [
     image: '/people/siyan-luo.webp',
   },
   {
-    name: 'Ticauris Stokes',
-    topic: 'Computer vision',
-    category: 'phd',
-    image: '/people/ticauris-stokes.webp',
-  },
-  {
     name: 'Ashim Dahal',
     topic: 'Computer vision',
     category: 'undergrad',
@@ -158,6 +152,13 @@ export const people: Person[] = [
     topic: 'TA at U. of Arkansas',
     category: 'masters',
     image: '/people/murad-hasan.webp',
+    graduated: 'Spring 2026',
+  },
+  {
+    name: 'Ticauris Stokes',
+    topic: 'Computer vision',
+    category: 'phd',
+    image: '/people/ticauris-stokes.webp',
     graduated: 'Spring 2026',
   },
 ];

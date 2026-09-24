@@ -1,29 +1,74 @@
 ---
 import { Icon } from 'astro-icon/components';
-const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="container wide footer-inner ui">
-    <span>© {year} AIMS · TEC 340, University of Southern Mississippi</span>
-    <span class="links">
-      <a href="https://github.com/aimsresearchlab" aria-label="GitHub"><Icon name="ph:github-logo" /></a>
+    <span class="logos">
+      <a href="/">
+        <img src="/assets/aims-lab-logo-trim.png" alt="AIMS Lab: Artificial Intelligence and Multimodal Systems" width="1906" height="383" />
+      </a>
+      <a href="https://www.usm.edu/" aria-label="The University of Southern Mississippi">
+        <img src="/assets/usm1.png" alt="The University of Southern Mississippi" width="2002" height="372" />
+      </a>
     </span>
+    <address class="info">
+      <a href="mailto:Rabab.Abdelfattah@usm.edu"><Icon name="ph:envelope-simple" aria-hidden="true" />Rabab.Abdelfattah@usm.edu</a>
+      <a href="https://github.com/aimsresearchlab"><Icon name="ph:github-logo" aria-hidden="true" />github.com/aimsresearchlab</a>
+    </address>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    padding-block: 2rem;
-    background: var(--navy);
-    color: #cdd6f4;
+    padding-block: 2.5rem;
+    background: var(--paper);
+    border-top: 1px solid var(--charcoal); /* the footer shares the page colour, so the rule marks where it starts */
+    color: var(--ink-soft);
   }
   .footer-inner {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: space-between;
+    gap: 1rem 2rem;
     font-size: 0.9rem;
   }
-  .links { display: inline-flex; gap: 1rem; font-size: 1.25rem; }
-  .site-footer a { color: #cdd6f4; }
-  .site-footer a:hover { color: #ffffff; }
+  .logos {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+  .logos img {
+    display: block;
+    width: auto;
+    height: 56px;
+    max-width: 100%;
+  }
+  /* Above phone width the two columns stay side by side; the logos wrap
+     inside theirs when space runs short. */
+  @media (min-width: 40.01rem) {
+    .footer-inner { flex-wrap: nowrap; }
+    .logos { flex: 1 1 auto; min-width: 0; }
+    .info { flex: none; }
+  }
+  @media (max-width: 40rem) {
+    .site-footer { padding-block: 1.5rem; }
+    .logos img { height: 42px; }
+  }
+  /* Logos on the left; email and GitHub stacked on the right, one per line. */
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-style: normal;
+    font-size: 1.125rem;
+  }
+  .info > * { display: inline-flex; align-items: center; gap: 0.55rem; }
+  .info a { text-decoration: none; }
+  .info a:hover { text-decoration: underline; }
+  .info svg { flex: none; font-size: 1.25rem; }
+  .site-footer a { color: var(--ink-soft); }
+  .site-footer a:hover { color: var(--brand); }
 </style>

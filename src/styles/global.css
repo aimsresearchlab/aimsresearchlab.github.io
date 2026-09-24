@@ -10,17 +10,18 @@
   --navy:         #041A62; /* deep sections: footer / hero backgrounds        */
 
   /* --- Neutrals --------------------------------------------------------- */
-  --paper:        #FAFAF8; /* page background, warm off-white, not pure white */
+  --paper:        #E8E5DF; /* page background, warm beige                        */
   --ink:          #0A1B4C; /* body text, logo navy, ~15:1 on paper           */
   --ink-soft:     #3A4266; /* secondary text, captions                        */
   --rule:         #E4E4DE; /* hairlines, borders                              */
+  --surface:      #F6F4F0; /* cards on the beige page: warm off-white, not #fff */
+  --line:         #D6D1C7; /* borders that must show on --paper                */
 
   /* --- Accent (use sparingly, ~5%, the blue's complement) -------------- */
   --ochre:        #C8892A; /* one-off highlights: "new" badge, an award       */
-  --gold:         #F5CE55; /* USM gold, filled panels (the /people culture card) */
+  --gold:         #F5CE55; /* USM gold, filled panels (/people culture, home news) */
   --gold-ink:     #8A6A1F; /* gold that reads as text on paper: kickers, roles   */
   --charcoal:     #302F2C; /* full-bleed page headers, warm near-black            */
-  --usm-band:     #E8E5DF; /* the university band above the header                */
   --on-charcoal:  #D6D5D0; /* secondary text on --charcoal (headings stay white)  */
 
   /* --- Figure palette ---------------------------------------------------

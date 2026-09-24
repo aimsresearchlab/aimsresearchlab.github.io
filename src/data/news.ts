@@ -9,10 +9,6 @@ export interface NewsItem {
 
 export const news: NewsItem[] = [
   {
-    date: '2026-09-10',
-    text: 'Lab website launched at aimsresearchlab.com',
-  },
-  {
     date: '2026-08-20',
     text: '"Same Ranking, Different Winner" accepted to Findings of EMNLP 2026',
     url: 'https://arxiv.org/abs/2605.24060',

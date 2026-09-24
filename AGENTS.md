@@ -49,11 +49,11 @@ token with a comment rather than a literal in a component.
 
 - `--brand` `#1652EC`, from `full/logo.svg`: links, headings, accents.
 - `--brand-deep` `#0A2596`: the same blue where small text needs more contrast.
-- `--navy` `#041A62`: deep sections, currently the footer.
+- `--navy` `#041A62`: deep sections and hover fills. The footer sits on `--paper`.
 
 **Neutrals**
 
-- `--paper` `#FAFAF8`: page background, warm off-white, not pure white. The
+- `--paper` `#E8E5DF`: page background, warm beige. The
   header sits on it too.
 - `--ink` `#0A1B4C`: body text, the logo navy.
 - `--ink-soft` `#3A4266`: secondary text, captions, nav links at rest.
@@ -62,13 +62,12 @@ token with a comment rather than a literal in a component.
 **Accents, used sparingly**
 
 - `--ochre` `#C8892A`: one-off highlights, a "new" badge, an award.
-- `--gold` `#F5CE55`: USM gold. Filled panels (the culture card on `/people`)
+- `--gold` `#F5CE55`: USM gold. Filled panels (the culture card on `/people`, the news panel on the homepage)
   and the rule under the page header band.
 - `--gold-ink` `#8A6A1F`: gold that reads as text on paper, for kickers and
   role lines.
 - `--charcoal` `#302F2C`: the full-bleed page header band.
 - `--on-charcoal` `#D6D5D0`: secondary text on that band. Headings stay white.
-- `--usm-band` `#E8E5DF`: the university band above the header.
 
 **Figure palette**
 
@@ -87,7 +86,7 @@ chrome: a page still uses `--brand`, `--ink`, and `--ochre`.
 - `--content-width` `min(68%, 48rem)`: the centered prose column.
 - `--content-wide` `min(88vw, 64rem)`: the wider column for grids and the
   banner. The homepage sections, the footer, and `.wide` anywhere use it.
-- `--header-width` `min(94vw, 78rem)`: the header and the university band only.
+- `--header-width` `min(94vw, 78rem)`: the header only.
   It is deliberately wider than `--content-wide` so the six nav links clear the
   logo on one line. Do not "align" it to the content column; that is what made
   the labels wrap.
@@ -101,9 +100,9 @@ interest comes from content: photos, cards, the news feed.
 ```
 src/styles/global.css          design tokens + base typography (edit look here)
 src/styles/deck.css            the overview deck only, all under `.deck`
-src/layouts/Base.astro         page shell: <head>, fonts, USM band, centered <main>, footer
+src/layouts/Base.astro         page shell: <head>, fonts, centered <main>, footer
 src/components/Header.astro    logo + nav (edit the nav array at the top)
-src/components/Footer.astro    copyright + GitHub org link
+src/components/Footer.astro    logos left; director's email and GitHub stacked on the right
 src/components/PageHeader.astro  the charcoal band every page below / opens with
 src/components/Person.astro    one homepage roster entry (square photo, name, topic, link icons);
                                /people draws its own larger cards in people.astro
@@ -133,7 +132,8 @@ public/projects/*.{mp4,webm}   project cover videos, plus -thumb cuts
 public/people/*.webp           headshots, 192x192, referenced from people.ts
 public/lab.webp                homepage banner, 1600x640 (5:2), lab photo
 public/assets/aims-lab-logo.png  the header logo
-public/assets/usm1.png         the university band logo
+public/assets/usm1.png         USM logo in the footer (trimmed, no margins)
+public/assets/aims-lab-logo-trim.png  AIMS logo for the footer (aims-lab-logo.png trimmed)
 public/usm-logo.svg            USM mark for the deck title sheet
 public/slides/                 deck exports (.pptx) and QR codes
 public/seam/                   SEAM-Bench demo + leaderboard, served at /seam/
@@ -147,18 +147,17 @@ public/robots.txt              allows all, points at the sitemap
 
 ## Page chrome
 
-Three pieces stack above every page, in this order:
+Two pieces stack above every page, in this order:
 
-1. **The university band** (`src/layouts/Base.astro`): USM's own mark on
-   `--usm-band`, linking to usm.edu. It is the university's chrome and sits
-   above ours, not inside the header.
-2. **The header** (`src/components/Header.astro`): the AIMS Lab logo and the
+1. **The header** (`src/components/Header.astro`): the AIMS Lab logo and the
    nav. Edit the `nav` array at the top of the file to change the links; the
    current page is detected from the path and marked with a brand underline.
    Nav links are underlined, never boxed or pilled.
-3. **The page header band** (`src/components/PageHeader.astro`): charcoal,
+2. **The page header band** (`src/components/PageHeader.astro`): charcoal,
    full bleed, with a gold rule under it. Every route below the homepage opens
-   with it. The homepage does not: it has the banner and hero instead.
+   with it. The homepage does not: it has the banner and hero instead, with
+   the same charcoal band and gold rule drawn full bleed behind the top 60% of
+   the lab photo (`.hero::before` in `src/pages/index.astro`).
 
 ```astro
 <PageHeader title="People">
@@ -184,11 +183,13 @@ another band; `/projects` carried its own copy for a while and they drifted.
 - `role` and `bio` together promote a faculty member to the featured card at
   the top of `/people`. Set both or neither.
 - `topic` is one short line (two to four words). It must fit on one line in a
-  10.5rem card on the homepage; if it wraps, shorten it. Cards in a row must
+  12.95rem card on the homepage; if it wraps, shorten it. Cards in a row must
   line up.
-- On `/people` every student and alum is a card: a 4:3 photo on top, then the
-  role kicker (from `category`), name, topic, and text link pills, three
-  cards per row. Each category gets its own heading with a student count.
+- On `/people` every current student is a card: the photo on the left, then
+  name, topic (in blue), and text link pills, two cards per row. No role
+  kicker; the section heading already says it. Each category gets its own
+  heading with a short blue bar under it and a student count beside it.
+  Alumni are a compact list (small photo, name, topic), not cards.
 - Names are forced onto one line (`white-space: nowrap`). If a name is too long
   for the card, widen `.people :global(.person)` in `src/pages/index.astro`
   rather than letting it wrap.
@@ -196,7 +197,7 @@ another band; `/projects` carried its own copy for a while and they drifted.
 
 ### Headshots (`public/people/`)
 
-- Format: **webp only**, exactly **192x192** (2x of the 96px avatar), quality 85.
+- Format: **webp only**, exactly **192x192** (about 1.75x the 110px homepage avatar), quality 85.
   Filename is `firstname-lastname.webp`, lowercase, hyphenated.
 - Crop to the face: roughly the head and shoulders, face centered, before
   resizing. Do not upload a full-body or landscape shot and let CSS crop it.
@@ -209,15 +210,15 @@ another band; `/projects` carried its own copy for a while and they drifted.
 
 - Sources so far: the USM faculty directory for faculty; personal sites or
   GitHub avatars for students. Ask before scraping a photo from anywhere else.
-- Photos are never circles: 96px squares on the homepage, 4:3 card photos on
-  `/people` (cropped from the square file, so keep the face centered). The
-  cards show the 192x192 file at about 360px wide, so a larger source looks
-  sharper there.
+- Photos are never circles: 110px squares on the homepage, 128px rounded
+  squares beside the name on `/people` cards (96px on phones), a 192px square
+  on the director's card, and 56px squares in the alumni list. None of these
+  draws the 192x192 file much above its real size, so do not reintroduce a
+  layout that stretches it.
 - No photo yet: point `image` at `/people/aims-placeholder.webp` (the AIMS
   mark in brand blue on a grey tile). Omitting `image` shows initials
   instead; either is fine, but do not use a stock placeholder image.
-- The featured card renders its portrait near 285x370, so the director's file
-  wants a larger source than 192x192.
+- The featured card renders its portrait as a 192px square (160px on phones).
 
 ### Publications (`src/data/publications.ts`)
 
