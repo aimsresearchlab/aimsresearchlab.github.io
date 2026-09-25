@@ -11,6 +11,13 @@ const applyHref = `mailto:${email}?subject=UR2PhD_YourName`;
 // CRA's UR2PhD page (checked 2026-09-24). The logo is CRA's own PNG from cra.org;
 // they publish no SVG.
 const craHref = 'https://cra.org/ur2phd/';
+// CRA's JotForm application forms, as sent by Dr. Abdelfattah (2026-09-24).
+const forms = {
+  undergradResearch: 'https://cra.jotform.com/243166491626865',
+  travel: 'https://cra.jotform.com/243115304588859',
+  facultyResearch: 'https://cra.jotform.com/243166900979871',
+  continuingMentor: 'https://cra.jotform.com/243544292087057',
+};
 
 const goals = [
   'Prepare undergraduate students for research',
@@ -46,6 +53,7 @@ const audiences = [
       'Develop leadership and communication skills',
       'Gain formal training in research mentorship',
       'Receive a $1,000 stipend (if requirements are met)',
+      { text: 'Continuing mentors may receive an additional award of up to $250.', href: forms.continuingMentor },
     ],
   },
   {
@@ -61,10 +69,10 @@ const audiences = [
   },
 ];
 const funding = [
-  { label: 'Undergraduate research', amount: 'Up to $8,000' },
-  { label: 'Conference travel', amount: 'Up to $2,000' },
+  { label: 'Undergraduate research', amount: 'Up to $8,000', href: forms.undergradResearch },
+  { label: 'Conference travel', amount: 'Up to $2,000', href: forms.travel },
   { label: 'Graduate mentor stipend', amount: '$1,000' },
-  { label: 'Faculty research', amount: 'Up to $4,000' },
+  { label: 'Faculty research', amount: 'Up to $4,000', href: forms.facultyResearch },
 ];
 const whyJoin = [
   'Students become research-ready early',
@@ -137,7 +145,7 @@ const whyJoin = [
             <Icon name={a.icon} class="audience-icon" aria-hidden="true" />
             <h3>{a.title}</h3>
           </div>
-          <ul class="ticks">{a.items.map((i) => <li>{i}</li>)}</ul>
+          <ul class="ticks">{a.items.map((i) => <li>{typeof i === 'string' ? i : <a href={i.href}>{i.text}</a>}</li>)}</ul>
         </div>
       ))}
     </div>
@@ -148,8 +156,17 @@ const whyJoin = [
     <ul class="funding">
       {funding.map((f) => (
         <li>
-          <span class="fund-label ui">{f.label}</span>
-          <span class="fund-amount">{f.amount}</span>
+          {f.href ? (
+            <a class="fund-tile" href={f.href}>
+              <span class="fund-label ui">{f.label}</span>
+              <span class="fund-amount">{f.amount}</span>
+            </a>
+          ) : (
+            <div class="fund-tile">
+              <span class="fund-label ui">{f.label}</span>
+              <span class="fund-amount">{f.amount}</span>
+            </div>
+          )}
         </li>
       ))}
     </ul>
@@ -419,7 +436,9 @@ const whyJoin = [
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1.25rem;
   }
-  .funding li {
+  .funding li { display: flex; }
+  .fund-tile {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -427,7 +446,9 @@ const whyJoin = [
     background: var(--charcoal);
     border-bottom: 5px solid var(--gold);
     border-radius: 14px;
+    text-decoration: none;
   }
+  a.fund-tile:hover { background: var(--ink); }
   .fund-label {
     font-size: 0.8rem;
     font-weight: 700;
