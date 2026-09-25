@@ -148,14 +148,14 @@ export const people: Person[] = [
   // section on /people.
   {
     name: 'Akram Hossain',
-    topic: 'RA at U. of Arkansas',
+    topic: 'Ph.D. student, University of Arkansas',
     category: 'masters',
     image: '/people/akram-hossain.webp',
     graduated: 'Spring 2026',
   },
   {
     name: 'Murad Hasan',
-    topic: 'TA at U. of Arkansas',
+    topic: 'Ph.D. student, University of Arkansas',
     category: 'masters',
     image: '/people/murad-hasan.webp',
     graduated: 'Spring 2026',
