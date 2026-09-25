@@ -56,7 +56,7 @@ export const people: Person[] = [
   },
   {
     name: 'Siyan Luo',
-    topic: 'PhD student',
+    topic: 'Ph.D. student',
     category: 'phd',
     image: '/people/siyan-luo.webp',
   },
@@ -65,6 +65,42 @@ export const people: Person[] = [
     topic: 'Computer vision',
     category: 'phd',
     image: '/people/ticauris-stokes.webp',
+  },
+    {
+    name: 'Sugam Panthi',
+    topic: 'LLM evaluation validity',
+    category: 'undergrad',
+    image: '/people/sugam-panthi.webp',
+    links: [
+      { type: 'website', url: 'https://spanthi.com' },
+      { type: 'github', url: 'https://github.com/Vein05' },
+    ],
+  },
+    {
+    name: 'Muhaiminul Yeamin',
+    topic: 'NLP',
+    category: 'undergrad',
+    image: '/people/muhaiminul-yeamin.webp',
+    links: [
+      { type: 'website', url: 'https://muhaiminul.online/' },
+      { type: 'github', url: 'https://github.com/MY-Sabil' },
+    ],
+  },
+    {
+    name: 'Sakshyam Sigdel',
+    topic: 'Applied computer vision',
+    category: 'undergrad',
+    image: '/people/sakshyam-sigdel.webp',
+    links: [
+      { type: 'website', url: 'https://sakshyamsigdel.com.np' },
+      { type: 'github', url: 'https://github.com/S-Sigdel' },
+    ],
+  },
+    {
+    name: 'Shrabya Bhattarai',
+    topic: 'Applied computer vision',
+    category: 'undergrad',
+    image: '/people/shrabya-bhattarai.webp',
   },
   {
     name: 'Ashim Dahal',
@@ -77,15 +113,11 @@ export const people: Person[] = [
       { type: 'github', url: 'https://github.com/ashimdahal' },
     ],
   },
-  {
-    name: 'Sugam Panthi',
-    topic: 'LLM evaluation validity',
+    {
+    name: 'Joshua Johnston',
+    topic: 'Computer vision',
     category: 'undergrad',
-    image: '/people/sugam-panthi.webp',
-    links: [
-      { type: 'website', url: 'https://spanthi.com' },
-      { type: 'github', url: 'https://github.com/Vein05' },
-    ],
+    image: '/people/joshua-johnston.webp',
   },
   {
     name: 'Nhoojah Maharjan',
@@ -95,26 +127,6 @@ export const people: Person[] = [
     links: [
       { type: 'website', url: 'https://www.nhoojah.com.np/' },
       { type: 'github', url: 'https://github.com/yarwen0' },
-    ],
-  },
-  {
-    name: 'Sakshyam Sigdel',
-    topic: 'Applied computer vision',
-    category: 'undergrad',
-    image: '/people/sakshyam-sigdel.webp',
-    links: [
-      { type: 'website', url: 'https://sakshyamsigdel.com.np' },
-      { type: 'github', url: 'https://github.com/S-Sigdel' },
-    ],
-  },
-  {
-    name: 'Muhaiminul Yeamin',
-    topic: 'NLP',
-    category: 'undergrad',
-    image: '/people/muhaiminul-yeamin.webp',
-    links: [
-      { type: 'website', url: 'https://muhaiminul.online/' },
-      { type: 'github', url: 'https://github.com/MY-Sabil' },
     ],
   },
   {
@@ -131,18 +143,9 @@ export const people: Person[] = [
     topic: 'Computer vision',
     category: 'undergrad',
     image: '/people/bishesta-bohara.webp',
-  },
-  {
-    name: 'Shrabya Bhattarai',
-    topic: 'Applied computer vision',
-    category: 'undergrad',
-    image: '/people/shrabya-bhattarai.webp',
-  },
-  {
-    name: 'Joshua Johnston',
-    topic: 'Computer vision',
-    category: 'undergrad',
-    image: '/people/joshua-johnston.webp',
+    links: [
+      { type: 'linkedin', url: 'https://www.linkedin.com/in/bishesta-bohara-85aa78209/' },
+    ],  
   },
   // Alumni. Keep them in the array; `graduated` moves them to the Alumni
   // section on /people.
@@ -164,7 +167,7 @@ export const people: Person[] = [
   // lab as a PhD student.
   {
     name: 'Ticauris Stokes',
-    topic: 'PhD student in AIMS',
+    topic: 'Ph.D. student in AIMS',
     category: 'masters',
     image: '/people/ticauris-stokes.webp',
     graduated: 'Spring 2026',
