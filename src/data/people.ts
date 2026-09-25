@@ -82,7 +82,7 @@ export const people: Person[] = [
     category: 'undergrad',
     image: '/people/muhaiminul-yeamin.webp',
     links: [
-      { type: 'website', url: 'https://muhaiminul.online/' },
+      { type: 'website', url: 'https://muhaiminul.me/' },
       { type: 'github', url: 'https://github.com/MY-Sabil' },
     ],
   },
