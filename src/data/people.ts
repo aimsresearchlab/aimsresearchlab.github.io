@@ -65,7 +65,7 @@ export const people: Person[] = [
     topic: 'Trustworthy AI',
     category: 'phd',
     image: '/people/stone.webp',
-      links: [
+    links: [
       { type: 'linkedin', url: 'https://www.linkedin.com/in/stonebarnard' },
     ],
   },
@@ -73,7 +73,10 @@ export const people: Person[] = [
     name: 'Ticauris Stokes',
     topic: 'Computer vision',
     category: 'phd',
-    image: '/people/ticauris-stokes.webp',
+    image: '/people/ticauris-stokes.webp', 
+    links: [
+      { type: 'linkedin', url: 'https://www.linkedin.com/in/ticauris-stokes' },
+    ],
   },
     {
     name: 'Sugam Panthi',
