@@ -60,6 +60,15 @@ export const people: Person[] = [
     category: 'phd',
     image: '/people/siyan-luo.webp',
   },
+    {
+    name: 'Stone Barnard',
+    topic: 'Trustworthy AI',
+    category: 'phd',
+    image: '/people/stone.webp',
+      links: [
+      { type: 'linkedin', url: 'https://www.linkedin.com/in/stonebarnard' },
+    ],
+  },
   {
     name: 'Ticauris Stokes',
     topic: 'Computer vision',
