@@ -64,7 +64,7 @@ export const people: Person[] = [
   },
     {
     name: 'Stone Barnard',
-    topic: 'Trustworthy AI',
+    topic: 'Computer vision',
     category: 'phd',
     image: '/people/stone.webp',
     links: [
@@ -116,17 +116,6 @@ export const people: Person[] = [
     category: 'undergrad',
     image: '/people/shrabya-bhattarai.webp',
   },
-  {
-    name: 'Ashim Dahal',
-    topic: 'Computer vision',
-    category: 'undergrad',
-    image: '/people/ashim-dahal.webp',
-    links: [
-      { type: 'website', url: 'https://ashimdahal.com.np/' },
-      { type: 'scholar', url: 'https://scholar.google.com/citations?user=Nt9K4nsAAAAJ' },
-      { type: 'github', url: 'https://github.com/ashimdahal' },
-    ],
-  },
     {
     name: 'Joshua Johnston',
     topic: 'Computer vision',
@@ -144,9 +133,20 @@ export const people: Person[] = [
     ],
   },
   {
+    name: 'Ashim Dahal',
+    topic: 'Computer vision',
+    category: 'collaborator',
+    image: '/people/ashim-dahal.webp',
+    links: [
+      { type: 'website', url: 'https://ashimdahal.com.np/' },
+      { type: 'scholar', url: 'https://scholar.google.com/citations?user=Nt9K4nsAAAAJ' },
+      { type: 'github', url: 'https://github.com/ashimdahal' },
+    ],
+  },
+  {
     name: 'Rashika Karmacharya',
     topic: 'Computer vision',
-    category: 'undergrad',
+    category: 'collaborator',
     image: '/people/rashika-karmacharya.webp',
     links: [
       { type: 'linkedin', url: 'https://www.linkedin.com/in/rashika-karmacharya' },
@@ -155,7 +155,7 @@ export const people: Person[] = [
   {
     name: 'Bishesta Bohara',
     topic: 'Computer vision',
-    category: 'undergrad',
+    category: 'collaborator',
     image: '/people/bishesta-bohara.webp',
     links: [
       { type: 'linkedin', url: 'https://www.linkedin.com/in/bishesta-bohara-85aa78209/' },

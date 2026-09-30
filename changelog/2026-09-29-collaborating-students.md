@@ -11,7 +11,6 @@ Asked for by the lab director.
 - Alumni photos on `/people` went from 56px to 96px squares (still under the
   192px source, so nothing is stretched).
 
-Still to do:
-
-- Move each undergraduate whose primary advisor is in another lab to
-  `category: 'collaborator'` in `src/data/people.ts`.
+- Ashim Dahal, Rashika Karmacharya, and Bishesta Bohara moved from
+  `undergrad` to `collaborator`, in that order.
+- Stone Barnard's topic changed from "Trustworthy AI" to "Computer vision".
