@@ -136,7 +136,7 @@ export const people: Person[] = [
     name: 'Bibas Kandel',
     topic: 'Trustworthy AI',
     category: 'undergrad',
-    image: '/people/Bibas.webp',
+    image: '/people/bibas.webp',
     links: [
       { type: 'website', url: 'https://https://bibas.dev//' },
       { type: 'linkedin', url: 'https://www.linkedin.com/in/kandel-bibas' },
