@@ -117,12 +117,6 @@ export const people: Person[] = [
     image: '/people/shrabya-bhattarai.webp',
   },
   {
-    name: 'S. Brandon Barnard',
-    topic: 'Computer vision',
-    category: 'phd',
-    image: '/people/aims-placeholder.webp',
-  },
-  {
     name: 'Ashim Dahal',
     topic: 'Computer vision',
     category: 'undergrad',

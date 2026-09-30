@@ -10,12 +10,8 @@ Asked for by the lab director.
   while it has no members.
 - Alumni photos on `/people` went from 56px to 96px squares (still under the
   192px source, so nothing is stretched).
-- New PhD student: S. Brandon Barnard (computer vision), shown with the AIMS
-  placeholder photo for now.
 
 Still to do:
 
 - Move each undergraduate whose primary advisor is in another lab to
   `category: 'collaborator'` in `src/data/people.ts`.
-- Replace S. Brandon Barnard's placeholder photo with a headshot when one is
-  available (`public/people/s-brandon-barnard.webp`, 192x192).
