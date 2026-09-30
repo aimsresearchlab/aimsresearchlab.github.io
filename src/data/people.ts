@@ -165,7 +165,7 @@ export const people: Person[] = [
   {
     name: 'Bishesta Bohara',
     topic: 'Computer vision',
-    category: 'collaborator',
+    category: 'undergrad',
     image: '/people/bishesta-bohara.webp',
     links: [
       { type: 'linkedin', url: 'https://www.linkedin.com/in/bishesta-bohara-85aa78209/' },
