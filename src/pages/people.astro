@@ -22,6 +22,7 @@ const heading: Record<Category, string> = {
   phd: 'Doctoral Researchers',
   masters: "Master's Researchers",
   undergrad: 'Undergraduate Researchers',
+  collaborator: 'Collaborating Students from Other Labs',
 };
 const count = (members: Person[]) => {
   const n = members.length;
@@ -325,14 +326,14 @@ const linkLabel: Record<LinkType, string> = {
   }
   .alumni-list li { display: flex; align-items: center; gap: 0.9rem; }
   .alumni-photo {
-    flex: 0 0 56px;
-    width: 56px;
-    height: 56px;
+    flex: 0 0 96px;
+    width: 96px;
+    height: 96px;
     object-fit: cover;
     object-position: 50% 20%;
-    border-radius: 8px;
+    border-radius: 10px;
     background: var(--surface);
-    font-size: 1.1rem;
+    font-size: 1.6rem;
   }
   .alumni-name { display: block; font-weight: 700; font-size: 1.15rem; line-height: 1.2; }
   .alumni-topic { display: block; color: var(--ink-soft); font-size: 0.9rem; }

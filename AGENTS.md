@@ -178,7 +178,11 @@ another band; `/projects` carried its own copy for a while and they drifted.
 
 ### People (`src/data/people.ts`)
 
-- One entry per person. Categories: `faculty`, `phd`, `masters`, `undergrad`.
+- One entry per person. Categories: `faculty`, `phd`, `masters`, `undergrad`,
+  `collaborator`. `collaborator` is for an undergraduate who works with the
+  lab but whose primary advisor is another professor; they get their own
+  section after the undergraduates (on `/people`, the homepage, and the deck)
+  so no one reads them as this lab's student.
   Section order and headings come from `categoryOrder` in the same file.
 - Someone who has finished gets `graduated: 'Spring 2026'` (season plus year).
   That drops them from the roster on the homepage and moves them into the
@@ -193,7 +197,7 @@ another band; `/projects` carried its own copy for a while and they drifted.
   name, topic (in blue), and text link pills, two cards per row. No role
   kicker; the section heading already says it. Each category gets its own
   heading with a short blue bar under it and a student count beside it.
-  Alumni are a compact list (small photo, name, topic), not cards.
+  Alumni are a compact list (96px photo, name, topic), not cards.
 - Names are forced onto one line (`white-space: nowrap`). If a name is too long
   for the card, widen `.people :global(.person)` in `src/pages/index.astro`
   rather than letting it wrap.
@@ -216,7 +220,7 @@ another band; `/projects` carried its own copy for a while and they drifted.
   GitHub avatars for students. Ask before scraping a photo from anywhere else.
 - Photos are never circles: 110px squares on the homepage, 128px rounded
   squares beside the name on `/people` cards (96px on phones), a 192px square
-  on the director's card, and 56px squares in the alumni list. None of these
+  on the director's card, and 96px squares in the alumni list. None of these
   draws the 192x192 file much above its real size, so do not reintroduce a
   layout that stretches it.
 - No photo yet: point `image` at `/people/aims-placeholder.webp` (the AIMS

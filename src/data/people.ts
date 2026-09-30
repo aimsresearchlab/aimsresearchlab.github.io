@@ -1,7 +1,9 @@
 // Single source of truth for people, mirroring src/data/publications.ts.
 // To add someone: copy an entry into the right category.
 
-export type Category = 'faculty' | 'phd' | 'masters' | 'undergrad';
+// `collaborator`: an undergraduate who works with the lab but whose primary
+// advisor is in another lab. Listed after the lab's own undergraduates.
+export type Category = 'faculty' | 'phd' | 'masters' | 'undergrad' | 'collaborator';
 
 export type LinkType =
   | 'website'
@@ -115,6 +117,12 @@ export const people: Person[] = [
     image: '/people/shrabya-bhattarai.webp',
   },
   {
+    name: 'S. Brandon Barnard',
+    topic: 'Computer vision',
+    category: 'phd',
+    image: '/people/aims-placeholder.webp',
+  },
+  {
     name: 'Ashim Dahal',
     topic: 'Computer vision',
     category: 'undergrad',
@@ -192,6 +200,7 @@ export const categoryOrder: { key: Category; label: string }[] = [
   { key: 'phd', label: 'PhD Students' },
   { key: 'masters', label: "Master's Students" },
   { key: 'undergrad', label: 'Undergraduates' },
+  { key: 'collaborator', label: 'Collaborating Students' },
 ];
 
 // Within a category, list order is display order (longest-serving first).
