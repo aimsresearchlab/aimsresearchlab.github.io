@@ -132,6 +132,16 @@ export const people: Person[] = [
       { type: 'github', url: 'https://github.com/yarwen0' },
     ],
   },
+    {
+    name: 'Bibas Kandel',
+    topic: 'Trustworthy AI',
+    category: 'undergrad',
+    image: '/people/Bibas.webp',
+    links: [
+      { type: 'website', url: 'https://https://bibas.dev//' },
+      { type: 'linkedin', url: 'https://www.linkedin.com/in/kandel-bibas' },
+    ],
+  },
   {
     name: 'Ashim Dahal',
     topic: 'Computer vision',
