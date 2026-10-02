@@ -9,6 +9,11 @@ export interface NewsItem {
 
 export const news: NewsItem[] = [
   {
+    date: '2026-09-29',
+    text: 'New preprint: "Memory Consolidation Flattens the Temporal Shape of User Facts" (LAPSE)',
+    url: 'https://arxiv.org/abs/2609.36457',
+  },
+  {
     date: '2026-08-20',
     text: '"Same Ranking, Different Winner" accepted to Findings of EMNLP 2026',
     url: 'https://arxiv.org/abs/2605.24060',

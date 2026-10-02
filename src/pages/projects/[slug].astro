@@ -4,8 +4,10 @@ import { Icon } from 'astro-icon/components';
 import Base from '../../layouts/Base.astro';
 import Cover from '../../components/Cover.astro';
 import Publication from '../../components/Publication.astro';
+import WriteUp from '../../components/WriteUp.astro';
 import { allProjects, linkMeta } from '../../data/projects';
 import { publications } from '../../data/publications';
+import { writing } from '../../data/writing';
 
 export async function getStaticPaths() {
   const projects = await allProjects();
@@ -22,6 +24,7 @@ const { Content } = await render(project);
 // Papers listed in frontmatter, in the order publications.ts defines.
 const titles = new Set(project.data.publications);
 const papers = publications.filter((p) => titles.has(p.title));
+const posts = writing.filter((w) => w.project === project.id);
 ---
 <Base title={`${title} · AIMS Lab`} description={claim} type="article">
   <article>
@@ -56,6 +59,13 @@ const papers = publications.filter((p) => titles.has(p.title));
       <section class="papers">
         <h2>Papers</h2>
         {papers.map((pub) => <Publication pub={pub} />)}
+      </section>
+    )}
+
+    {posts.length > 0 && (
+      <section class="papers">
+        <h2>Write-ups</h2>
+        {posts.map((post) => <WriteUp post={post} />)}
       </section>
     )}
   </article>

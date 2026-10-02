@@ -1,0 +1,44 @@
+---
+// One write-up entry, styled like a Publication row. Used on /writing and on
+// project pages. The link goes to the member's own site.
+import type { WriteUp } from '../data/writing';
+import { formatDate } from '../data/news';
+interface Props { post: WriteUp; }
+const { post } = Astro.props;
+---
+<a class="post" href={post.url}>
+  <span class="post-title">{post.title}</span>
+  <span class="post-summary">{post.summary}.</span>
+  <span class="post-meta ui">
+    {post.author} · <time datetime={post.date}>{formatDate(post.date)}</time>
+    <span class="link-cue">[READ]</span>
+  </span>
+</a>
+
+<style>
+  .post {
+    display: block;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+    color: inherit;
+    text-decoration: none;
+  }
+  .post:hover .post-title { color: var(--brand); }
+  .post-title { display: block; font-weight: 700; line-height: 1.35; }
+  .post-summary { display: block; margin-top: 0.25rem; line-height: 1.45; }
+  .post-meta {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .link-cue {
+    color: var(--brand);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin-left: 0.15rem;
+    white-space: nowrap;
+  }
+  .post:hover .link-cue { color: var(--brand-deep); }
+</style>

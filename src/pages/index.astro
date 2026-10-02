@@ -110,6 +110,7 @@ const areas = [
       <a class="ui see-all" href="/publications">All publications →</a>
     </div>
     {recent.map((pub) => <Publication pub={pub} />)}
+    <p class="ui writeups">Plain-language write-ups of the lab's papers are on the <a href="/writing/">Writing</a> page.</p>
   </section>
 </Base>
 
@@ -293,4 +294,6 @@ const areas = [
     background: linear-gradient(90deg, var(--brand) 50%, var(--gold) 50%);
   }
   .see-all { font-size: 0.9rem; white-space: nowrap; }
+  /* Quiet pointer to /writing under the Recent list; visible, just low weight. */
+  .writeups { font-size: 0.85rem; color: var(--ink-soft); margin: 0.9rem 0 0; }
 </style>

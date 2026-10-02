@@ -107,6 +107,7 @@ src/components/PageHeader.astro  the charcoal band every page below / opens with
 src/components/Person.astro    one homepage roster entry (square photo, name, topic, link icons);
                                /people draws its own larger cards in people.astro
 src/components/Publication.astro
+src/components/WriteUp.astro   one write-up row (/writing + project pages)
 src/components/ProjectCard.astro  one project card (homepage + /projects)
 src/components/Cover.astro     16:9 project cover (image, video, or placeholder)
 src/components/ResearchLoop.astro  the six-area figure on /what-is-aims, inline SVG
@@ -119,6 +120,7 @@ src/content/projects/*.md      one markdown file per project (source of truth)
 src/data/people.ts             roster (feeds homepage People and /people)
 src/data/publications.ts       papers (feeds homepage Recent and /publications)
 src/data/news.ts               dated news feed (homepage right column and /news)
+src/data/writing.ts            members' blog write-ups (feeds /writing and project pages)
 src/data/ur2phd.ts             UR2PhD cohorts on /ur2phd (one entry per term, names sorted by last name)
 src/data/projects.ts           helpers over the projects collection + link icons
 src/data/deck.ts               deck-only copy: areas, title tags, leadership
@@ -249,6 +251,20 @@ another band; `/projects` carried its own copy for a while and they drifted.
 - Add an entry for every acceptance, preprint, new member, talk, or award.
   A stale feed reads worse than none.
 
+### Writing (`src/data/writing.ts`)
+
+- One entry per blog post a member has published about the lab's work. The
+  post lives on the member's own site; this page only links to it, so search
+  engines and readers can follow lab work to its plain-language write-up.
+- `url` is the post's canonical URL, trailing slash included if the site uses
+  one. `date` is the post's publish date. `summary` is one sentence in plain
+  words, no trailing period. Avoid numbers unless they match the paper.
+- `project` is a slug from `src/content/projects/`. When set, the post also
+  appears under "Write-ups" on that project page. Omit it for work with no
+  project page.
+- Only posts about work done in or with the lab. Never name the venue of a
+  paper under review in a title or summary.
+
 ### Banner (`public/lab.webp`)
 
 The homepage banner is a **5:2** image, **1600x640 webp**, quality 82. Crop
@@ -333,6 +349,7 @@ the pages, not at homepage anchors:
 /news             full archive, grouped by year (not in the nav; linked from the homepage news panel)
 /ur2phd           the CRA UR2PhD mentoring program at USM, and its participants
 /publications     all papers, grouped by year
+/writing          members' plain-language write-ups, linking out (not in the nav; linked from /publications and under the homepage Recent list)
 /slides/aims-lab  the overview deck (also downloadable as .pptx)
 /seam/            SEAM-Bench demo and leaderboard (static, outside Astro)
 /tiap/            TIAP walkthrough (static, outside Astro)

@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import WriteUp from '../components/WriteUp.astro';
+import { writing } from '../data/writing';
+
+const sorted = [...writing].sort((a, b) => b.date.localeCompare(a.date));
+---
+<Base
+  title="Writing · AIMS Lab"
+  description="Plain-language write-ups of AIMS lab research on LLM memory, evaluation, RAG, and AI agents, written by lab members."
+>
+  <PageHeader title="Writing" width="prose">
+    <p class="lede">
+      Plain-language write-ups of the lab's papers and methods, published on
+      members' own sites. For the papers themselves, see
+      <a href="/publications/">Publications</a>.
+    </p>
+  </PageHeader>
+  <section>
+    {sorted.map((post) => <WriteUp post={post} />)}
+  </section>
+</Base>
