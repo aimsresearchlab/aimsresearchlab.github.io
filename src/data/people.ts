@@ -115,6 +115,10 @@ export const people: Person[] = [
     topic: 'Applied computer vision',
     category: 'undergrad',
     image: '/people/shrabya-bhattarai.webp',
+    links: [
+      { type: 'website', url: 'https://shrabya.com.np/' },
+      { type: 'linkedin', url: 'https://www.linkedin.com/in/shrabya-bhattarai' },
+    ],
   },
     {
     name: 'Joshua Johnston',
