@@ -146,6 +146,8 @@ public/CNAME                   custom domain for GitHub Pages; do not delete
 public/favicon.svg             copied from favicon/logo.svg
 public/og.jpg                  social preview image, 1200x630 jpg (not webp)
 public/robots.txt              allows all, points at the sitemap
+public/9487d40c57ee4bfcb0a0c4e8dda6374d.txt  IndexNow key; do not rename or delete
+scripts/indexnow.py            pings IndexNow (Bing, which backs ChatGPT search) with every sitemap URL; run after a deploy that adds pages
 .github/workflows/deploy.yml   builds and publishes to GitHub Pages on push to main
 ```
 
