@@ -1,17 +1,12 @@
-// Dated news feed. Newest first; the homepage shows the first `limit` entries.
-// To add an item: copy an entry to the top. Dates are ISO (YYYY-MM-DD).
-
-export interface NewsItem {
-  date: string;   // "2026-08-20"
-  text: string;   // one sentence, no trailing period needed
-  url?: string;   // optional link (paper, repo, announcement)
-}
-
 export const news: NewsItem[] = [
   {
     date: '2026-09-29',
     text: 'New preprint: "Memory Consolidation Flattens the Temporal Shape of User Facts" (LAPSE)',
     url: 'https://arxiv.org/abs/2609.36457',
+  },
+  {
+    date: '2026-09-25',
+    text: 'S. Brandon Barnard joins the AIMS Lab to pursue his PhD studies',
   },
   {
     date: '2026-08-20',
@@ -24,9 +19,42 @@ export const news: NewsItem[] = [
     url: 'https://arxiv.org/abs/2608.19303',
   },
   {
+    date: '2026-08-17',
+    text: 'Muhaiminul Yeamin, an Honors student, joins the AIMS Lab as an undergraduate researcher',
+  },
+  {
+    date: '2026-08-15',
+    text: 'Siyan Luo joins the AIMS Lab to pursue her PhD studies',
+  },
+  {
     date: '2026-06-19',
     text: 'New preprint: "Fixed RAG Compression Collapses Measured Reader Scaling"',
     url: 'https://arxiv.org/abs/2606.21807',
+  },
+  {
+    date: '2026-04-23',
+    text: 'Olanrewaju Muili joins the AIMS Lab to pursue his PhD studies',
+  },
+  {
+    date: '2026-04-23',
+    text: 'Sugam Panthi, an Honors student, joins the AIMS Lab as an undergraduate researcher',
+  },
+  {
+    date: '2026-03-27',
+    text: 'Murad Hasan successfully defends his master’s thesis, "LLM-as-Judge for Reliable Crack Segmentation in Edge-Based Structural Inspection," and is currently pursuing his PhD at the University of Arkansas',
+  },
+  {
+    date: '2026-03-26',
+    text: 'Akram Hossain successfully defends his master’s thesis, "Toward Trustworthy Power Line Perception from Aerial Imagery: Segmentation and Reliability Monitoring," and is currently pursuing his PhD at the University of Arkansas',
+  },
+  {
+    date: '2026-03-25',
+    text: 'Ticauris successfully defends his master’s thesis, "A Unified Framework for Distributed and Resource-Aware Plant Disease Detection Using Federated and Adaptive Hybrid Deep Learning," and continues his research as a PhD student in the AIMS Lab',
+  },
+  {
+    date: '2026-03-18',
+    text: 'New preprint: "Does It Matter Which Gaussians You Pick in 4D Gaussian Streaming?"',
+    url: 'https://arxiv.org/abs/2603.17227',
   },
   {
     date: '2026-01-01',
@@ -34,19 +62,7 @@ export const news: NewsItem[] = [
     url: 'https://aquila.usm.edu/fac_pubs/22086/',
   },
   {
-    date: '2026-03-18',
-    text: 'New preprint: "Does It Matter Which Gaussians You Pick in 4D Gaussian Streaming?"',
-    url: 'https://arxiv.org/abs/2603.17227',
+    date: '2025-11-13',
+    text: 'Joshua Johnston, an Honors student, joins our group as an undergraduate researcher',
   },
 ];
-
-export function recentNews(limit = 5): NewsItem[] {
-  return [...news].sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
-}
-
-// "Aug 20, 2026"
-export function formatDate(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return `${months[m - 1]} ${d}, ${y}`;
-}
