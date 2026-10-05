@@ -21,7 +21,7 @@ import { Icon } from 'astro-icon/components';
 import { allProjects } from '../data/projects';
 import { publications } from '../data/publications';
 import { groupedPeople } from '../data/people';
-import { posterSpots, lapse, lapseNumbers, monitorNumbers, ragNumbers } from '../data/reel';
+import { posterSpots, lapse, lapseNumbers, monitorNumbers, ragNumbers, ragReaders, backdrops } from '../data/reel';
 
 const root = process.cwd();
 const read = (p: string) => fs.readFileSync(path.join(root, p), 'utf8');
@@ -90,7 +90,8 @@ const poster = (slug: string) => posters.find((p) => p.slug === slug)!;
 
 const roster = groupedPeople();
 // The director gets the large portrait; everyone else fills the grid beside it.
-const everyone = roster.flatMap((g) => g.members);
+// Collaborators are advised in another lab, so the lab TV leaves them out.
+const everyone = roster.flatMap((g) => g.members).filter((m) => m.category !== 'collaborator');
 const lead = everyone.find((m) => m.category === 'faculty');
 const members = everyone.filter((m) => m !== lead);
 const fmt = (n: number, d = 3) => n.toFixed(d);
@@ -130,7 +131,9 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
 
     <!-- ===== Same Ranking, Different Winner ===== -->
     <section class="r-stage r-scene" data-scene="same-ranking-different-winner">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['same-ranking-different-winner'].src} alt="" width="1920" height="1080" /></div>
       <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
         <header class="r-head">
           <p class="r-kicker">{poster('same-ranking-different-winner').kicker}</p>
           <h2 class="r-title">{poster('same-ranking-different-winner').title}</h2>
@@ -140,6 +143,11 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
           <p class="r-label">One real query · {tiap.case.dataset}</p>
           <p class="tiap-q"><span data-type={tiap.case.query}>{tiap.case.query}</span></p>
         </div>
+        <!-- The paper's Figure 1 (figures/same-ranking-different-winner/ in the research repo), in the space the query leaves. -->
+        <figure class="tiap-fig" data-anim="fig">
+          <img src="/reel/srdw-fig1.webp" alt="Figure 1 of the paper: one source turn is stored as raw, derived and canonical memories; the same ranked output is a miss under the raw target and a hit under source and canonical." width="1600" height="419" />
+          <figcaption>Figure 1 of the paper</figcaption>
+        </figure>
         <div class="tiap-board" data-anim="board">
           <p class="r-label">What earns credit</p>
           <div class="tiap-chips">
@@ -162,13 +170,37 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
           <p class="r-big-n">{tiapAudit.ndcg_change_rate_low.toFixed(1)}–{tiapAudit.ndcg_change_rate_high.toFixed(1)}%</p>
           <p class="r-big-l">of shared queries change nDCG when only the scoring target changes.</p>
         </div>
-        <footer class="r-foot"><span>{poster('same-ranking-different-winner').venue}</span></footer>
+        <footer class="r-foot"><span>{poster('same-ranking-different-winner').venue}</span><span class="r-credit">Photo: {backdrops['same-ranking-different-winner'].photographer} / Pexels</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== 4D Gaussian Streaming ===== -->
+    <section class="r-stage r-scene" data-scene="gaussian-streaming">
+      <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
+        <header class="r-head">
+          <p class="r-kicker">{poster('gaussian-streaming').kicker}</p>
+          <h2 class="r-title">{poster('gaussian-streaming').title}</h2>
+        </header>
+        <div class="gs-body">
+          <div class="gs-text" data-anim="text">
+            <p class="r-big-n" data-count="8192">8,192</p>
+            <p class="r-big-l">anchors: the standard choice for 4D Gaussian streaming.</p>
+            <p class="gs-claim">{poster('gaussian-streaming').claim}</p>
+          </div>
+          <div class="gs-video" data-anim="video">
+            <video src="/projects/anchor_policies.mp4" poster="/projects/gaussian-streaming.webp" muted playsinline loop preload="auto"></video>
+          </div>
+        </div>
+        <footer class="r-foot"><span>{poster('gaussian-streaming').venue}</span></footer>
       </div>
     </section>
 
     <!-- ===== SEAM ===== -->
     <section class="r-stage r-scene" data-scene="seam">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['seam'].src} alt="" width="1920" height="1080" /></div>
       <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
         <header class="r-head">
           <p class="r-kicker">{poster('seam').kicker}</p>
           <h2 class="r-title">SEAM</h2>
@@ -202,46 +234,15 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
             ))}
           </div>
         </div>
-        <footer class="r-foot"><span>{seamMin}–{seamMax}% absorption on a bare newline, across {seamRows.length} models · {poster('seam').venue}</span></footer>
-      </div>
-    </section>
-
-    <!-- ===== Fixed RAG Compression ===== -->
-    <section class="r-stage r-scene" data-scene="fixed-rag-compression">
-      <div class="r-frame">
-        <header class="r-head">
-          <p class="r-kicker">{poster('fixed-rag-compression').kicker}</p>
-          <h2 class="r-title">{poster('fixed-rag-compression').title}</h2>
-          <p class="r-sub">{poster('fixed-rag-compression').claim}</p>
-        </header>
-        <div class="rag-flow" data-anim="flow">
-          <div class="rag-docs">{Array.from({ length: 6 }, () => <span class="rag-doc"><Icon name="ph:file-text" /></span>)}</div>
-          <div class="rag-funnel"><Icon name="ph:funnel-simple-bold" /><span>fixed compressor</span></div>
-          <div class="rag-readers">{Array.from({ length: ragNumbers.readers }, () => <span class="rag-reader"><Icon name="ph:robot" /></span>)}</div>
-          <p class="rag-readers-l">{ragNumbers.readers} readers: compression gain falls as the reader gets stronger ({ragNumbers.significant}, p &lt; 0.05)</p>
-        </div>
-        <div class="rag-stats" data-anim="stats">
-          <div class="rag-stat">
-            <p class="r-big-n" data-n={ragNumbers.hiddenPct}>{ragNumbers.hiddenPct}%</p>
-            <div class="rag-up">
-              <p class="r-label">The upgrade from Qwen 7B to GPT-4.1-mini</p>
-              <div class="rag-uprow"><span>raw evidence</span><span class="rag-uptrack"><span class="rag-upbar" style="--v:1"></span></span></div>
-              <div class="rag-uprow"><span>fixed compressor</span><span class="rag-uptrack"><span class="rag-upbar rag-upbar-cut" style={`--v:${1 - ragNumbers.hiddenPct / 100}`}></span></span></div>
-              <p class="r-big-l">of it is hidden by a fixed HotpotQA compressor.</p>
-            </div>
-          </div>
-          <div class="rag-stat">
-            <p class="r-big-n" data-n={ragNumbers.flippedPct}>{ragNumbers.flippedPct}%</p>
-            <p class="r-big-l">of pairwise model rankings flip under generic summarization on LongMemEval-S.</p>
-          </div>
-        </div>
-        <footer class="r-foot"><span>{poster('fixed-rag-compression').venue}</span></footer>
+        <footer class="r-foot"><span>{seamMin}–{seamMax}% absorption on a bare newline, across {seamRows.length} models · {poster('seam').venue}</span><span class="r-credit">Photo: {backdrops['seam'].photographer} / Pexels</span></footer>
       </div>
     </section>
 
     <!-- ===== Outcome Monitors ===== -->
     <section class="r-stage r-scene" data-scene="outcome-monitors">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['outcome-monitors'].src} alt="" width="1920" height="1080" /></div>
       <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
         <header class="r-head">
           <p class="r-kicker">{poster('outcome-monitors').kicker}</p>
           <h2 class="r-title">{poster('outcome-monitors').title}</h2>
@@ -273,55 +274,15 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
             <div class="om-bar-col"><span class="om-bar om-bar-on" style={`--v:${monitorNumbers.after / 30}`}></span><p class="om-n" data-n={monitorNumbers.after}>{monitorNumbers.after}%</p><p>with outcome monitors</p></div>
           </div>
         </div>
-        <footer class="r-foot"><span>{poster('outcome-monitors').venue}</span></footer>
-      </div>
-    </section>
-
-    <!-- ===== 4D Gaussian Streaming ===== -->
-    <section class="r-stage r-scene" data-scene="gaussian-streaming">
-      <div class="r-frame">
-        <header class="r-head">
-          <p class="r-kicker">{poster('gaussian-streaming').kicker}</p>
-          <h2 class="r-title">{poster('gaussian-streaming').title}</h2>
-        </header>
-        <div class="gs-body">
-          <div class="gs-text" data-anim="text">
-            <p class="r-big-n" data-count="8192">8,192</p>
-            <p class="r-big-l">anchors: the standard choice for 4D Gaussian streaming.</p>
-            <p class="gs-claim">{poster('gaussian-streaming').claim}</p>
-          </div>
-          <div class="gs-video" data-anim="video">
-            <video src="/projects/anchor_policies.mp4" poster="/projects/gaussian-streaming.webp" muted playsinline loop preload="auto"></video>
-          </div>
-        </div>
-        <footer class="r-foot"><span>{poster('gaussian-streaming').venue}</span></footer>
-      </div>
-    </section>
-
-    <!-- ===== LAPSE ===== -->
-    <section class="r-stage r-scene" data-scene="lapse">
-      <div class="r-frame">
-        <header class="r-head">
-          <p class="r-kicker">{poster('lapse').kicker}</p>
-          <h2 class="r-title">LAPSE</h2>
-          <p class="r-sub">Memory consolidation flattens the temporal shape of user facts.</p>
-        </header>
-        <div class="lp-flow" data-anim="flow">
-          <div class="lp-said"><p class="r-label">The user says</p><p class="lp-bubble">I am <mark data-cue>driving</mark> a Peugeot</p></div>
-          <div class="lp-writer"><Icon name="ph:database" /><span>memory writer</span></div>
-          <div class="lp-stored"><p class="r-label">Stored note</p><p class="lp-note">The user <mark data-flat>drives</mark> a Peugeot</p><p class="lp-lost" data-lost>The cue that it is still going on is gone.</p></div>
-        </div>
-        <div class="lp-stats" data-anim="stats">
-          <div><p class="r-big-n">{lapseNumbers.flattened} <small>of {lapseNumbers.pairs}</small></p><p class="r-big-l">matched pairs: three writer models flattened the ongoing form and kept the simple present. Never the reverse.</p></div>
-          <div><p class="r-big-n">{lapseNumbers.configs}<small> / {lapseNumbers.configs}</small></p><p class="r-big-l">model configurations, plus {lapseNumbers.pipelines.join(', ').replace(/, ([^,]*)$/, ', and $1')}.</p></div>
-        </div>
-        <footer class="r-foot"><span>Memory Consolidation Flattens the Temporal Shape of User Facts · {lapse.venue}</span></footer>
+        <footer class="r-foot"><span>{poster('outcome-monitors').venue}</span><span class="r-credit">Photo: {backdrops['outcome-monitors'].photographer} / Pexels</span></footer>
       </div>
     </section>
 
     <!-- ===== Thin-Object Segmentation ===== -->
     <section class="r-stage r-scene" data-scene="thin-object-segmentation">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['thin-object-segmentation'].src} alt="" width="1920" height="1080" /></div>
       <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
         <header class="r-head">
           <p class="r-kicker">{poster('thin-object-segmentation').kicker}</p>
           <h2 class="r-title">{poster('thin-object-segmentation').title}</h2>
@@ -338,13 +299,76 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
             </figure>
           ))}
         </div>
-        <footer class="r-foot"><span>{poster('thin-object-segmentation').venue}</span></footer>
+        <footer class="r-foot"><span>{poster('thin-object-segmentation').venue}</span><span class="r-credit">Photo: {backdrops['thin-object-segmentation'].photographer} / Pexels</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== Fixed RAG Compression ===== -->
+    <section class="r-stage r-scene" data-scene="fixed-rag-compression">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['fixed-rag-compression'].src} alt="" width="1920" height="1080" /></div>
+      <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
+        <header class="r-head">
+          <p class="r-kicker">{poster('fixed-rag-compression').kicker}</p>
+          <h2 class="r-title">{poster('fixed-rag-compression').title}</h2>
+          <p class="r-sub">{poster('fixed-rag-compression').claim}</p>
+        </header>
+        <div class="rag-flow" data-anim="flow">
+          <div class="rag-docs">{Array.from({ length: 6 }, () => <span class="rag-doc"><Icon name="ph:file-text" /></span>)}</div>
+          <div class="rag-funnel"><Icon name="ph:funnel-simple-bold" /><span>fixed compressor</span></div>
+          <div class="rag-readers">
+            <p class="r-label">Readers, weakest baseline first</p>
+            {ragReaders.map((r) => <span class="rag-reader"><img src={`/reel/icons/${r.icon}.svg`} alt={r.name} title={r.name} width="48" height="48" /></span>)}
+          </div>
+          <p class="rag-readers-l">{ragNumbers.readers} readers: compression gain falls as the reader gets stronger ({ragNumbers.significant}, p &lt; 0.05)</p>
+        </div>
+        <div class="rag-stats" data-anim="stats">
+          <div class="rag-stat">
+            <p class="r-big-n" data-n={ragNumbers.hiddenPct}>{ragNumbers.hiddenPct}%</p>
+            <div class="rag-up">
+              <p class="r-label">The upgrade from Qwen 7B to GPT-4.1-mini</p>
+              <div class="rag-uprow"><span>raw evidence</span><span class="rag-uptrack"><span class="rag-upbar" style="--v:1"></span></span></div>
+              <div class="rag-uprow"><span>fixed compressor</span><span class="rag-uptrack"><span class="rag-upbar rag-upbar-cut" style={`--v:${1 - ragNumbers.hiddenPct / 100}`}></span></span></div>
+              <p class="r-big-l">of it is hidden by a fixed HotpotQA compressor.</p>
+            </div>
+          </div>
+          <div class="rag-stat">
+            <p class="r-big-n" data-n={ragNumbers.flippedPct}>{ragNumbers.flippedPct}%</p>
+            <p class="r-big-l">of pairwise model rankings flip under generic summarization on LongMemEval-S.</p>
+          </div>
+        </div>
+        <footer class="r-foot"><span>{poster('fixed-rag-compression').venue}</span><span class="r-credit">Photo: {backdrops['fixed-rag-compression'].photographer} / Pexels</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== LAPSE ===== -->
+    <section class="r-stage r-scene" data-scene="lapse">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['lapse'].src} alt="" width="1920" height="1080" /></div>
+      <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
+        <header class="r-head">
+          <p class="r-kicker">{poster('lapse').kicker}</p>
+          <h2 class="r-title">LAPSE</h2>
+          <p class="r-sub">Memory consolidation flattens the temporal shape of user facts.</p>
+        </header>
+        <div class="lp-flow" data-anim="flow">
+          <div class="lp-said"><p class="r-label">The user says</p><p class="lp-bubble">I am <mark data-cue>driving</mark> a Peugeot</p></div>
+          <div class="lp-writer"><Icon name="ph:database" /><span>memory writer</span></div>
+          <div class="lp-stored"><p class="r-label">Stored note</p><p class="lp-note">The user <mark data-flat>drives</mark> a Peugeot</p><p class="lp-lost" data-lost>The cue that it is still going on is gone.</p></div>
+        </div>
+        <div class="lp-stats" data-anim="stats">
+          <div><p class="r-big-n">{lapseNumbers.flattened} <small>of {lapseNumbers.pairs}</small></p><p class="r-big-l">matched pairs: three writer models flattened the ongoing form and kept the simple present. Never the reverse.</p></div>
+          <div><p class="r-big-n">{lapseNumbers.configs}<small> / {lapseNumbers.configs}</small></p><p class="r-big-l">model configurations, plus {lapseNumbers.pipelines.join(', ').replace(/, ([^,]*)$/, ', and $1')}.</p></div>
+        </div>
+        <footer class="r-foot"><span>Memory Consolidation Flattens the Temporal Shape of User Facts · {lapse.venue}</span><span class="r-credit">Photo: {backdrops['lapse'].photographer} / Pexels</span></footer>
       </div>
     </section>
 
     <!-- ===== People ===== -->
     <section class="r-stage r-scene r-people" data-scene="people">
+      <div class="r-bg" aria-hidden="true"><img src={backdrops['people'].src} alt="" width="1920" height="1080" /></div>
       <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
         <header class="r-head">
           <p class="r-kicker">The people</p>
           <h2 class="r-title">Meet the lab</h2>

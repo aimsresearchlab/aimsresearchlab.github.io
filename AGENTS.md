@@ -149,7 +149,7 @@ public/usm-logo.svg            USM mark for the deck title sheet
 public/slides/                 deck exports (.pptx) and QR codes
 public/seam/                   SEAM-Bench demo + leaderboard, served at /seam/
 public/tiap/                   TIAP walkthrough, served at /tiap/
-public/reel/                   reel images: room.webp (the photo the 3D room is built from), poster figures
+public/reel/                   reel images: room.webp (the photo the 3D room is built from), poster figures, bg-*.webp scene backdrops
 public/CNAME                   custom domain for GitHub Pages; do not delete
 public/favicon.svg             copied from favicon/logo.svg
 public/og.jpg                  social preview image, 1200x630 jpg (not webp)
@@ -412,7 +412,25 @@ people and the address.
   measurements (`STATIONS`, `LOUNGE`).
 - **Posters** hang over the real posters in the photo; their order and wall
   positions are in `src/data/reel.ts`, their copy and covers come from the
-  project files.
+  project files. Language and vision posters alternate where there are enough
+  of each, so no more than two language posters run together; when adding a
+  project, place it to keep that, and reassign slugs to the existing spots
+  rather than moving the spots.
+- **Scenes** carry the AIMS mark top right, as the posters do, and a photo
+  behind them under a navy gradient that keeps the left and top near solid,
+  so the result stays the subject. Each photo shows the paper's own running
+  example (the warehouse task, the driver, the pasted text); none is
+  generated. They come from Pexels (key in the costumary repo's `be/.env`,
+  never copied here), cropped to 1920x1080 webp at quality 72, and are listed
+  with their photographer in `backdrops` in `src/data/reel.ts`; the scene
+  footer credits them. Pick dark photos: a bright one lifts the whole frame
+  and washes out the grey labels. The people scene shows current lab members
+  only; collaborators are left out.
+- **Logos and figures in scenes** are real: the RAG scene's 20 readers are
+  their family logos (`public/reel/icons/`, from @lobehub/icons as listed in
+  `research/icons.md`) in the paper's Table 4 order (`ragReaders`), and Same
+  Ranking shows the paper's Figure 1 (`public/reel/srdw-fig1.webp`) in the
+  space its query leaves.
 - **Numbers** in the scenes are read at build time from the SEAM and TIAP demo
   data, or from `src/data/reel.ts`, which names the arXiv abstract each comes
   from.

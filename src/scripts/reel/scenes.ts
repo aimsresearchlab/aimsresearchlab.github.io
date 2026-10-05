@@ -70,6 +70,7 @@ export function sameRanking(root: HTMLElement): TL {
   const query = q(root, '[data-anim="query"]');
   const board = q(root, '[data-anim="board"]');
   const big = q(root, '[data-anim="big"]');
+  const fig = q(root, '[data-anim="fig"]');
   const chips = Object.fromEntries(qa(root, '.tiap-chip').map((c) => [c.dataset.target!, c]));
   const bars = qa(root, '.tiap-bar');
   const vals = qa(root, '[data-val]');
@@ -82,7 +83,7 @@ export function sameRanking(root: HTMLElement): TL {
   tl.set(Object.values(chips), { backgroundColor: 'rgba(0,0,0,0)', color: soft }, 0);
   tl.set(crowns, { autoAlpha: 0 }, 0);
   tl.set(Object.values(notes), { autoAlpha: 0 }, 0);
-  tl.set(big, { autoAlpha: 0 }, 0);
+  tl.set([big, fig], { autoAlpha: 0 }, 0);
   tl.set(bars, { '--v': 0 }, 0);
 
   fadeIn(tl, query, 0.6);
@@ -110,6 +111,7 @@ export function sameRanking(root: HTMLElement): TL {
   tl.to(crowns[1], { autoAlpha: 1, duration: 0.6 }, 9.2);
   tl.to(notes.canonical, { autoAlpha: 1, duration: 0.6 }, 9.3);
   tl.to(query, { autoAlpha: 0, duration: 0.6 }, 12.0);
+  fadeIn(tl, fig, 12.5, 0.9);
   fadeIn(tl, big, 12.3, 0.9);
   tl.to({}, { duration: 0.01 }, 17.5);
   return tl;
@@ -199,7 +201,6 @@ export function fixedRag(root: HTMLElement): TL {
   head(tl, root);
   const docs = qa(root, '.rag-doc');
   const readers = qa(root, '.rag-reader');
-  readers.forEach((r, i) => r.style.setProperty('--k', String(i / (readers.length - 1))));
   tl.fromTo(docs, { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.5 }, 0.9);
   tl.fromTo(q(root, '.rag-funnel'), { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, 1.5);
   tl.fromTo(readers, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.4, ease: 'power2.out' }, 2.0);
