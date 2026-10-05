@@ -16,12 +16,15 @@ change the paragraph that describes it in the same commit.
 - **Pages work without JavaScript.** Every route renders and reads with
   scripting off. Do not add Astro client directives (`client:load`, etc.), and
   do not reach for a `<script>` to solve a layout or content problem; it almost
-  never does for this site. Two places may run script, both under the same
+  never does for this site. Three places may run script, all under the same
   condition, that the page is complete without it:
   - `/slides/aims-lab`, the overview deck. Its `<script>` bundles
     `src/scripts/deck-present.ts` and `deck-motion.ts` at build time (no CDN).
     Present mode and motion are enhancements on a page that already scrolls and
     reads. Keep them optional, and keep the import bundled.
+  - `/reel`, the lab TV loop. Its `<script>` bundles `src/scripts/reel/`
+    (three.js and GSAP from npm, no CDN). Without script the page is a stack
+    of 16:9 frames, each scene at rest.
   - The hand-written demos under `public/`, outside the Astro pipeline:
     `public/seam/` and `public/tiap/`. They are interactive by nature.
 
@@ -127,6 +130,10 @@ src/data/deck.ts               deck-only copy: areas, title tags, leadership
 src/data/qr.ts                 the QR file naming rule, shared with the script
 src/scripts/deck-present.ts    deck present mode (optional, bundled)
 src/scripts/deck-motion.ts     deck motion (optional, bundled)
+src/pages/reel.astro           the lab TV loop at /reel (noindex, not in the nav or sitemap)
+src/scripts/reel/*.ts          the reel: main.ts timeline, lab.ts photo room, arch.ts overhead model, scenes.ts
+src/styles/reel.css            the reel only, all under `.reel`
+src/data/reel.ts               reel-only copy: poster order and spots, numbers quoted from arXiv abstracts
 scripts/deck-pptx.mjs          renders the deck to .pptx with Playwright
 scripts/deck-qr.mjs            writes every QR code under public/slides/
 scripts/sync-tiap-data.py      pulls the TIAP demo's numbers from the paper repo
@@ -142,6 +149,7 @@ public/usm-logo.svg            USM mark for the deck title sheet
 public/slides/                 deck exports (.pptx) and QR codes
 public/seam/                   SEAM-Bench demo + leaderboard, served at /seam/
 public/tiap/                   TIAP walkthrough, served at /tiap/
+public/reel/                   reel images: room.webp (the photo the 3D room is built from), poster figures
 public/CNAME                   custom domain for GitHub Pages; do not delete
 public/favicon.svg             copied from favicon/logo.svg
 public/og.jpg                  social preview image, 1200x630 jpg (not webp)
@@ -353,6 +361,7 @@ the pages, not at homepage anchors:
 /publications     all papers, grouped by year
 /writing          members' plain-language write-ups, linking out (not in the nav; linked from /publications and under the homepage Recent list)
 /slides/aims-lab  the overview deck (also downloadable as .pptx)
+/reel             the lab TV loop (noindex; not in the nav or the sitemap)
 /seam/            SEAM-Bench demo and leaderboard (static, outside Astro)
 /tiap/            TIAP walkthrough (static, outside Astro)
 ```
@@ -382,6 +391,35 @@ files, and it exports to PowerPoint for anyone who needs to edit it elsewhere.
   `public/slides/aims-lab.pptx` and the dark variant. It loads the page with
   reduced motion, so every sheet is at rest when measured. Rerun it after
   changing deck copy, and commit the .pptx.
+
+## The lab reel (`/reel`)
+
+A loop for the lab TV. A camera opens on a 3D model of the room, flies down
+into the photograph of it, visits one poster per line of work, and each poster
+opens into a short animated scene of that paper's result. It ends on the
+people and the address.
+
+- **The room** is rebuilt from one photo, `public/reel/room.webp`. Its
+  calibration is at the top of `src/scripts/reel/lab.ts`: focal length,
+  view direction and roll from three vanishing points, the camera height from
+  the carpet tiles and the TV, and every wall, desk, monitor and piece of
+  furniture placed where the photo puts it. Simple boxes are painted by
+  projecting the photo back out of its own camera. Replacing the photo with a
+  different shot means measuring all of that again; a higher-resolution copy
+  of the same shot is a drop-in swap.
+- **The overhead model** (`arch.ts`) is a lit copy of the room on a paper
+  backdrop, with ambient occlusion. Its furniture positions come from the same
+  measurements (`STATIONS`, `LOUNGE`).
+- **Posters** hang over the real posters in the photo; their order and wall
+  positions are in `src/data/reel.ts`, their copy and covers come from the
+  project files.
+- **Numbers** in the scenes are read at build time from the SEAM and TIAP demo
+  data, or from `src/data/reel.ts`, which names the arXiv abstract each comes
+  from.
+- **Keys**: space pauses (a bar of stops appears; 1 to 0 jump), hold space for
+  2x, arrows step between stops, F fullscreen, R restart, S 3x. `?at=<stop>`
+  starts at a stop (`?at=seam`). `window.__tl` is the timeline, as in the
+  demos below.
 
 ## SEAM-Bench and TIAP pages (`public/seam/`, `public/tiap/`)
 
@@ -448,7 +486,8 @@ All of it lives in `src/layouts/Base.astro`; pages only pass `title`,
   data script (`type="application/ld+json"`), not executable JS, so it does
   not violate the no-client-JS rule.
 - `@astrojs/sitemap` writes `sitemap-index.xml` at build time from every
-  route; `public/robots.txt` references it. Nothing to maintain by hand.
+  route except `/reel` (noindex, filtered out in `astro.config.mjs`);
+  `public/robots.txt` references it. Nothing to maintain by hand.
 - New pages: pass a specific `title` ("Thing · AIMS Lab") and a one-sentence
   `description` under 160 characters. Do not reuse the homepage description,
   and do not ship a placeholder: `/projects` shipped `description="..."` for a

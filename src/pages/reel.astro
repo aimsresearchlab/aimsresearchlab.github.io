@@ -1,0 +1,392 @@
+---
+// /reel: a loop for the lab TV. A camera moves through the lab, rebuilt in 3D
+// from one photo of the room (public/reel/room.webp), stops at a poster for
+// each line of work, and each poster opens into a short animated scene of that
+// paper's result. It ends on the people and the address.
+//
+// Without JavaScript the page is a stack of 16:9 frames, each scene at rest,
+// so it reads like the deck. With it, src/scripts/reel/main.ts (bundled at
+// build time, no CDN) runs the loop. Keys: space pauses, arrows step between
+// stops, F goes fullscreen, R restarts.
+//
+// Numbers are read here from the data the demos already ship, or from
+// src/data/reel.ts, which names the arXiv abstract each one comes from.
+import fs from 'node:fs';
+import path from 'node:path';
+import '@fontsource/tinos';
+import '@fontsource/tinos/700.css';
+import '../styles/global.css';
+import '../styles/reel.css';
+import { Icon } from 'astro-icon/components';
+import { allProjects } from '../data/projects';
+import { publications } from '../data/publications';
+import { groupedPeople } from '../data/people';
+import { posterSpots, lapse, lapseNumbers, monitorNumbers, ragNumbers } from '../data/reel';
+
+const root = process.cwd();
+const read = (p: string) => fs.readFileSync(path.join(root, p), 'utf8');
+
+// CamelCase tags to words: 'HumanCenteredAI' -> 'Human Centered AI'.
+const words = (tag: string) =>
+  tag.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+const kicker = (tags: string[]) => tags.map(words).join(' · ');
+
+const projects = new Map((await allProjects()).map((p) => [p.id, p]));
+const pubFor = (slug: string) => {
+  const title = projects.get(slug)?.data.publications?.[0];
+  return publications.find((p) => p.title === title);
+};
+const qrFor = (slug: string) =>
+  fs.existsSync(path.join(root, `public/slides/qr-${slug}.svg`)) ? `/slides/qr-${slug}.svg` : undefined;
+
+// ---- SEAM: the verbatim case and the leaderboard rows ---------------------
+const seamPage = read('public/seam/index.html');
+const seamConst = (name: string) => JSON.parse(seamPage.match(new RegExp(`const ${name}\\s*=\\s*("(?:[^"\\\\]|\\\\.)*");`))![1]);
+const seamCase = {
+  instr: seamConst('INSTR'),
+  art: seamConst('ART'),
+  after: seamConst('AFTER'),
+  clean: seamConst('CLEAN'),
+};
+type SeamRow = { name: string; icon: string | null; newline: { pct: number }; boundary: { pct: number } };
+const seamRows: SeamRow[] = JSON.parse(read('public/seam/leaderboard.html').match(/const ROWS = (\[.*\]);/)![1]);
+seamRows.sort((a, b) => b.newline.pct - a.newline.pct);
+const seamMin = Math.min(...seamRows.map((r) => r.newline.pct));
+const seamMax = Math.max(...seamRows.map((r) => r.newline.pct));
+
+// ---- TIAP: one real query, two systems, three scoring targets -------------
+const tiap = JSON.parse(read('public/tiap/data/tiap-case.json'));
+const tiapTargets = ['raw', 'source', 'canonical'] as const;
+const tiapLabel = { raw: 'Raw', source: 'Source', canonical: 'Canonical' };
+const tiapSystems = [tiap.systems.longmemeval_allminilm, tiap.systems.longmemeval_bge_m3].map((s: any) => ({
+  label: s.label as string,
+  ndcg: Object.fromEntries(tiapTargets.map((t) => [t, s.targets[t].ndcg as number])),
+}));
+const tiapAudit = tiap.audit.published;
+
+// ---- Posters, in the order the camera visits them --------------------------
+const posters = posterSpots.map((spot) => {
+  if (spot.slug === 'lapse') {
+    return { ...spot, kicker: kicker(lapse.tags), title: lapse.title, claim: lapse.claim, cover: lapse.cover, venue: lapse.venue };
+  }
+  const p = projects.get(spot.slug)!;
+  const pub = pubFor(spot.slug);
+  const venue = pub
+    ? `${pub.venue}${pub.venue.includes(String(pub.year)) ? '' : `, ${pub.year}`} · ${pub.authors}`
+    : spot.slug === 'seam'
+      ? 'S. Panthi, M. Yeamin, R. Abdelfattah · aimsresearchlab.com/seam'
+      : `aimsresearchlab.com/projects/${spot.slug}`;
+  return {
+    ...spot,
+    kicker: kicker(p.data.tags),
+    title: p.data.title,
+    claim: p.data.claim,
+    cover: p.data.cover,
+    qr: qrFor(spot.slug),
+    venue,
+  };
+});
+const poster = (slug: string) => posters.find((p) => p.slug === slug)!;
+
+const roster = groupedPeople();
+// The director gets the large portrait; everyone else fills the grid beside it.
+const everyone = roster.flatMap((g) => g.members);
+const lead = everyone.find((m) => m.category === 'faculty');
+const members = everyone.filter((m) => m !== lead);
+const fmt = (n: number, d = 3) => n.toFixed(d);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Lab Reel · AIMS Lab · USM</title>
+    <meta name="description" content="A looping tour of the AIMS Lab for the lab TV: the room in 3D, one poster per line of work, and the people." />
+  </head>
+  <body class="reel">
+    <script type="application/json" id="reel-data" set:html={JSON.stringify({ posters })} />
+
+    <!-- The room. Without script this is the photograph. -->
+    <section class="r-stage r-lab" data-stage="lab">
+      <img class="r-photo" src="/reel/room.webp" width="1024" height="768" alt="The AIMS Lab: two rows of desks, posters on the block walls, a couch and a TV under the AIMS LAB sign." />
+      <canvas class="r-gl" aria-hidden="true"></canvas>
+      <div class="r-frame">
+        <div class="r-caption" data-caption="photo">
+          <p class="r-cap-kicker">TEC 340 · The University of Southern Mississippi</p>
+          <p class="r-cap-line" data-cap-a>Our lab, rebuilt in 3D from one photograph.</p>
+          <p class="r-cap-line r-cap-alt" data-cap-b>The AIMS Lab, rendered live.</p>
+        </div>
+        <div class="r-lower" data-lower>
+          <img src="/logo-mark-light.svg" alt="" width="96" height="96" />
+          <div>
+            <p class="r-lower-title">AIMS Lab</p>
+            <p class="r-lower-sub">Artificial Intelligence &amp; Multimodal Systems</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Same Ranking, Different Winner ===== -->
+    <section class="r-stage r-scene" data-scene="same-ranking-different-winner">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('same-ranking-different-winner').kicker}</p>
+          <h2 class="r-title">{poster('same-ranking-different-winner').title}</h2>
+          <p class="r-badge"><Icon name="ph:seal-check-fill" /> {tiap.paper.venue}</p>
+        </header>
+        <div class="tiap-query" data-anim="query">
+          <p class="r-label">One real query · {tiap.case.dataset}</p>
+          <p class="tiap-q"><span data-type={tiap.case.query}>{tiap.case.query}</span></p>
+        </div>
+        <div class="tiap-board" data-anim="board">
+          <p class="r-label">What earns credit</p>
+          <div class="tiap-chips">
+            {tiapTargets.map((t) => <span class="tiap-chip" data-target={t}>{tiapLabel[t]}</span>)}
+          </div>
+          <div class="tiap-rows">
+            {tiapSystems.map((s, i) => (
+              <div class="tiap-row" data-row={i}>
+                <span class="tiap-name">{s.label}</span>
+                <span class="tiap-track"><span class="tiap-bar" data-raw={s.ndcg.raw} data-source={s.ndcg.source} data-canonical={s.ndcg.canonical} style={`--v:${s.ndcg.canonical}`}></span></span>
+                <span class="tiap-val" data-val>{fmt(s.ndcg.canonical)}</span>
+                <span class="tiap-crown" data-crown><Icon name="ph:crown-simple-fill" /></span>
+              </div>
+            ))}
+          </div>
+          <p class="tiap-note" data-note="source">Under <b>Source</b>, {tiap.flip.source_winner} wins by {fmt(tiap.flip.delta_source)}.</p>
+          <p class="tiap-note" data-note="canonical">Under <b>Canonical</b>, {tiap.flip.canonical_winner} wins by {fmt(Math.abs(tiap.flip.delta_canonical))}. Same saved outputs.</p>
+        </div>
+        <div class="r-big" data-anim="big">
+          <p class="r-big-n">{tiapAudit.ndcg_change_rate_low.toFixed(1)}–{tiapAudit.ndcg_change_rate_high.toFixed(1)}%</p>
+          <p class="r-big-l">of shared queries change nDCG when only the scoring target changes.</p>
+        </div>
+        <footer class="r-foot"><span>{poster('same-ranking-different-winner').venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== SEAM ===== -->
+    <section class="r-stage r-scene" data-scene="seam">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('seam').kicker}</p>
+          <h2 class="r-title">SEAM</h2>
+          <p class="r-sub">Can a model tell a pasted document from the words you type after it?</p>
+        </header>
+        <div class="seam-case" data-anim="case">
+          <div class="seam-card seam-in">
+            <p class="win-bar"><i></i><i></i><i></i><span>Chat</span></p>
+            <p class="seam-instr"><span data-type={seamCase.instr}>{seamCase.instr}</span></p>
+            <p class="seam-art"><span class="seam-paste" data-paste>pasted</span><span data-type={seamCase.art}>{seamCase.art}</span></p>
+            <div class="seam-line" data-seamline><span>one newline · no marker</span></div>
+            <p class="seam-after" data-after>{[...seamCase.after].map((ch) => <span class="seam-ch">{ch}</span>)}</p>
+            <span class="seam-send" data-send><Icon name="ph:paper-plane-tilt-fill" /></span>
+          </div>
+          <div class="seam-arrow" data-arrow><Icon name="ph:arrow-right-bold" /></div>
+          <div class="seam-card seam-out">
+            <p class="win-bar"><i></i><i></i><i></i><span>Returned artifact</span></p>
+            <p class="seam-clean"><span data-type={seamCase.clean}>{seamCase.clean}</span> <span class="seam-ghost" data-ghost>{[...seamCase.after].map((ch) => <span class="seam-ch">{ch}</span>)}</span></p>
+            <p class="seam-verdict" data-verdict><Icon name="ph:warning-fill" /> The afterthought was edited into the document.</p>
+          </div>
+        </div>
+        <div class="seam-chart" data-anim="chart">
+          <p class="seam-chart-cap"><span data-cap="newline">Absorption with a bare newline before the comment</span><span data-cap="boundary">Same 20 models, boundary tags around the paste</span></p>
+          <div class="seam-bars">
+            {seamRows.map((r) => (
+              <div class="seam-row">
+                <span class="seam-name">{r.icon ? <img class={r.icon === 'openai.svg' ? 'seam-logo mono' : 'seam-logo'} src={`/seam/icons/${r.icon}`} alt="" width="26" height="26" /> : <span class="seam-logo" />}{r.name}</span>
+                <span class="seam-track"><span class="seam-bar" data-newline={r.newline.pct} data-boundary={r.boundary.pct} style={`--v:${r.newline.pct / 75}`}></span></span>
+                <span class="seam-val" data-val data-newline={r.newline.pct} data-boundary={r.boundary.pct}>{r.newline.pct.toFixed(1)}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <footer class="r-foot"><span>{seamMin}–{seamMax}% absorption on a bare newline, across {seamRows.length} models · {poster('seam').venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== Fixed RAG Compression ===== -->
+    <section class="r-stage r-scene" data-scene="fixed-rag-compression">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('fixed-rag-compression').kicker}</p>
+          <h2 class="r-title">{poster('fixed-rag-compression').title}</h2>
+          <p class="r-sub">{poster('fixed-rag-compression').claim}</p>
+        </header>
+        <div class="rag-flow" data-anim="flow">
+          <div class="rag-docs">{Array.from({ length: 6 }, () => <span class="rag-doc"><Icon name="ph:file-text" /></span>)}</div>
+          <div class="rag-funnel"><Icon name="ph:funnel-simple-bold" /><span>fixed compressor</span></div>
+          <div class="rag-readers">{Array.from({ length: ragNumbers.readers }, () => <span class="rag-reader"><Icon name="ph:robot" /></span>)}</div>
+          <p class="rag-readers-l">{ragNumbers.readers} readers: compression gain falls as the reader gets stronger ({ragNumbers.significant}, p &lt; 0.05)</p>
+        </div>
+        <div class="rag-stats" data-anim="stats">
+          <div class="rag-stat">
+            <p class="r-big-n" data-n={ragNumbers.hiddenPct}>{ragNumbers.hiddenPct}%</p>
+            <div class="rag-up">
+              <p class="r-label">The upgrade from Qwen 7B to GPT-4.1-mini</p>
+              <div class="rag-uprow"><span>raw evidence</span><span class="rag-uptrack"><span class="rag-upbar" style="--v:1"></span></span></div>
+              <div class="rag-uprow"><span>fixed compressor</span><span class="rag-uptrack"><span class="rag-upbar rag-upbar-cut" style={`--v:${1 - ragNumbers.hiddenPct / 100}`}></span></span></div>
+              <p class="r-big-l">of it is hidden by a fixed HotpotQA compressor.</p>
+            </div>
+          </div>
+          <div class="rag-stat">
+            <p class="r-big-n" data-n={ragNumbers.flippedPct}>{ragNumbers.flippedPct}%</p>
+            <p class="r-big-l">of pairwise model rankings flip under generic summarization on LongMemEval-S.</p>
+          </div>
+        </div>
+        <footer class="r-foot"><span>{poster('fixed-rag-compression').venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== Outcome Monitors ===== -->
+    <section class="r-stage r-scene" data-scene="outcome-monitors">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('outcome-monitors').kicker}</p>
+          <h2 class="r-title">{poster('outcome-monitors').title}</h2>
+          <p class="r-sub">A failed tool call can arrive in the expected format and be used as fact.</p>
+        </header>
+        <!-- The tool, value and recovery tools are the ones in the paper's own figure (the project cover). -->
+        <div class="om-pipe" data-anim="pipe">
+          <div class="om-node" data-node="agent"><Icon name="ph:robot" /><span>agent</span></div>
+          <span class="om-link" data-link="1"></span>
+          <div class="om-node" data-node="tool"><Icon name="ph:wrench" /><span>lookup_inventory</span></div>
+          <span class="om-link" data-link="2"></span>
+          <div class="om-node om-result" data-node="result"><code>available = −3</code><span class="om-ok"><Icon name="ph:check-circle-fill" /> well-formed</span></div>
+          <span class="om-link" data-link="3"></span>
+          <div class="om-node om-monitor" data-node="monitor"><Icon name="ph:shield-check-fill" /><span>outcome monitor</span></div>
+          <span class="om-link" data-link="4"></span>
+          <div class="om-node" data-node="next"><Icon name="ph:flag-checkered" /><span>next step</span></div>
+          <span class="om-packet" data-packet></span>
+        </div>
+        <p class="om-silent" data-silent><Icon name="ph:warning-fill" /> Silent failure: nothing stops the agent from building on it.</p>
+        <div class="om-receipt" data-receipt>
+          <p class="om-receipt-h">Advisory receipt</p>
+          <p><span>contract violated</span><code>expected ≥ 0, observed −3</code></p>
+          <p><span>recovery tools</span><code>query_warehouse · get_stock_by_sku</code></p>
+        </div>
+        <div class="om-stat" data-anim="stat">
+          <p class="r-label">ToolMaze task completion, {monitorNumbers.models}</p>
+          <div class="om-bars">
+            <div class="om-bar-col"><span class="om-bar" style={`--v:${monitorNumbers.before / 30}`}></span><p class="om-n" data-n={monitorNumbers.before}>{monitorNumbers.before}%</p><p>without</p></div>
+            <div class="om-bar-col"><span class="om-bar om-bar-on" style={`--v:${monitorNumbers.after / 30}`}></span><p class="om-n" data-n={monitorNumbers.after}>{monitorNumbers.after}%</p><p>with outcome monitors</p></div>
+          </div>
+        </div>
+        <footer class="r-foot"><span>{poster('outcome-monitors').venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== 4D Gaussian Streaming ===== -->
+    <section class="r-stage r-scene" data-scene="gaussian-streaming">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('gaussian-streaming').kicker}</p>
+          <h2 class="r-title">{poster('gaussian-streaming').title}</h2>
+        </header>
+        <div class="gs-body">
+          <div class="gs-text" data-anim="text">
+            <p class="r-big-n" data-count="8192">8,192</p>
+            <p class="r-big-l">anchors: the standard choice for 4D Gaussian streaming.</p>
+            <p class="gs-claim">{poster('gaussian-streaming').claim}</p>
+          </div>
+          <div class="gs-video" data-anim="video">
+            <video src="/projects/anchor_policies.mp4" poster="/projects/gaussian-streaming.webp" muted playsinline loop preload="auto"></video>
+          </div>
+        </div>
+        <footer class="r-foot"><span>{poster('gaussian-streaming').venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== LAPSE ===== -->
+    <section class="r-stage r-scene" data-scene="lapse">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('lapse').kicker}</p>
+          <h2 class="r-title">LAPSE</h2>
+          <p class="r-sub">Memory consolidation flattens the temporal shape of user facts.</p>
+        </header>
+        <div class="lp-flow" data-anim="flow">
+          <div class="lp-said"><p class="r-label">The user says</p><p class="lp-bubble">I am <mark data-cue>driving</mark> a Peugeot</p></div>
+          <div class="lp-writer"><Icon name="ph:database" /><span>memory writer</span></div>
+          <div class="lp-stored"><p class="r-label">Stored note</p><p class="lp-note">The user <mark data-flat>drives</mark> a Peugeot</p><p class="lp-lost" data-lost>The cue that it is still going on is gone.</p></div>
+        </div>
+        <div class="lp-stats" data-anim="stats">
+          <div><p class="r-big-n">{lapseNumbers.flattened} <small>of {lapseNumbers.pairs}</small></p><p class="r-big-l">matched pairs: three writer models flattened the ongoing form and kept the simple present. Never the reverse.</p></div>
+          <div><p class="r-big-n">{lapseNumbers.configs}<small> / {lapseNumbers.configs}</small></p><p class="r-big-l">model configurations, plus {lapseNumbers.pipelines.join(', ').replace(/, ([^,]*)$/, ', and $1')}.</p></div>
+        </div>
+        <footer class="r-foot"><span>Memory Consolidation Flattens the Temporal Shape of User Facts · {lapse.venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== Thin-Object Segmentation ===== -->
+    <section class="r-stage r-scene" data-scene="thin-object-segmentation">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">{poster('thin-object-segmentation').kicker}</p>
+          <h2 class="r-title">{poster('thin-object-segmentation').title}</h2>
+          <p class="r-sub">The target is a handful of pixels wide: one problem, three fields.</p>
+        </header>
+        <!-- Tiles cropped from the survey's own figure (public/projects/thin.webp). -->
+        <div class="thin-tiles" data-anim="tiles">
+          {[['line', 'Power lines'], ['crack', 'Cracks'], ['vessel', 'Retinal vessels']].map(([k, label]) => (
+            <figure class="thin-tile">
+              <div class="thin-img" style={`--img:url(/reel/thin-${k}.webp);--mask:url(/reel/thin-${k}-mask.webp)`}>
+                <span class="thin-glow"></span>
+              </div>
+              <figcaption>{label}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <footer class="r-foot"><span>{poster('thin-object-segmentation').venue}</span></footer>
+      </div>
+    </section>
+
+    <!-- ===== People ===== -->
+    <section class="r-stage r-scene r-people" data-scene="people">
+      <div class="r-frame">
+        <header class="r-head">
+          <p class="r-kicker">The people</p>
+          <h2 class="r-title">Meet the lab</h2>
+        </header>
+        {lead && (
+          <figure class="pp-card pp-lead">
+            <img src={lead.image} alt="" width="192" height="192" loading="eager" />
+            <figcaption><b>{lead.name}</b><span>{lead.role ?? lead.topic}</span></figcaption>
+          </figure>
+        )}
+        <div class="pp-grid">
+          {members.map((m) => (
+            <figure class="pp-card">
+              {m.image ? <img src={m.image} alt="" width="192" height="192" loading="eager" /> : <span class="pp-init">{m.name.split(' ').map((w) => w[0]).join('')}</span>}
+              <figcaption><b>{m.name}</b><span>{m.topic}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Close ===== -->
+    <section class="r-stage r-scene r-close" data-scene="close">
+      <div class="r-frame">
+        <img class="cl-mark" src="/logo-mark-light.svg" alt="" width="220" height="220" />
+        <p class="cl-name">Artificial Intelligence &amp; Multimodal Systems Lab</p>
+        <p class="cl-where">The University of Southern Mississippi · TEC 340</p>
+        <div class="cl-url">
+          <img src="/slides/qr-aimsresearchlab.svg" alt="" width="200" height="200" />
+          <p>aimsresearchlab.com</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="r-curtain" aria-hidden="true"></div>
+    <div class="r-hud" aria-hidden="true"><span data-hud></span></div>
+
+    <script>
+      // Optional, like the deck: everything above reads without it. Bundled at
+      // build time, so the TV never depends on a CDN.
+      import { initReel } from '../scripts/reel/main';
+      initReel(document.body);
+    </script>
+  </body>
+</html>

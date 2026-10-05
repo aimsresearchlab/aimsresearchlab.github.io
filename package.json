@@ -16,9 +16,12 @@
     "@fontsource/tinos": "^5.1.0",
     "@iconify-json/ph": "^1.2.2",
     "@iconify-json/simple-icons": "^1.2.95",
+    "@types/three": "^0.186.0",
     "astro": "^5.6.0",
     "astro-icon": "^1.1.5",
-    "motion": "^13.4.0"
+    "gsap": "^3.15.0",
+    "motion": "^13.4.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "playwright": "^1.63.0",
