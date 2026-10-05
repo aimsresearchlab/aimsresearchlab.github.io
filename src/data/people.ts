@@ -175,6 +175,12 @@ export const people: Person[] = [
       { type: 'linkedin', url: 'https://www.linkedin.com/in/bishesta-bohara-85aa78209/' },
     ],  
   },
+    {
+    name: 'Jahandad Irfan',
+    topic: 'Computer vision',
+    category: 'undergrad',
+    image: '/people/Jahandad.webp',
+  },
   // Alumni. Keep them in the array; `graduated` moves them to the Alumni
   // section on /people.
   {
