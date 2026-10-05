@@ -1,3 +1,13 @@
+// Dated news feed, newest first.
+// To add an item, copy an entry to the top.
+// Dates use ISO format: YYYY-MM-DD.
+
+export interface NewsItem {
+  date: string;
+  text: string;
+  url?: string;
+}
+
 export const news: NewsItem[] = [
   {
     date: '2026-09-29',
@@ -66,3 +76,22 @@ export const news: NewsItem[] = [
     text: 'Joshua Johnston, an Honors student, joins our group as an undergraduate researcher',
   },
 ];
+
+// Return the newest entries for the homepage.
+export function recentNews(limit = 5): NewsItem[] {
+  return [...news]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, limit);
+}
+
+// Format "2026-08-20" as "Aug 20, 2026".
+export function formatDate(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+
+  return `${months[m - 1]} ${d}, ${y}`;
+}
