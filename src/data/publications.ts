@@ -132,6 +132,13 @@ export const publications: Publication[] = [
     url: 'https://arxiv.org/abs/2606.21807',
   },
   {
+    title: 'LLM-as-Judge for Semantic Judging of Powerline Segmentation in UAV Inspection',
+    authors: 'A. Hossain, R. Abdelfattah, X. Wang',
+    venue: 'arXiv preprint',
+    year: 2026,
+    url: 'https://arxiv.org/abs/2604.05371',
+  },
+  {
     title: 'Does It Matter Which Gaussians You Pick in 4D Gaussian Streaming?',
     authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
     venue: 'arXiv preprint',

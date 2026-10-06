@@ -335,6 +335,15 @@ export function thin(root: HTMLElement): TL {
   return tl;
 }
 
+export function smoke(root: HTMLElement): TL {
+  const tl = gsap.timeline();
+  head(tl, root);
+  tl.fromTo(q(root, '[data-anim="fig"]'), { autoAlpha: 0, scale: 0.96 }, { autoAlpha: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, 0.6);
+  qa(root, '[data-step]').forEach((el, i) => fadeIn(tl, el, 1.6 + i * 1.3, 0.7, 20));
+  tl.to({}, { duration: 0.01 }, 11.5);
+  return tl;
+}
+
 export function people(root: HTMLElement): TL {
   const tl = gsap.timeline();
   head(tl, root, 0.2);
@@ -361,6 +370,7 @@ export const builders: Record<string, (root: HTMLElement) => TL> = {
   'gaussian-streaming': gaussian,
   lapse,
   'thin-object-segmentation': thin,
+  'smoke-detection': smoke,
   people,
   close: closing,
 };

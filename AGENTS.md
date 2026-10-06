@@ -416,10 +416,15 @@ people and the address.
   measurements (`STATIONS`, `LOUNGE`).
 - **Posters** hang over the real posters in the photo; their order and wall
   positions are in `src/data/reel.ts`, their copy and covers come from the
-  project files. Language and vision posters alternate where there are enough
-  of each, so no more than two language posters run together; when adding a
-  project, place it to keep that, and reassign slugs to the existing spots
-  rather than moving the spots.
+  project files. The order is a priority order set by the lab's advisor, not
+  by topic: keep it as given, put new projects where they are asked for, and
+  do not reorder posters to alternate language and vision work. To change the
+  order, reassign slugs to the existing spots rather than moving the spots.
+  Eight spots: the five over real posters, two on bare wall near the back, and
+  right wall z -2.3, added for the eighth poster. LAPSE has no project page,
+  so its copy is an object in `src/data/reel.ts` (`lapse`). The smoke
+  detection scene shows the lab's infographic
+  (`public/reel/smoke-detection-infographic.webp`) beside its five steps.
 - **Scenes** carry the AIMS mark top right, as the posters do, and a photo
   behind them under a navy gradient that keeps the left and top near solid,
   so the result stays the subject. Each photo shows the paper's own running

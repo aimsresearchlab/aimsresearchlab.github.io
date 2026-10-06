@@ -303,6 +303,34 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
       </div>
     </section>
 
+    <!-- ===== UAV Smoke Detection ===== -->
+    <section class="r-stage r-scene" data-scene="smoke-detection">
+      <div class="r-frame">
+        <p class="r-brand"><img src="/logo-mark-light.svg" alt="" width="44" height="44" /><span>AIMS Lab</span></p>
+        <header class="r-head">
+          <p class="r-kicker">{poster('smoke-detection').kicker}</p>
+          <h2 class="r-title">{poster('smoke-detection').title}</h2>
+          <p class="r-sub">All inference stays on the drone: a light model screens every frame, a stronger one sees only the uncertain ones.</p>
+        </header>
+        <!-- Steps read off the lab's infographic (public/reel/smoke-detection-infographic.webp). -->
+        <div class="sd-body">
+          <ol class="sd-steps">
+            {[
+              ['UAV image input', 'real-time aerial images'],
+              ['Lightweight model', 'fast smoke classification on the UAV'],
+              ['Confidence-based selection', 'two thresholds chosen by Bayesian optimization'],
+              ['Depth-wise model', 'detailed analysis of the uncertain cases'],
+              ['Final decision', 'real-time smoke detection'],
+            ].map(([name, line]) => <li data-step><b>{name}</b><span>{line}</span></li>)}
+          </ol>
+          <figure class="sd-fig" data-anim="fig">
+            <img src="/reel/smoke-detection-infographic.webp" alt="The lab's infographic: the five-step framework, example UAV images, the accuracy and efficiency trade-off, and runtime results." width="1536" height="1024" />
+          </figure>
+        </div>
+        <footer class="r-foot"><span>{poster('smoke-detection').venue}</span></footer>
+      </div>
+    </section>
+
     <!-- ===== Fixed RAG Compression ===== -->
     <section class="r-stage r-scene" data-scene="fixed-rag-compression">
       <div class="r-bg" aria-hidden="true"><img src={backdrops['fixed-rag-compression'].src} alt="" width="1920" height="1080" /></div>

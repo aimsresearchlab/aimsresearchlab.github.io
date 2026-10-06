@@ -14,19 +14,21 @@ export interface PosterSpot {
 }
 
 /**
- * The posters in the order the camera visits them: language and vision work
- * alternate where there is enough of each (two vision projects, five language),
- * so no more than two language posters run together. Positions are along the
+ * The posters in the order the camera visits them. This is the advisor's
+ * priority order (see AGENTS.md), not a topic order. Positions are along the
  * side walls of the room rebuilt in src/scripts/reel/lab.ts. Five hang over
- * the five real posters in the photo (measured centres); the other two are on
- * bare wall near the back.
+ * the five real posters in the photo (measured centres); the other three are on
+ * bare wall: two near the back, and right z -2.3, the spot added for the
+ * eighth poster (a poster is 1.3 m wide, so it clears the one at -4.15 and the
+ * desks, which only start at -2.4 and are far below the poster's 2.03 m).
  */
 export const posterSpots: PosterSpot[] = [
-  { slug: 'same-ranking-different-winner', wall: 'left', z: -3.22 },
-  { slug: 'gaussian-streaming', wall: 'right', z: -4.15 },
-  { slug: 'seam', wall: 'left', z: -5.03 },
-  { slug: 'outcome-monitors', wall: 'right', z: -6.08 },
-  { slug: 'thin-object-segmentation', wall: 'left', z: -7.0 },
+  { slug: 'same-ranking-different-winner', wall: 'right', z: -2.3 },
+  { slug: 'seam', wall: 'left', z: -3.22 },
+  { slug: 'outcome-monitors', wall: 'right', z: -4.15 },
+  { slug: 'thin-object-segmentation', wall: 'left', z: -5.03 },
+  { slug: 'smoke-detection', wall: 'right', z: -6.08 },
+  { slug: 'gaussian-streaming', wall: 'left', z: -7.0 },
   { slug: 'fixed-rag-compression', wall: 'right', z: -7.6 },
   { slug: 'lapse', wall: 'left', z: -8.55 },
 ];
