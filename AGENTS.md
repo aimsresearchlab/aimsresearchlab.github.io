@@ -314,9 +314,13 @@ publications:
   we found, what is next). Keep it to what the papers actually support.
 - `featured` orders the homepage grid, which shows the first three. Raise the
   limit in `src/pages/index.astro` if you want two rows.
-- `links` use `kind`: `arxiv`, `github`, `paper`, or `demo`. Each renders as an
-  outlined pill with the matching icon. Only canonical records (arXiv, DOI,
-  public GitHub repo, a demo on this site). Do not link private repos.
+- `links` use `kind`: `arxiv`, `github`, `paper`, `demo`, or `poster`. Each
+  renders as an outlined pill with the matching icon. Only canonical records
+  (arXiv, DOI, public GitHub repo, a demo on this site, a poster PDF under
+  `public/projects/`). Do not link private repos.
+- A poster also goes in the body as a `## Poster` section: a webp render of the
+  PDF, 2000px wide, quality 85, linked to the PDF
+  (`public/projects/<slug>-poster.{pdf,webp}`).
 - `publications` must match titles in `src/data/publications.ts` character for
   character; a typo silently drops the paper from the Papers section.
 - Adding a project means regenerating the QR codes: `npm run deck:qr`.

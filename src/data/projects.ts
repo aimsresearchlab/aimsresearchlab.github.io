@@ -12,6 +12,7 @@ export const linkMeta = {
   github: { icon: 'simple-icons:github', label: 'GitHub', color: '#181717' },
   paper:  { icon: 'ph:file-text',        label: 'Paper',  color: 'currentColor' },
   demo:   { icon: 'ph:play-circle',      label: 'Demo',   color: 'currentColor' },
+  poster: { icon: 'ph:presentation-chart', label: 'Poster', color: 'currentColor' },
 } as const;
 
 // Every project. Featured ones first in their given order, then the rest.

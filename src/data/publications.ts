@@ -111,6 +111,13 @@ export const publications: Publication[] = [
     url: 'https://doi.org/10.1007/978-3-030-69544-6_36',
   },
   {
+    title: 'Memory Consolidation Flattens the Temporal Shape of User Facts',
+    authors: 'S. Panthi, M. Yeamin, S. Luo, R. Abdelfattah',
+    venue: 'arXiv preprint',
+    year: 2026,
+    url: 'https://arxiv.org/abs/2609.36457',
+  },
+  {
     title: 'Outcome Monitors: Recovery Affordances for Silent Tool Failures',
     authors: 'S. Panthi, R. Abdelfattah',
     venue: 'arXiv preprint',

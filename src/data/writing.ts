@@ -20,6 +20,7 @@ export const writing: WriteUp[] = [
     author: 'Sugam Panthi',
     date: '2026-09-21',
     summary: 'How the LAPSE benchmark was built: small probes first, minimal pairs, checked invented names, and a smoke test read by hand',
+    project: 'lapse',
   },
   {
     title: 'Every Reported Number Should Trace to One Scorer and Run',
@@ -50,6 +51,7 @@ export const writing: WriteUp[] = [
     author: 'Sugam Panthi',
     date: '2026-08-03',
     summary: 'A LAPSE pilot: memory writers rewrite "I am staying in" as "lives in", and date stamps barely change it',
+    project: 'lapse',
   },
   {
     title: 'Scoring Targets Change Which Memory System Wins',

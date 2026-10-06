@@ -23,7 +23,7 @@ const projects = defineCollection({
     links: z
       .array(
         z.object({
-          kind: z.enum(['arxiv', 'github', 'paper', 'demo']),
+          kind: z.enum(['arxiv', 'github', 'paper', 'demo', 'poster']),
           url: z.string(),
         }),
       )

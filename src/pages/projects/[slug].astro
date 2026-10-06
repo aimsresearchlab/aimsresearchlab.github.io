@@ -109,6 +109,8 @@ const posts = writing.filter((w) => w.project === project.id);
 
   .prose :global(h2) { font-size: 1.25rem; margin-top: 2.25rem; }
   .prose :global(p) { margin: 0 0 1.1rem; }
+  /* A figure or poster in the body: full column width, hairline frame. */
+  .prose :global(img) { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
   .papers { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.75rem; }
   .papers h2 { font-size: 1.25rem; margin-top: 0; }
 </style>
