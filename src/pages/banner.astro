@@ -1,0 +1,41 @@
+---
+// /banner: one full-screen 16:9 slide for the projector behind a group photo,
+// in the shape of an event title slide: the full AIMS Lab logo on a light
+// panel, a spaced line under it, and a navy band with the website's QR code
+// (public/slides/qr-aimsresearchlab.svg, from npm run deck:qr) and the details. No script; it scales with the window through container units.
+import '@fontsource/tinos';
+import '@fontsource/tinos/700.css';
+import '../styles/global.css';
+import '../styles/banner.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Banner · AIMS Lab · USM</title>
+    <meta name="description" content="A full-screen AIMS Lab title slide for the projector behind group photos." />
+  </head>
+  <body class="banner-page">
+    <main class="bn-frame">
+      <section class="bn-top">
+        <img class="bn-logo" src="/aims-logo-full.svg" alt="AIMS Lab: Artificial Intelligence & Multimodal Systems" width="2172" height="724" />
+        <p class="bn-line">The University of Southern Mississippi</p>
+      </section>
+      <section class="bn-bottom">
+        <figure class="bn-qr">
+          <img src="/slides/qr-aimsresearchlab.svg" alt="QR code for aimsresearchlab.com" width="35" height="35" />
+          <figcaption>Scan to visit our website</figcaption>
+        </figure>
+        <div class="bn-rule" aria-hidden="true"></div>
+        <div class="bn-details">
+          <p>AIMS Research Lab</p>
+          <p>CSCE · TEC 340</p>
+          <p class="bn-gap">aimsresearchlab.com</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

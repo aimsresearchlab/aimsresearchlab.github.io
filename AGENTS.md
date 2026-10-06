@@ -366,6 +366,7 @@ the pages, not at homepage anchors:
 /writing          members' plain-language write-ups, linking out (not in the nav; linked from /publications and under the homepage Recent list)
 /slides/aims-lab  the overview deck (also downloadable as .pptx)
 /reel             the lab TV loop (noindex; not in the nav or the sitemap)
+/banner           one full-screen title slide for the projector behind group photos (noindex; not in the nav or the sitemap)
 /seam/            SEAM-Bench demo and leaderboard (static, outside Astro)
 /tiap/            TIAP walkthrough (static, outside Astro)
 ```

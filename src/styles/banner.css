@@ -1,0 +1,45 @@
+/* /banner: a 16:9 frame letterboxed in the window. Sizes are in cqw (percent
+   of the frame width), so the slide looks the same on any screen. */
+.banner-page { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--navy); overflow: hidden; }
+.bn-frame {
+  container-type: inline-size;
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  display: grid;
+  grid-template-rows: 58fr 42fr;
+}
+.bn-top {
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1cqw;
+  border-bottom: 0.6cqw solid var(--gold);
+}
+.bn-logo { width: 72cqw; height: auto; display: block; }
+.bn-line {
+  margin: 0;
+  max-width: none;
+  white-space: nowrap;
+  text-align: center;
+  font: 500 2.1cqw / 1 var(--font-ui);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.bn-bottom {
+  background: var(--navy);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 4cqw;
+  padding: 0 7cqw;
+}
+.bn-qr { margin: 0; justify-self: center; display: flex; align-items: center; gap: 2.4cqw; }
+.bn-qr img { width: 15cqw; height: auto; display: block; background: var(--paper); padding: 0.6cqw; border-radius: 0.8cqw; image-rendering: pixelated; }
+.bn-qr figcaption { max-width: 14cqw; font: 700 2.8cqw / 1.2 var(--font-serif); color: var(--gold); }
+.bn-rule { width: 0.2cqw; height: 60%; background: var(--on-charcoal); opacity: 0.5; }
+.bn-details { justify-self: center; text-align: center; }
+.bn-details p { margin: 0; font: 600 2.4cqw / 1.5 var(--font-ui); letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-charcoal); }
+.bn-details .bn-gap { margin-top: 1.6cqw; text-transform: none; color: var(--surface); }

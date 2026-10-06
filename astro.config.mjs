@@ -9,6 +9,7 @@ export default defineConfig({
   // Phosphor icons resolve from @iconify-json/ph and are inlined as SVG at
   // build time (no client-side JS). Use in markup as: <Icon name="ph:book-open" />
   // sitemap writes sitemap-index.xml + sitemap-0.xml into dist/ at build time.
-  // /reel is the lab TV loop, marked noindex, so it stays out of the sitemap.
-  integrations: [icon(), sitemap({ filter: (page) => !page.includes('/reel') })],
+  // /reel (the lab TV loop) and /banner (a projector slide) are noindex, so
+  // they stay out of the sitemap.
+  integrations: [icon(), sitemap({ filter: (page) => !page.includes('/reel') && !page.includes('/banner') })],
 });
