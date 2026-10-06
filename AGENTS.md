@@ -416,7 +416,8 @@ people and the address.
   measurements (`STATIONS`, `LOUNGE`).
 - **Posters** hang over the real posters in the photo; their order and wall
   positions are in `src/data/reel.ts`, their copy and covers come from the
-  project files. The order is a priority order set by the lab's advisor, not
+  project files, except covers listed in `posterCovers` there (thin-object
+  shows the survey figure on the wall and its project cover in the scene). The order is a priority order set by the lab's advisor, not
   by topic: keep it as given, put new projects where they are asked for, and
   do not reorder posters to alternate language and vision work. To change the
   order, reassign slugs to the existing spots rather than moving the spots.

@@ -325,12 +325,7 @@ export function lapse(root: HTMLElement): TL {
 export function thin(root: HTMLElement): TL {
   const tl = gsap.timeline();
   head(tl, root);
-  const tiles = qa(root, '.thin-tile');
-  tl.fromTo(tiles, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, stagger: 0.18, duration: 0.8, ease: 'power3.out' }, 0.8);
-  qa(root, '.thin-glow').forEach((g, i) => {
-    tl.fromTo(g, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.6, ease: 'power2.inOut' }, 2.4 + i * 0.7);
-    tl.fromTo(g, { opacity: 1 }, { opacity: 0.85, duration: 1.2, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 4.4 + i * 0.7);
-  });
+  tl.fromTo(q(root, '[data-anim="fig"]'), { autoAlpha: 0, scale: 0.96 }, { autoAlpha: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, 0.8);
   tl.to({}, { duration: 0.01 }, 13);
   return tl;
 }

@@ -21,7 +21,7 @@ import { Icon } from 'astro-icon/components';
 import { allProjects } from '../data/projects';
 import { publications } from '../data/publications';
 import { groupedPeople } from '../data/people';
-import { posterSpots, lapse, lapseNumbers, monitorNumbers, ragNumbers, ragReaders, backdrops } from '../data/reel';
+import { posterSpots, posterCovers, lapse, lapseNumbers, monitorNumbers, ragNumbers, ragReaders, backdrops } from '../data/reel';
 
 const root = process.cwd();
 const read = (p: string) => fs.readFileSync(path.join(root, p), 'utf8');
@@ -81,7 +81,7 @@ const posters = posterSpots.map((spot) => {
     kicker: kicker(p.data.tags),
     title: p.data.title,
     claim: p.data.claim,
-    cover: p.data.cover,
+    cover: posterCovers[spot.slug] ?? p.data.cover,
     qr: qrFor(spot.slug),
     venue,
   };
@@ -288,17 +288,9 @@ const fmt = (n: number, d = 3) => n.toFixed(d);
           <h2 class="r-title">{poster('thin-object-segmentation').title}</h2>
           <p class="r-sub">The target is a handful of pixels wide: one problem, three fields.</p>
         </header>
-        <!-- Tiles cropped from the survey's own figure (public/projects/thin.webp). -->
-        <div class="thin-tiles" data-anim="tiles">
-          {[['line', 'Power lines'], ['crack', 'Cracks'], ['vessel', 'Retinal vessels']].map(([k, label]) => (
-            <figure class="thin-tile">
-              <div class="thin-img" style={`--img:url(/reel/thin-${k}.webp);--mask:url(/reel/thin-${k}-mask.webp)`}>
-                <span class="thin-glow"></span>
-              </div>
-              <figcaption>{label}</figcaption>
-            </figure>
-          ))}
-        </div>
+        <figure class="thin-fig" data-anim="fig">
+          <img src="/reel/thin-poster.webp" alt="The lab's power-line poster: a drone image, the predicted power-line mask, the overlay, a multimodal judge's verdict, and one reliable and one unreliable example." width="2000" height="1129" />
+        </figure>
         <footer class="r-foot"><span>{poster('thin-object-segmentation').venue}</span><span class="r-credit">Photo: {backdrops['thin-object-segmentation'].photographer} / Pexels</span></footer>
       </div>
     </section>

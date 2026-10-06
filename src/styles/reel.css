@@ -356,18 +356,8 @@
 .reel .lp-stats { position: absolute; left: calc(120 * var(--u)); top: calc(680 * var(--u)); width: calc(1680 * var(--u)); display: grid; grid-template-columns: 1fr 1fr; gap: calc(90 * var(--u)); }
 
 /* --- Thin-Object Segmentation ----------------------------------------------- */
-.reel .thin-tiles { position: absolute; left: calc(120 * var(--u)); top: calc(400 * var(--u)); width: calc(1680 * var(--u)); display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(60 * var(--u)); }
-.reel .thin-tile { margin: 0; }
-.reel .thin-img { position: relative; aspect-ratio: 332 / 230; border-radius: calc(14 * var(--u)); overflow: hidden; background: var(--img) center / cover; }
-.reel .thin-glow {
-  position: absolute;
-  inset: 0;
-  background: var(--gold);
-  -webkit-mask: var(--mask) center / cover;
-  mask: var(--mask) center / cover luminance;
-  filter: drop-shadow(0 0 calc(6 * var(--u)) var(--gold));
-}
-.reel .thin-tile figcaption { margin-top: calc(18 * var(--u)); font: 700 calc(34 * var(--u)) / 1.2 var(--font-serif); color: #fff; }
+.reel .thin-fig { position: absolute; left: calc(120 * var(--u)); top: calc(370 * var(--u)); margin: 0; border-radius: calc(16 * var(--u)); overflow: hidden; background: #fff; box-shadow: 0 calc(30 * var(--u)) calc(80 * var(--u)) rgb(0 0 0 / 0.5); }
+.reel .thin-fig img { display: block; width: auto; height: calc(590 * var(--u)); }
 
 /* --- People ---------------------------------------------------------------
    The director as a large portrait on the left, everyone else in a 4 x 4 grid

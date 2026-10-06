@@ -85,6 +85,15 @@ export interface Backdrop {
  * resized to 1920x1080 webp at quality 72. 4D Gaussian Streaming has none: its
  * own capture frames fill that scene.
  */
+/**
+ * Wall posters that use a different image from the project cover. The
+ * thin-object cover (the power-line poster) is shown inside its scene instead,
+ * and the wall gets the survey's own figure.
+ */
+export const posterCovers: Record<string, string> = {
+  'thin-object-segmentation': '/projects/thin.webp',
+};
+
 export const backdrops: Record<string, Backdrop> = {
   'same-ranking-different-winner': { src: '/reel/bg-same-ranking-different-winner.webp', photographer: 'Siarhei Nester', url: 'https://www.pexels.com/photo/28827841/' },
   seam: { src: '/reel/bg-seam.webp', photographer: 'Israel Torres', url: 'https://www.pexels.com/photo/17810854/' },
