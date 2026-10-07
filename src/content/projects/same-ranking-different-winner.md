@@ -2,8 +2,8 @@
 title: 'Same Ranking, Different Winner'
 claim: 'The scoring target a memory benchmark picks can flip which LLM wins, even when the overall ranking looks stable.'
 tags: [ConversationalMemory, Evaluation]
-cover: /projects/same-ranking-compressed.mp4
-coverVideo: /projects/tiap-live-audit-demo-v2.webm
+cover: /projects/same-ranking-different-winner.webp
+coverVideo: /projects/same-ranking-compressed.mp4
 featured: 1
 links:
   - { kind: demo, url: '/tiap/' }
