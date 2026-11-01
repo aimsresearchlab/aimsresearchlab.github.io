@@ -82,7 +82,7 @@ export const people: Person[] = [
   },
     {
     name: 'Sugam Panthi',
-    topic: 'LLM evaluation validity',
+    topic: 'LLM evaluation',
     category: 'undergrad',
     image: '/people/sugam-panthi.webp',
     links: [
