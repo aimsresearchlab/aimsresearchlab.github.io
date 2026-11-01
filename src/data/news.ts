@@ -10,6 +10,11 @@ export interface NewsItem {
 
 export const news: NewsItem[] = [
   {
+    date: '2026-10-28',
+    text: 'Congratulations to Sugam Panthi on receiving a $5,000 research grant in API credits from Pangram',
+    url: 'https://www.pangram.com',
+  },
+  {
     date: '2026-09-29',
     text: 'New preprint: "Memory Consolidation Flattens the Temporal Shape of User Facts" (LAPSE)',
     url: 'https://arxiv.org/abs/2609.36457',
