@@ -10,6 +10,11 @@ export interface NewsItem {
 
 export const news: NewsItem[] = [
   {
+    date: '2026-11-06',
+    text: 'Congratulations to Sugam Panthi on receiving an Eagle SPUR undergraduate research grant from USM',
+    url: 'https://www.usm.edu/undergraduate-research/eagle-scholars-program-undergraduate-research-eagle-spur.php',
+  },
+  {
     date: '2026-10-28',
     text: 'Congratulations to Sugam Panthi on receiving a $5,000 research grant in API credits from Pangram',
     url: 'https://www.pangram.com',
