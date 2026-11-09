@@ -34,13 +34,13 @@ export const publications: Publication[] = [
     year: 2026,
   },
    {
-    title: 'A comprehensive survey on facial expression generation: From GANs to LLM-guided multimodal models',
-    authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
-    venue: 'Pattern Recognition (under major revision)',
-    year: 2026,
+    title: 'Bayesian optimization-aided hybrid deep learning model for lightweight UAV-based smoke detection',
+    authors: 'Rabab Abdelfattah, Kareem Abdelfatah, Mostafa M Fouda, Zubair Md Fadlullah, Mahmoud Abouyoussef, Mohamed I Ibrahem',
+    venue: 'IEEE Internet of Things Journal',
+    year: 2025,
   },
   {
-    title: 'Bayesian Optimization-Aided Hybrid Deep Learning Model for Lightweight UAV-Based Smoke Detection',
+    title: 'A comprehensive survey on facial expression generation: From GANs to LLM-guided multimodal models',
     authors: 'M. Hasan, R. Abdelfattah, K. Abdelfattah, M. M. Fouda, A. Sherif',
     venue: 'ICT Express',
     year: 2026,
