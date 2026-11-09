@@ -38,6 +38,7 @@ export const publications: Publication[] = [
     authors: 'Rabab Abdelfattah, Kareem Abdelfatah, Mostafa M Fouda, Zubair Md Fadlullah, Mahmoud Abouyoussef, Mohamed I Ibrahem',
     venue: 'IEEE Internet of Things Journal',
     year: 2025,
+    url: 'https://ieeexplore.ieee.org/abstract/document/11029443',
   },
   {
     title: 'A comprehensive survey on facial expression generation: From GANs to LLM-guided multimodal models',
