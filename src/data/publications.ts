@@ -32,6 +32,7 @@ export const publications: Publication[] = [
     authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
     venue: 'Pattern Recognition',
     year: 2026,
+    url: 'https://arxiv.org/abs/2610.17513',
   },
    {
     title: 'Bayesian optimization-aided hybrid deep learning model for lightweight UAV-based smoke detection',
