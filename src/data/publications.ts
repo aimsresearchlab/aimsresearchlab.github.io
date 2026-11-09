@@ -30,15 +30,20 @@ export const publications: Publication[] = [
   {
     title: 'Gaussian Splatting for Real-Time Scene Reconstruction: Methods, Systems, and Trade-offs',
     authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
+    venue: 'Pattern Recognition',
+    year: 2026,
+  },
+   {
+    title: 'A comprehensive survey on facial expression generation: From GANs to LLM-guided multimodal models',
+    authors: 'A. Dahal, R. Abdelfattah, N. Rahimi',
     venue: 'Pattern Recognition (under major revision)',
     year: 2026,
   },
   {
     title: 'Bayesian Optimization-Aided Hybrid Deep Learning Model for Lightweight UAV-Based Smoke Detection',
-    authors: 'R. Abdelfattah, K. Abdelfatah, M. M. Fouda, Z. M. Fadlullah, M. Abouyoussef, M. I. Ibrahem',
-    venue: 'IEEE Internet of Things Journal',
-    year: 2025,
-    url: 'https://doi.org/10.1109/JIOT.2025.3578445',
+    authors: 'M. Hasan, R. Abdelfattah, K. Abdelfattah, M. M. Fouda, A. Sherif',
+    venue: 'ICT Express',
+    year: 2026,
   },
   {
     title: 'BOL-LPP: A Bayesian-Optimized LSTM Model for Day-Ahead Load Price Forecasting in the ERCOT Market',
