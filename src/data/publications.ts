@@ -46,6 +46,7 @@ export const publications: Publication[] = [
     authors: 'M. Hasan, R. Abdelfattah, K. Abdelfattah, M. M. Fouda, A. Sherif',
     venue: 'ICT Express',
     year: 2026,
+    url: 'https://www.sciencedirect.com/science/article/pii/S2405959526000792'
   },
   {
     title: 'BOL-LPP: A Bayesian-Optimized LSTM Model for Day-Ahead Load Price Forecasting in the ERCOT Market',
