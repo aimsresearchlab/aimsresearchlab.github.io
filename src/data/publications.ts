@@ -34,19 +34,19 @@ export const publications: Publication[] = [
     year: 2026,
     url: 'https://arxiv.org/abs/2610.17513',
   },
-   {
-    title: 'Bayesian optimization-aided hybrid deep learning model for lightweight UAV-based smoke detection',
-    authors: 'Rabab Abdelfattah, Kareem Abdelfatah, Mostafa M Fouda, Zubair Md Fadlullah, Mahmoud Abouyoussef, Mohamed I Ibrahem',
-    venue: 'IEEE Internet of Things Journal',
-    year: 2025,
-    url: 'https://ieeexplore.ieee.org/abstract/document/11029443',
-  },
   {
     title: 'A comprehensive survey on facial expression generation: From GANs to LLM-guided multimodal models',
-    authors: 'M. Hasan, R. Abdelfattah, K. Abdelfattah, M. M. Fouda, A. Sherif',
+    authors: 'M. Hasan, R. Abdelfattah, K. Abdelfatah, M. Fouda, A. Sherif',
     venue: 'ICT Express',
     year: 2026,
-    url: 'https://www.sciencedirect.com/science/article/pii/S2405959526000792'
+    url: 'https://doi.org/10.1016/j.icte.2026.05.007',
+  },
+  {
+    title: 'Bayesian Optimization-Aided Hybrid Deep Learning Model for Lightweight UAV-Based Smoke Detection',
+    authors: 'R. Abdelfattah, K. Abdelfatah, M. M. Fouda, Z. M. Fadlullah, M. Abouyoussef, M. I. Ibrahem',
+    venue: 'IEEE Internet of Things Journal',
+    year: 2025,
+    url: 'https://doi.org/10.1109/JIOT.2025.3578445',
   },
   {
     title: 'BOL-LPP: A Bayesian-Optimized LSTM Model for Day-Ahead Load Price Forecasting in the ERCOT Market',

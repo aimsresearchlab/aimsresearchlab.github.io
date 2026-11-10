@@ -10,6 +10,11 @@ export interface NewsItem {
 
 export const news: NewsItem[] = [
   {
+    date: '2026-11-10',
+    text: 'Accepted in Pattern Recognition: "Gaussian Splatting for Real-Time Scene Reconstruction: Methods, Systems, and Trade-offs"',
+    url: 'https://arxiv.org/abs/2610.17513',
+  },
+  {
     date: '2026-11-06',
     text: 'Congratulations to Sugam Panthi on receiving an Eagle SPUR undergraduate research grant from USM',
     url: 'https://www.usm.edu/undergraduate-research/eagle-scholars-program-undergraduate-research-eagle-spur.php',
