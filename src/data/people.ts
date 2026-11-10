@@ -152,7 +152,7 @@ export const people: Person[] = [
     category: 'collaborator',
     image: '/people/ashim-dahal.webp',
     links: [
-      { type: 'website', url: 'https://ashimdahal.com.np/' },
+      { type: 'website', url: 'https://ashimdahal.github.io/' },
       { type: 'scholar', url: 'https://scholar.google.com/citations?user=Nt9K4nsAAAAJ' },
       { type: 'github', url: 'https://github.com/ashimdahal' },
     ],
